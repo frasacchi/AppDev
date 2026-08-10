@@ -1,5 +1,3 @@
-# appdev
-
 Hosted pages for app beta testing and App Store submission requirements —
 privacy policies, TestFlight join pages — for every app in development.
 Deployed via **GitHub Pages**, so anything in here is a real, public URL the
