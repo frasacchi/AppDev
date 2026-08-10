@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Join China Hand — TestFlight Beta</title>
+<meta name="description" content="Join the China Hand beta on TestFlight.">
+<!-- Instagram/social preview card -->
+<meta property="og:title" content="Play China Hand — join the beta">
+<meta property="og:description" content="Tap to join the TestFlight beta. iPhone/iPad only.">
+<meta property="og:image" content="icon.png">
+<style>
+  :root{
+    --ink:#291a12; --parchment:#faf0d1; --parchment2:#eddbb2;
+    --card-red:#d42e29; --gold:#f7c22e; --gold-deep:#c7851a; --cream:#fff7e0;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; min-height:100dvh; display:flex; align-items:center; justify-content:center;
+    padding:28px 20px;
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Rounded","Segoe UI",sans-serif;
+    background:radial-gradient(circle at 50% 0%, #fdf6e3, #e8d9ab 75%);
+    color:var(--ink);
+  }
+  .card{
+    max-width:380px; width:100%; text-align:center;
+    background:var(--parchment);
+    border:3px solid var(--ink);
+    border-radius:22px 16px 24px 14px/14px 24px 16px 22px;
+    padding:30px 26px 26px;
+    box-shadow:0 10px 0 rgba(41,26,18,.15);
+  }
+  .icon{
+    width:104px; height:104px; border-radius:24px;
+    border:3px solid var(--ink);
+    box-shadow:2px 4px 0 rgba(41,26,18,.2);
+    margin-bottom:14px;
+  }
+  h1{font-size:26px; margin:0 0 4px; letter-spacing:.01em}
+  .sub{font-size:14.5px; opacity:.72; margin:0 0 22px; line-height:1.5; font-weight:600}
+  .cta{
+    display:block; text-decoration:none;
+    background:var(--gold); color:var(--ink); font-weight:800; font-size:18px;
+    padding:15px 20px;
+    border:3px solid var(--ink);
+    border-radius:16px 11px 18px 10px/10px 18px 11px 16px;
+    box-shadow:0 5px 0 var(--gold-deep);
+    transition:transform .08s, box-shadow .08s;
+  }
+  .cta:active{transform:translateY(4px); box-shadow:0 1px 0 var(--gold-deep)}
+  .steps{
+    text-align:left; font-size:13.5px; font-weight:600; opacity:.75;
+    margin:20px 0 0; padding:0; list-style:none; line-height:1.7;
+  }
+  .steps li{display:flex; gap:8px}
+  .steps b{opacity:.55; font-weight:800}
+  .note{
+    margin-top:20px; font-size:12px; opacity:.55; font-weight:600; line-height:1.5;
+  }
+  .platform-warning{
+    display:none; margin-top:16px; padding:10px 14px; font-size:13px; font-weight:700;
+    background:var(--cream); border:2px solid var(--card-red); color:var(--card-red);
+    border-radius:10px 7px 11px 6px/6px 11px 7px 10px;
+  }
+</style>
+</head>
+<body>
+
+  <div class="card">
+    <img class="icon" src="icon.png" alt="China Hand app icon">
+    <h1>China Hand</h1>
+    <p class="sub">The beta's open — tap below to join on TestFlight.</p>
+
+    <!-- Replace JOIN_CODE with the code from your public TestFlight link,
+         e.g. https://testflight.apple.com/join/AbCd1234 -->
+    <a class="cta" id="joinLink" href="https://testflight.apple.com/join/JOIN_CODE">
+      Join the beta
+    </a>
+
+    <ol class="steps">
+      <li><b>1.</b> <span>Tap the button above.</span></li>
+      <li><b>2.</b> <span>No TestFlight yet? Apple's page installs it for you first, then brings you back to join.</span></li>
+      <li><b>3.</b> <span>Open TestFlight → Install China Hand → play.</span></li>
+    </ol>
+
+    <div class="platform-warning" id="platformWarning">
+      Looks like you're not on an iPhone or iPad — China Hand's beta is iOS only right now.
+    </div>
+
+    <p class="note">Free while in beta. Feedback welcome inside the app.</p>
+  </div>
+
+<script>
+// A friendly heads-up for non-Apple visitors, since Instagram sends people
+// from every device. Doesn't block the tap — Apple's own join page will
+// explain it too — this just sets expectations a beat earlier.
+(function () {
+  var ua = navigator.userAgent || "";
+  var isAppleTouch = /iPhone|iPad|iPod/.test(ua) ||
+                      (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1); // iPadOS 13+ reports as Mac
+  // Explicit both branches: Instagram's in-app browser is a known quirky
+  // WebView, so this stays correct even if the script somehow runs more
+  // than once rather than relying on the element's default hidden state.
+  document.getElementById('platformWarning').style.display =
+    isAppleTouch ? 'none' : 'block';
+})();
+</script>
+
+</body>
+</html>
