@@ -31,39 +31,13 @@ username — every file becomes reachable at:
 
 | Page | URL |
 |---|---|
-| China Hand — join beta | `https://USERNAME.github.io/appdev/chinahand/join.html` |
-| China Hand — privacy policy | `https://USERNAME.github.io/appdev/chinahand/privacy.html` |
+| China Hand — join beta | `https://frasacchi.github.io/appdev/chinahand/join.html` |
+| China Hand — privacy policy | `https://frasacchi.github.io/appdev/chinahand/privacy.html` |
 
 The **join** URL is what goes in an Instagram bio or a Story link. The
 **privacy** URL is what goes in App Store Connect's Privacy Policy field —
 different audiences, different pages, so they stay separate rather than
 sharing one page that tries to serve both.
-
-## One-time setup
-
-1. Push this repo to GitHub as **public** (GitHub Pages requires it, unless
-   you're on a paid plan that allows private Pages).
-2. **Settings → Pages** → Source: **Deploy from a branch** → Branch: `main`,
-   folder `/ (root)` → Save.
-3. GitHub gives you the base URL within a minute or two. Every file in every
-   app folder is live under it immediately — no per-file setup after this.
-
-## Before `chinahand/join.html` actually works
-
-It ships with one placeholder that has to be filled in by hand:
-
-- `JOIN_CODE` in the button's `href` — replace with the code from your
-  **public TestFlight link** (App Store Connect → the app → TestFlight →
-  your external group → Public Link → Enable). The full URL looks like
-  `https://testflight.apple.com/join/AbCd1234`; only the last part changes.
-
-## Before `chinahand/privacy.html` is ready to submit
-
-Two placeholders:
-
-- `[DATE — fill in before publishing]` — the date you're actually publishing it
-- `[YOUR EMAIL HERE]` — a real, monitored address; Apple requires a working
-  contact method on the policy page, not just the existence of the page
 
 ## Adding the next app
 
