@@ -21,7 +21,7 @@
 <body>
 
 <h1>Privacy Policy for Sboogie</h1>
-<p class="updated">Last updated: [DATE — fill in before publishing]</p>
+<p class="updated">Last updated: 21 August 2026</p>
 
 <p>Sboogie is a card game (President/Scum, with bluffing). This policy
 explains what information it handles and why. The short version:
@@ -32,20 +32,31 @@ Almost everything it stores stays on your device.</p>
 <p>Sboogie saves the following locally, using Apple's standard on-device
 storage (<code>UserDefaults</code>):</p>
 <ul>
-  <li>The player name you choose (used to label your seat at the table — you can change or clear it anytime)</li>
+  <li>Your table name — either the one you chose, or the "Player 1234" name the app assigns if you haven't chosen one</li>
+  <li>Whether you have been through the first-run setup</li>
   <li>Match rules and AI difficulty preferences</li>
-  <li>Your selected cosmetic set</li>
-  <li>Your Supporter status and Sboogie Gem balance</li>
+  <li>Your selected cosmetic set and pile effect</li>
+  <li>Your career record: matches played, wins, times you finished last, and flags won and lost</li>
+  <li>Your Sboogie Gem balance, which cosmetic sets you have unlocked, and the purchase identifiers used to make sure a purchase is never credited twice</li>
 </ul>
+<p>Your Supporter status is <strong>not</strong> saved on the device at all —
+it is read from your App Store purchase record each time the app starts.</p>
 <p>None of this is transmitted to us, because we don't operate a server that
 the app talks to. We simply have no way to see it.</p>
 
 <h2>Syncing between your own devices</h2>
-<p>Your Sboogie Gem balance and Supporter status sync across your own
-iPhone and iPad using <strong>Apple's iCloud Key-Value Storage</strong>,
-tied to your Apple ID. This is Apple's infrastructure, governed by
+<p>Three small values sync across your own iPhone and iPad using
+<strong>Apple's iCloud Key-Value Storage</strong>, tied to your Apple ID:
+your Sboogie Gem balance, which cosmetic sets you have unlocked, and a list
+of purchase identifiers used to make sure a purchase is never credited
+twice. Nothing else is synced — no gameplay, no statistics, no name.</p>
+<p>Your <strong>Supporter status is not stored in iCloud</strong>. It comes
+from your App Store purchase record, which is how "Restore purchases" works
+on a new device. That record is held by Apple, not by us.</p>
+<p>Both are Apple's infrastructure, governed by
 <a href="https://www.apple.com/legal/privacy/">Apple's own privacy policy</a>,
-not ours. You can disable iCloud for any app in iOS Settings.</p>
+not ours. You can disable iCloud for any app in iOS Settings; Sboogie keeps
+working, and your gems stay on the device you earned them on.</p>
 
 <h2>Playing with people nearby</h2>
 <p>Local multiplayer uses Apple's MultipeerConnectivity framework, which
@@ -92,7 +103,7 @@ want to be aware of, and it's controllable via the device's own name in iOS
 Settings.</p>
 
 <h2>Data deletion</h2>
-<p>Everything Sboogie stores lives on your device. To remove it entirely,
+<p>Almost everything Sboogie stores lives on your device. To remove it entirely,
 delete the app — this clears local storage. To also clear the iCloud-synced
 gem balance, turn off iCloud for Sboogie in iOS Settings before deleting, or
 contact us and we'll walk you through it (though again, we never actually
@@ -103,7 +114,7 @@ hold this data ourselves — it lives in your iCloud account).</p>
 Continued use of the app after a change means you accept the update.</p>
 
 <h2>Contact</h2>
-<p>Questions about privacy: <strong>[YOUR EMAIL HERE]</strong></p>
+<p>Questions about privacy: <strong>sacchi.appdev@outlook.com</strong></p>
 
 <h2>Other links</h2>
 <ul>
