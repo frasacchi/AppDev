@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Casa Teresa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Tinos&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #636B2F;
+    --bg-deep: #4d5324;
+    --cream: #E8DEC8;
+    --leaf: #F1EBDC;
+    --berry: #9c3b2f;
+    --serif: "Tinos", "Times New Roman", Times, serif;
+    --ink: #f3f6f2;
+    --ink-soft: rgba(243, 246, 242, 0.62);
+    --rule: rgba(243, 246, 242, 0.28);
+    --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-io: cubic-bezier(0.76, 0, 0.24, 1);
+    --mono: "Share Tech Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --bg: #636B2F; --bg-deep: #464c20; }
+  }
+  :root[data-theme="dark"] { --bg: #636B2F; --bg-deep: #464c20; }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: var(--mono);
+    color: var(--ink);
+    background: var(--bg);
+    background-image: radial-gradient(120% 80% at 80% 100%, var(--bg-deep), transparent 60%);
+    background-attachment: fixed;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  body.menu-open { overflow: hidden; }
+
+  /* ---------- Header ---------- */
+  header {
+    position: fixed; inset: 0 0 auto 0; z-index: 30;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 76px; padding: 0 clamp(20px, 5vw, 48px);
+    border-bottom: 1px solid var(--rule);
+    background: var(--bg);
+    transition: border-color .5s var(--ease-out), background-color .5s;
+  }
+  body.menu-open header { border-color: transparent; background: transparent; }
+
+  .brand {
+    font-size: 17px; letter-spacing: .42em; text-transform: uppercase;
+    color: var(--ink); text-decoration: none; white-space: nowrap;
+  }
+
+  .toggle {
+    position: relative; width: 64px; height: 64px;
+    background: none; border: 1.5px solid transparent; cursor: pointer;
+    transition: border-color .35s var(--ease-out);
+  }
+  .toggle:hover, .toggle:focus-visible { border-color: var(--ink); outline: none; }
+  .toggle span {
+    position: absolute; left: 50%; width: 30px; height: 1.5px;
+    background: var(--ink);
+    transform-origin: center;
+    transition: transform .6s var(--ease-io), top .6s var(--ease-io), width .4s var(--ease-out);
+  }
+  .toggle span:nth-child(1) { top: 27px; transform: translateX(-50%); }
+  .toggle span:nth-child(2) { top: 35px; transform: translateX(-50%); }
+  .toggle:hover span:nth-child(2) { width: 18px; transform: translateX(-17px); }
+  body.menu-open .toggle { border-color: transparent; }
+  body.menu-open .toggle span:nth-child(1) { top: 31px; transform: translateX(-50%) rotate(45deg); width: 30px; }
+  body.menu-open .toggle span:nth-child(2) { top: 31px; transform: translateX(-50%) rotate(-45deg); width: 30px; }
+
+  /* ---------- Home ---------- */
+  main {
+    min-height: 100vh; display: grid; place-items: center;
+    padding: 120px 24px 60px; text-align: center;
+  }
+  /* ---------- Logo ---------- */
+  .logo { width: min(150px, 38vw); height: auto; display: block; margin: 0 auto 40px; overflow: visible; }
+  .badge { transform-box: fill-box; transform-origin: center; transform: scale(.6); opacity: 0;
+    animation: badgeIn 1s var(--ease-out) .1s forwards; }
+  @keyframes badgeIn { to { transform: scale(1); opacity: 1; } }
+  .ring { stroke-dasharray: 1730; stroke-dashoffset: 1730; animation: dash 1.6s var(--ease-io) .3s forwards; }
+  /* Intro is orchestrated in JS (see bottom) so each stage starts only when the previous one ends. */
+  .stem, .tip { visibility: hidden; }
+
+  /* leaves: folded flat against the stem, then swing open while stretching out */
+  .leaf { transform-box: fill-box; opacity: 0; }
+  .leaf.l { transform-origin: 100% 50%; transform: rotate(60deg) scale(0, .2); --fold: 60deg; }
+  .leaf.r { transform-origin: 0% 50%;   transform: rotate(-60deg) scale(0, .2); --fold: -60deg; }
+  .logo.grown .leaf {
+    animation: unfurl 1.5s cubic-bezier(.22,1,.36,1) var(--d) both !important;
+  }
+  @keyframes unfurl {
+    0%   { transform: rotate(var(--fold)) scale(0, .2); opacity: 0; }
+    12%  { opacity: 1; }
+    45%  { transform: rotate(calc(var(--fold) * .35)) scale(.7, .45); }
+    100% { transform: rotate(0deg) scale(1, 1); opacity: 1; }
+  }
+
+  /* berry: squeezed out of the stem tip as the very last element */
+  .berry { transform-box: fill-box; transform-origin: 50% 100%; transform: scale(0, 0); }
+  .logo.bloom .berry { animation: emerge 1.1s cubic-bezier(.22,1,.36,1) both !important; }
+  @keyframes emerge {
+    0%   { transform: scale(.15, 0); }
+    40%  { transform: scale(.55, 1.3); }
+    70%  { transform: scale(1.08, .94); }
+    100% { transform: scale(1, 1); }
+  }
+
+  /* finished branch breathes gently */
+  .branch { transform-box: view-box; transform-origin: 318px 322px; }
+  body.intro-done .branch { animation: sway 7s ease-in-out 1s infinite; }
+  @keyframes sway { 0%,100% { transform: rotate(0deg); } 30% { transform: rotate(1.4deg); } 70% { transform: rotate(-1deg); } }
+  .logo-name { opacity: 0; transform: translateY(12px); animation: rise .9s var(--ease-out) 3.6s forwards; }
+  @keyframes rise { to { opacity: 1; transform: none; } }
+  .underline { transform-box: fill-box; transform-origin: center; transform: scaleX(0);
+    animation: line .9s var(--ease-io) 2.8s forwards; }
+  @keyframes line { to { transform: scaleX(1); } }
+  .intro-late { opacity: 0; transform: translateY(12px); }
+  body.intro-done .intro-late { opacity: 1; transform: none;
+    transition: opacity 1.2s var(--ease-out), transform 1.2s var(--ease-out) !important; }
+
+  .tagline { font-size: 15px; color: var(--ink-soft); letter-spacing: .08em; line-height: 1.8; }
+  .address { margin-top: 10px; font-size: 15px; letter-spacing: .08em; color: var(--ink-soft); }
+  .scroll-line {
+    width: 1px; height: 70px; margin: 48px auto 0; background: var(--rule);
+    position: relative; overflow: hidden;
+  }
+  .scroll-line::after {
+    content: ""; position: absolute; inset: 0; background: var(--ink);
+    transform: translateY(-100%); animation: drip 2.4s var(--ease-io) infinite 2s;
+  }
+  @keyframes drip { 0% { transform: translateY(-100%);} 60%,100% { transform: translateY(100%);} }
+
+  /* ---------- Menu panel ---------- */
+  .menu {
+    position: fixed; inset: 0; z-index: 20;
+    background: var(--bg);
+    background-image: radial-gradient(100% 70% at 90% 90%, var(--bg-deep), transparent 60%);
+    clip-path: inset(0 0 100% 0);
+    visibility: hidden;
+    transition: clip-path .85s var(--ease-io), visibility 0s linear .85s;
+    overflow-y: auto;
+  }
+  body.menu-open .menu {
+    clip-path: inset(0 0 0 0);
+    visibility: visible;
+    transition: clip-path .85s var(--ease-io), visibility 0s;
+  }
+  .menu-inner {
+    min-height: 100%;
+    max-width: 640px; margin: 0 auto;
+    padding: 130px clamp(24px, 6vw, 48px) 60px;
+    display: flex; flex-direction: column; justify-content: center; gap: 14px;
+  }
+
+  .item { opacity: 0; transform: translateY(30px); transition: opacity .5s, transform .5s var(--ease-out); }
+  body.menu-open .item { opacity: 1; transform: none; transition: opacity .7s var(--ease-out), transform .9s var(--ease-out); }
+  body.menu-open .item:nth-child(1) { transition-delay: .45s; }
+  body.menu-open .item:nth-child(2) { transition-delay: .55s; }
+
+  .item-btn {
+    display: inline-flex; align-items: center; gap: 18px;
+    background: none; border: 0; cursor: pointer; color: var(--ink);
+    font-family: var(--mono); font-size: clamp(30px, 8vw, 46px);
+    text-transform: uppercase; letter-spacing: .2em;
+    padding: 10px 16px; margin-left: -16px;
+    position: relative;
+    transition: letter-spacing .6s var(--ease-out);
+  }
+  /* boxed frame draws itself when hovered / active, like the reference */
+  .item-btn::before {
+    content: ""; position: absolute; inset: 0;
+    border: 2px solid var(--ink);
+    clip-path: inset(0 100% 0 0);
+    transition: clip-path .55s var(--ease-io);
+  }
+  .item-btn::after {
+    content: ""; position: absolute; left: 12px; right: 12px; bottom: -9px; height: 2px;
+    background: var(--ink); transform: scaleX(0); transform-origin: left;
+    transition: transform .55s var(--ease-io) .1s;
+  }
+  .item-btn:hover::before, .item-btn:focus-visible::before,
+  .item-btn[aria-expanded="true"]::before { clip-path: inset(0 0 0 0); }
+  .item-btn:hover::after, .item-btn:focus-visible::after,
+  .item-btn[aria-expanded="true"]::after { transform: scaleX(1); }
+  .item-btn:focus-visible { outline: none; }
+  .item-btn[aria-expanded="true"] { letter-spacing: .26em; }
+
+  .chev {
+    width: 16px; height: 16px; flex: none;
+    border-right: 2px solid var(--ink); border-bottom: 2px solid var(--ink);
+    transform: rotate(45deg) translateY(-4px);
+    transition: transform .6s var(--ease-io);
+  }
+  .item-btn[aria-expanded="true"] .chev { transform: rotate(225deg) translate(-4px, -2px); }
+
+  /* accordion body */
+  .panel {
+    display: grid; grid-template-rows: 0fr;
+    transition: grid-template-rows .75s var(--ease-io);
+  }
+  .panel > div { overflow: hidden; }
+  .item.open .panel { grid-template-rows: 1fr; }
+  .panel-content { padding: 34px 0 30px; }
+
+  .reveal {
+    opacity: 0; transform: translateY(14px); filter: blur(4px);
+    transition: opacity .3s, transform .3s, filter .3s;
+  }
+  .item.open .reveal {
+    opacity: 1; transform: none; filter: blur(0);
+    transition: opacity .6s var(--ease-out), transform .7s var(--ease-out), filter .6s var(--ease-out);
+    transition-delay: calc(.2s + var(--i, 0) * .06s);
+  }
+
+  .label {
+    font-size: 13px; letter-spacing: .38em; text-transform: uppercase;
+    color: var(--ink-soft); margin-bottom: 14px;
+  }
+  .big { font-size: clamp(20px, 5vw, 26px); line-height: 1.55; letter-spacing: .04em; }
+  .group + .group { margin-top: 36px; }
+
+  .link {
+    color: var(--ink); text-decoration: none;
+    background: linear-gradient(var(--ink), var(--ink)) no-repeat left bottom / 0% 1.5px;
+    transition: background-size .5s var(--ease-io);
+    padding-bottom: 2px;
+  }
+  .link:hover, .link:focus-visible { background-size: 100% 1.5px; outline: none; }
+  .small-link { font-size: 13px; letter-spacing: .38em; color: var(--ink-soft); display: inline-block; margin-top: 18px; }
+  .small-link.link { background-image: linear-gradient(var(--ink-soft), var(--ink-soft)); }
+
+  /* opening times */
+  .times { width: 100%; max-width: 420px; border-collapse: collapse; }
+  .times td { padding: 11px 0; font-size: clamp(19px, 4.6vw, 24px); color: var(--ink-soft); }
+  .times td:first-child {
+    width: 120px; font-size: 14px; letter-spacing: .42em; text-transform: uppercase;
+  }
+  .times tr { position: relative; }
+  .times tr.today td { color: var(--ink); }
+  .times tr.today td:first-child::after {
+    content: ""; display: inline-block; width: 6px; height: 6px; margin-left: 8px;
+    border-radius: 50%; background: var(--ink); vertical-align: middle;
+    animation: pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes pulse { 50% { opacity: .2; transform: scale(.6); } }
+  .status { margin-top: 22px; font-size: 13px; letter-spacing: .3em; text-transform: uppercase; color: var(--ink-soft); }
+
+  .menu-foot {
+    margin-top: 40px; font-size: 13px; letter-spacing: .3em; color: var(--ink-soft);
+    opacity: 0; transition: opacity .4s;
+  }
+  body.menu-open .menu-foot { opacity: 1; transition: opacity .8s .8s; }
+
+  /* ---------- Home opening times ---------- */
+  .home-hours { padding: 40px 24px 120px; display: flex; flex-direction: column; align-items: center; }
+  .hh-title {
+    font-weight: normal; font-size: 14px; letter-spacing: .5em; text-transform: uppercase;
+    color: var(--ink-soft); margin-bottom: 34px; padding-left: .5em;
+  }
+  .hh-table { border-collapse: collapse; }
+  .hh-table td { padding: 12px 0; font-size: clamp(20px, 5vw, 26px); color: var(--ink-soft); white-space: nowrap; }
+  .hh-table td:first-child { width: 110px; font-size: 14px; letter-spacing: .42em; }
+  .hh-table tr.today td { color: var(--ink); }
+  .hh-table tr.today td:first-child::after {
+    content: ""; display: inline-block; width: 6px; height: 6px; margin-left: 6px;
+    border-radius: 50%; background: var(--berry); vertical-align: middle;
+    animation: pulse 1.8s ease-in-out infinite;
+  }
+  .hh-title, .hh-table tr, .hh-status {
+    opacity: 0; transform: translateY(16px);
+    transition: opacity .9s cubic-bezier(.22,1,.36,1), transform 1.1s cubic-bezier(.22,1,.36,1);
+    transition-delay: calc(var(--i, 0) * .08s);
+  }
+  .home-hours.in .hh-title, .home-hours.in .hh-table tr, .home-hours.in .hh-status { opacity: 1; transform: none; }
+  .hh-status { margin-top: 28px; font-size: 13px; letter-spacing: .3em; text-transform: uppercase; color: var(--ink-soft); }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; transition-delay: 0s !important; }
+    body.intro-done .branch { animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a class="brand" href="#">Casa Teresa</a>
+  <button class="toggle" id="toggle" aria-label="Open menu" aria-expanded="false" aria-controls="menu">
+    <span></span><span></span>
+  </button>
+</header>
+
+<main>
+  <div>
+    <svg class="logo" viewBox="230 115 165 220" role="img" aria-label="Casa Teresa olive branch">
+      <g class="branch">
+        <path class="stem" d="M318 322 Q312 232 311 152" fill="none" stroke="var(--leaf)" stroke-width="2.2" stroke-linecap="round"/>
+        <g transform="translate(315 304) rotate(-30)"><ellipse class="leaf r" style="--d:0.00s" cx="33" cy="0" rx="33" ry="13" fill="var(--leaf)"/></g>
+        <g transform="translate(314 272) rotate(30)"><ellipse class="leaf l" style="--d:0.22s" cx="-33" cy="0" rx="33" ry="13" fill="var(--leaf)"/></g>
+        <g transform="translate(314 253) rotate(-30)"><ellipse class="leaf r" style="--d:0.44s" cx="33" cy="0" rx="33" ry="13" fill="var(--leaf)"/></g>
+        <g transform="translate(313 222) rotate(30)"><ellipse class="leaf l" style="--d:0.66s" cx="-33" cy="0" rx="33" ry="13" fill="var(--leaf)"/></g>
+        <g transform="translate(312 204) rotate(-30)"><ellipse class="leaf r" style="--d:0.88s" cx="33" cy="0" rx="33" ry="13" fill="var(--leaf)"/></g>
+        <g transform="translate(311 176) rotate(30)"><ellipse class="leaf l" style="--d:1.10s" cx="-33" cy="0" rx="33" ry="13" fill="var(--leaf)"/></g>
+        <path class="tip" d="M311 152 L310.4 140" fill="none" stroke="var(--leaf)" stroke-width="2.2" stroke-linecap="round"/>
+        <circle class="berry" cx="310" cy="134" r="10" fill="var(--berry)"/>
+      </g>
+    </svg>
+    <div class="intro-late">
+    <p class="tagline">Coffee by day. Records and drinks by night.</p>
+    <p class="address">12 Example Street, London, E1 0AA</p>
+    <div class="scroll-line"></div>
+    </div>
+  </div>
+</main>
+
+<section class="home-hours" aria-labelledby="hh-title">
+  <h2 id="hh-title" class="hh-title">Opening times</h2>
+  <table class="hh-table"><tbody id="home-times"></tbody></table>
+  <p class="hh-status" id="home-status"></p>
+</section>
+
+<nav class="menu" id="menu" aria-hidden="true">
+  <div class="menu-inner">
+
+    <section class="item">
+      <button class="item-btn" aria-expanded="false" aria-controls="p-contact">
+        Contact <i class="chev"></i>
+      </button>
+      <div class="panel" id="p-contact">
+        <div>
+          <div class="panel-content">
+            <div class="group">
+              <p class="label reveal" style="--i:0">Address</p>
+              <p class="big reveal" style="--i:1">12 Example Street<br>London<br>E1 0AA</p>
+              <a class="link small-link reveal" style="--i:2" href="https://maps.google.com/?q=London" target="_blank" rel="noopener">OPEN IN GOOGLE MAPS</a>
+            </div>
+            <div class="group">
+              <p class="label reveal" style="--i:3">Reservations and private hire</p>
+              <p class="big reveal" style="--i:4"><a class="link" href="tel:+440000000000">+44 0000 000000</a></p>
+              <p class="big reveal" style="--i:5"><a class="link" href="mailto:hello@example.com">hello@example.com</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="item">
+      <button class="item-btn" aria-expanded="false" aria-controls="p-times">
+        Opening times <i class="chev"></i>
+      </button>
+      <div class="panel" id="p-times">
+        <div>
+          <div class="panel-content">
+            <table class="times">
+              <tbody id="times-body"></tbody>
+            </table>
+            <p class="status reveal" id="status" style="--i:8"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <p class="menu-foot">Walk-ins always welcome</p>
+  </div>
+</nav>
+
+<script>
+  const body = document.body;
+  const toggle = document.getElementById('toggle');
+  const menu = document.getElementById('menu');
+  const items = [...document.querySelectorAll('.item')];
+
+  // Opening hours: [open, close] in 24h; close past midnight > 24
+  const hours = [
+    ['Mon', null],
+    ['Tue', [12, 23]],
+    ['Wed', [12, 23]],
+    ['Thu', [12, 24]],
+    ['Fri', [12, 25]],
+    ['Sat', [9, 25]],
+    ['Sun', [9, 22]],
+  ];
+  const fmt = h => { h = h % 24; return h === 0 ? '12am' : h === 12 ? '12pm' : h < 12 ? h + 'am' : (h - 12) + 'pm'; };
+
+  const now = new Date();
+  const todayIdx = (now.getDay() + 6) % 7; // Mon = 0
+  const tbody = document.getElementById('times-body');
+  hours.forEach(([d, h], i) => {
+    const tr = document.createElement('tr');
+    tr.className = 'reveal' + (i === todayIdx ? ' today' : '');
+    tr.style.setProperty('--i', i);
+    tr.innerHTML = `<td>${d}</td><td>${h ? fmt(h[0]) + ' – ' + fmt(h[1]) : 'Closed'}</td>`;
+    tbody.appendChild(tr);
+  });
+
+  // Open-now status (handles past-midnight closing from previous day)
+  (function status() {
+    const t = now.getHours() + now.getMinutes() / 60;
+    const today = hours[todayIdx][1];
+    const yest = hours[(todayIdx + 6) % 7][1];
+    const open = (today && t >= today[0] && t < today[1]) || (yest && yest[1] > 24 && t < yest[1] - 24);
+    document.getElementById('status').textContent = open ? 'Open now' : 'Currently closed';
+  })();
+
+  // Home page copy of the hours
+  const homeBody = document.getElementById('home-times');
+  hours.forEach(([d, h], i) => {
+    const tr = document.createElement('tr');
+    if (i === todayIdx) tr.className = 'today';
+    tr.style.setProperty('--i', i + 1);
+    tr.innerHTML = `<td>${d.toUpperCase()}</td><td>${h ? fmt(h[0]) + ' – ' + fmt(h[1]) : 'Closed'}</td>`;
+    homeBody.appendChild(tr);
+  });
+  const hs = document.getElementById('home-status');
+  hs.textContent = document.getElementById('status').textContent;
+  hs.style.setProperty('--i', 9);
+  const hh = document.querySelector('.home-hours');
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(es => es.forEach(e => {
+      if (e.isIntersecting) { hh.classList.add('in'); io.disconnect(); }
+    }), { threshold: 0.2 });
+    io.observe(hh);
+  } else hh.classList.add('in');
+
+  // ---------- Intro: stem -> leaves -> berry ----------
+  (function intro() {
+    const logo = document.querySelector('.logo');
+    const stem = logo.querySelector('.stem');
+    const tip  = logo.querySelector('.tip');
+    const wait = ms => new Promise(r => setTimeout(r, ms));
+    const inOut = t => t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2;
+    const out   = t => 1 - Math.pow(1 - t, 3);
+
+    function draw(path, dur, ease) {
+      return new Promise(res => {
+        const L = path.getTotalLength();
+        path.setAttribute('stroke-dasharray', L + ' ' + L);
+        path.setAttribute('stroke-dashoffset', L);
+        path.style.visibility = 'visible';
+        const t0 = performance.now();
+        (function frame(now) {
+          const t = Math.min((now - t0) / dur, 1);
+          path.setAttribute('stroke-dashoffset', L * (1 - ease(t)));
+          t < 1 ? requestAnimationFrame(frame) : res();
+        })(t0);
+      });
+    }
+
+    async function run() {
+      await wait(350);
+      await draw(stem, 2000, inOut);          // 1. stem grows from the ground to full height
+      logo.classList.add('grown');            // 2. leaves unfurl, bottom to top
+      await wait(5 * 220 + 900);
+      await draw(tip, 450, out);              // 3. tip extends...
+      logo.classList.add('bloom');            //    ...and the berry squeezes out of it
+      await wait(700);
+      document.body.classList.add('intro-done'); // 4. text in, gentle sway
+    }
+    run();
+  })();
+
+  function setMenu(open) {
+    body.classList.toggle('menu-open', open);
+    toggle.setAttribute('aria-expanded', open);
+    toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    menu.setAttribute('aria-hidden', !open);
+    if (!open) setTimeout(() => items.forEach(it => setItem(it, false)), 700);
+  }
+  function setItem(item, open) {
+    item.classList.toggle('open', open);
+    item.querySelector('.item-btn').setAttribute('aria-expanded', open);
+  }
+
+  toggle.addEventListener('click', () => setMenu(!body.classList.contains('menu-open')));
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') setMenu(false); });
+
+  items.forEach(item => {
+    item.querySelector('.item-btn').addEventListener('click', () => {
+      const willOpen = !item.classList.contains('open');
+      items.forEach(o => o !== item && setItem(o, false)); // one open at a time
+      setItem(item, willOpen);
+    });
+  });
+</script>
+</body>
+</html>
