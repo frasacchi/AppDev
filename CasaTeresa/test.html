@@ -87,21 +87,26 @@
   @keyframes badgeIn { to { transform: scale(1); opacity: 1; } }
   .ring { stroke-dasharray: 1730; stroke-dashoffset: 1730; animation: dash 1.6s var(--ease-io) .3s forwards; }
   /* Intro is orchestrated in JS (see bottom) so each stage starts only when the previous one ends. */
-  .stem, .tip { visibility: hidden; }
+  .stem { visibility: hidden; }
 
   /* leaves: folded flat against the stem, then swing open while stretching out */
-  .leaf { transform-box: fill-box; opacity: 0; }
-  .leaf.l { transform-origin: 100% 50%; transform: rotate(60deg) scale(0, .2); --fold: 60deg; }
-  .leaf.r { transform-origin: 0% 50%;   transform: rotate(-60deg) scale(0, .2); --fold: -60deg; }
+  /* One continuous motion: each leaf swings open, stretches, and drifts away from the stem
+     at the same time. Separate transform properties let each part run on its own curve
+     without any pause or phase change in between. */
+  .leaf { transform-box: fill-box; opacity: 0; rotate: var(--fold); scale: 0 .2; translate: 0 0; }
+  .leaf.l { transform-origin: 100% 50%; --fold: 60deg;  --gap: -11px; }
+  .leaf.r { transform-origin: 0% 50%;   --fold: -60deg; --gap: 11px; }
   .logo.grown .leaf {
-    animation: unfurl 1.5s cubic-bezier(.22,1,.36,1) var(--d) both !important;
+    animation:
+      leaf-open  2s  cubic-bezier(.25, .8, .3, 1)  var(--d) both,
+      leaf-grow  2s  cubic-bezier(.3, .75, .25, 1) var(--d) both,
+      leaf-drift 2s  cubic-bezier(.45, .1, .25, 1) var(--d) both,
+      leaf-fade  .6s ease-out                      var(--d) both !important;
   }
-  @keyframes unfurl {
-    0%   { transform: rotate(var(--fold)) scale(0, .2); opacity: 0; }
-    12%  { opacity: 1; }
-    45%  { transform: rotate(calc(var(--fold) * .35)) scale(.7, .45); }
-    100% { transform: rotate(0deg) scale(1, 1); opacity: 1; }
-  }
+  @keyframes leaf-open  { from { rotate: var(--fold); } to { rotate: 0deg; } }
+  @keyframes leaf-grow  { from { scale: 0 .2; } to { scale: 1 1; } }
+  @keyframes leaf-drift { from { translate: 0 0; } to { translate: var(--gap) 0; } }
+  @keyframes leaf-fade  { from { opacity: 0; } to { opacity: 1; } }
 
   /* berry: squeezed out of the stem tip as the very last element */
   .berry { transform-box: fill-box; transform-origin: 50% 100%; transform: scale(0, 0); }
@@ -160,15 +165,16 @@
     display: flex; flex-direction: column; justify-content: center; gap: 14px;
   }
 
-  .item { opacity: 0; transform: translateY(30px); transition: opacity .5s, transform .5s var(--ease-out); }
+  .item { text-align: left; opacity: 0; transform: translateY(30px); transition: opacity .5s, transform .5s var(--ease-out); }
   body.menu-open .item { opacity: 1; transform: none; transition: opacity .7s var(--ease-out), transform .9s var(--ease-out); }
   body.menu-open .item:nth-child(1) { transition-delay: .45s; }
   body.menu-open .item:nth-child(2) { transition-delay: .55s; }
 
   .item-btn {
-    display: inline-flex; align-items: center; gap: 18px;
+    display: inline-flex; align-items: center; justify-content: flex-start; gap: 18px;
+    max-width: calc(100% + 16px); text-align: left; white-space: nowrap;
     background: none; border: 0; cursor: pointer; color: var(--ink);
-    font-family: var(--mono); font-size: clamp(30px, 8vw, 46px);
+    font-family: var(--mono); font-size: clamp(22px, 6.6vw, 46px);
     text-transform: uppercase; letter-spacing: .2em;
     padding: 10px 16px; margin-left: -16px;
     position: relative;
@@ -253,6 +259,7 @@
   @keyframes pulse { 50% { opacity: .2; transform: scale(.6); } }
   .status { margin-top: 22px; font-size: 13px; letter-spacing: .3em; text-transform: uppercase; color: var(--ink-soft); }
 
+  @media (max-width: 360px) { .item-btn { white-space: normal; } }
   .menu-foot {
     margin-top: 40px; font-size: 13px; letter-spacing: .3em; color: var(--ink-soft);
     opacity: 0; transition: opacity .4s;
@@ -300,17 +307,16 @@
 <main>
   <div>
     <svg class="logo" viewBox="230 115 165 220" role="img" aria-label="Casa Teresa olive branch">
-      <g class="branch">
-        <path class="stem" d="M318 322 Q312 232 311 152" fill="none" stroke="var(--leaf)" stroke-width="2.2" stroke-linecap="round"/>
-        <g transform="translate(315 304) rotate(-30)"><ellipse class="leaf r" style="--d:0.00s" cx="33" cy="0" rx="33" ry="13" fill="var(--leaf)"/></g>
-        <g transform="translate(314 272) rotate(30)"><ellipse class="leaf l" style="--d:0.22s" cx="-33" cy="0" rx="33" ry="13" fill="var(--leaf)"/></g>
-        <g transform="translate(314 253) rotate(-30)"><ellipse class="leaf r" style="--d:0.44s" cx="33" cy="0" rx="33" ry="13" fill="var(--leaf)"/></g>
-        <g transform="translate(313 222) rotate(30)"><ellipse class="leaf l" style="--d:0.66s" cx="-33" cy="0" rx="33" ry="13" fill="var(--leaf)"/></g>
-        <g transform="translate(312 204) rotate(-30)"><ellipse class="leaf r" style="--d:0.88s" cx="33" cy="0" rx="33" ry="13" fill="var(--leaf)"/></g>
-        <g transform="translate(311 176) rotate(30)"><ellipse class="leaf l" style="--d:1.10s" cx="-33" cy="0" rx="33" ry="13" fill="var(--leaf)"/></g>
-        <path class="tip" d="M311 152 L310.4 140" fill="none" stroke="var(--leaf)" stroke-width="2.2" stroke-linecap="round"/>
+      <g class="wind"><g class="branch">
+        <path class="stem" d="M318 322 Q312 230 310.5 142" fill="none" stroke="var(--leaf)" stroke-width="2.2" stroke-linecap="round"/>
+        <g transform="translate(315 304) rotate(-30)"><g class="flutter" data-side="r"><ellipse class="leaf r" style="--d:0.00s" cx="33" cy="0" rx="33" ry="13" fill="var(--leaf)"/></g></g>
+        <g transform="translate(314 272) rotate(30)"><g class="flutter" data-side="l"><ellipse class="leaf l" style="--d:0.22s" cx="-33" cy="0" rx="33" ry="13" fill="var(--leaf)"/></g></g>
+        <g transform="translate(314 253) rotate(-30)"><g class="flutter" data-side="r"><ellipse class="leaf r" style="--d:0.44s" cx="33" cy="0" rx="33" ry="13" fill="var(--leaf)"/></g></g>
+        <g transform="translate(313 222) rotate(30)"><g class="flutter" data-side="l"><ellipse class="leaf l" style="--d:0.66s" cx="-33" cy="0" rx="33" ry="13" fill="var(--leaf)"/></g></g>
+        <g transform="translate(312 204) rotate(-30)"><g class="flutter" data-side="r"><ellipse class="leaf r" style="--d:0.88s" cx="33" cy="0" rx="33" ry="13" fill="var(--leaf)"/></g></g>
+        <g transform="translate(311 176) rotate(30)"><g class="flutter" data-side="l"><ellipse class="leaf l" style="--d:1.10s" cx="-33" cy="0" rx="33" ry="13" fill="var(--leaf)"/></g></g>
         <circle class="berry" cx="310" cy="134" r="10" fill="var(--berry)"/>
-      </g>
+      </g></g>
     </svg>
     <div class="intro-late">
     <p class="tagline">Coffee by day. Records and drinks by night.</p>
@@ -433,10 +439,8 @@
   (function intro() {
     const logo = document.querySelector('.logo');
     const stem = logo.querySelector('.stem');
-    const tip  = logo.querySelector('.tip');
     const wait = ms => new Promise(r => setTimeout(r, ms));
     const inOut = t => t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2;
-    const out   = t => 1 - Math.pow(1 - t, 3);
 
     function draw(path, dur, ease) {
       return new Promise(res => {
@@ -457,13 +461,44 @@
       await wait(350);
       await draw(stem, 2000, inOut);          // 1. stem grows from the ground to full height
       logo.classList.add('grown');            // 2. leaves unfurl, bottom to top
-      await wait(5 * 220 + 900);
-      await draw(tip, 450, out);              // 3. tip extends...
-      logo.classList.add('bloom');            //    ...and the berry squeezes out of it
+      await wait(5 * 220 + 1600);
+      logo.classList.add('bloom');            // 3. berry squeezes out of the stem top
       await wait(700);
       document.body.classList.add('intro-done'); // 4. text in, gentle sway
     }
     run();
+  })();
+
+  // ---------- Wind: scrolling bends the branch, leaves flutter ----------
+  (function wind() {
+    const windG = document.querySelector('.wind');
+    const leaves = [...document.querySelectorAll('.flutter')];
+    let lastY = window.scrollY, lastT = performance.now();
+    let target = 0, angle = 0, vel = 0, t = 0;
+
+    window.addEventListener('scroll', () => {
+      const now = performance.now();
+      const dy = window.scrollY - lastY, dt = Math.max(now - lastT, 16);
+      lastY = window.scrollY; lastT = now;
+      // scroll speed becomes a gust, capped so it stays subtle
+      target = Math.max(-7, Math.min(7, (dy / dt) * 6));
+    }, { passive: true });
+
+    (function frame() {
+      target *= 0.92;                       // gust dies down
+      vel += (target - angle) * 0.05;       // spring toward the gust
+      vel *= 0.86;                          // damping, so it settles softly
+      angle += vel;
+      t += 0.016;
+      const gust = Math.abs(angle);
+      windG.setAttribute('transform', `rotate(${angle.toFixed(3)} 318 322)`);
+      leaves.forEach((el, i) => {
+        // leaves lag behind the stem and flutter a little, more near the top
+        const flutter = Math.sin(t * 9 + i * 1.3) * gust * 0.5 * (1 + i * 0.15);
+        el.setAttribute('transform', `rotate(${(angle * 0.8 + flutter).toFixed(3)})`);
+      });
+      requestAnimationFrame(frame);
+    })();
   })();
 
   function setMenu(open) {
