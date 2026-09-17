@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Power House Lab.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg-warm: #f5efe6;
+    --ink: #2a2522;
+    --ink-soft: #8a827b;
+    --rule: #b9b1a9;
+    --font: "Jost", "Futura", "Century Gothic", system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: var(--font);
+    color: var(--ink);
+    background: linear-gradient(180deg, var(--bg) 0%, var(--bg) 70%, var(--bg-warm) 100%);
+    overflow: hidden;
+    display: flex; flex-direction: column;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------- 3D logo ---------- */
+  .stage {
+    flex: 1; min-height: 0;
+    display: grid; place-items: center;
+    perspective: 1400px;
+    touch-action: none;
+    cursor: grab;
+    user-select: none; -webkit-user-select: none;
+  }
+  .stage.dragging { cursor: grabbing; }
+
+  .logo {
+    position: relative;
+    transform-style: preserve-3d;
+    will-change: transform;
+    font-size: clamp(64px, 15vw, 190px);
+    opacity: 0;
+    transition: opacity 1.2s ease;
+  }
+  .logo.ready { opacity: 1; }
+
+  .layer {
+    font-weight: 700;
+    line-height: .82;
+    letter-spacing: -.045em;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+  .layer + .layer { position: absolute; inset: 0; }
+  .layer span { display: block; }
+  .layer .l1 { padding-left: .55em; }
+  .layer .l2 { padding-left: .2em; }
+  .layer .l3 { padding-left: .5em; }
+
+  /* front face: dark, slightly glossy */
+  .layer.front {
+    color: #1d1916;
+    background: linear-gradient(160deg, #4a4039 0%, #1a1613 45%, #2e2723 70%, #120f0d 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* ---------- Signup ---------- */
+  footer {
+    padding: 0 16px max(24px, env(safe-area-inset-bottom));
+    text-align: center;
+  }
+  .soon { font-size: 13px; font-weight: 400; letter-spacing: .02em; margin-bottom: 10px; }
+  form {
+    display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-end;
+    gap: 12px; max-width: 520px; margin: 0 auto;
+  }
+  input {
+    flex: 1 1 140px; min-width: 0;
+    font: 300 13px var(--font); color: var(--ink);
+    background: none; border: 0; border-bottom: 1px solid var(--rule);
+    padding: 4px 0; outline: none; border-radius: 0;
+  }
+  input::placeholder { color: var(--ink-soft); text-transform: uppercase; }
+  input:focus { border-bottom-color: var(--ink); }
+  button {
+    font: 400 13px var(--font); color: var(--ink);
+    background: none; border: 1px solid var(--rule);
+    padding: 5px 18px; cursor: pointer;
+    transition: background .25s, color .25s;
+  }
+  button:hover, button:focus-visible { background: var(--ink); color: #fff; outline: none; }
+  .legal { margin-top: 16px; font-size: 10px; font-weight: 300; color: var(--ink-soft); }
+  .legal a { color: inherit; }
+  .thanks { font-size: 14px; font-weight: 300; }
+</style>
+</head>
+<body>
+
+<div class="stage" id="stage" aria-label="Power House Lab. logo — drag to rotate">
+  <div class="logo" id="logo">
+    <div class="layer front" aria-hidden="false">
+      <span class="l1">Power</span><span class="l2">House</span><span class="l3">Lab.</span>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p class="soon">OPENING IN LONDON VERY SOON</p>
+  <form id="signup">
+    <input type="text" name="name" placeholder="Name" autocomplete="name" required>
+    <input type="email" name="email" placeholder="Email" autocomplete="email" required>
+    <button type="submit">SEND</button>
+  </form>
+  <p class="legal">By submitting, you agree to our <a href="#">Privacy Policy</a> and consent to receive updates.</p>
+</footer>
+
+<script>
+  const stage = document.getElementById('stage');
+  const logo = document.getElementById('logo');
+  const front = logo.querySelector('.front');
+
+  // ---------- Build extrusion: stacked copies pushed back in Z ----------
+  // More layers = smoother edges; total depth stays the same.
+  const LAYERS = window.matchMedia('(max-width: 700px)').matches ? 24 : 36;
+  const DEPTH = 0.24 / LAYERS; // em per layer
+  const frag = document.createDocumentFragment();
+  for (let i = LAYERS; i >= 1; i--) {
+    const el = front.cloneNode(true);
+    el.className = 'layer';
+    el.setAttribute('aria-hidden', 'true');
+    // flat fake shading: light just behind the face, fading darker toward the back
+    const t = i / LAYERS;
+    el.style.color = `hsl(30 12% ${(72 - t * 40).toFixed(1)}%)`;
+    el.style.transform = `translateZ(${-i * DEPTH}em)`;
+    frag.appendChild(el);
+  }
+  logo.insertBefore(frag, front);
+  front.style.transform = 'translateZ(0)';
+
+  // ---------- Motion: drag to rotate, springs back to a resting tilt ----------
+  const REST = { x: 16, y: -26 };
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let rx = REST.x, ry = REST.y, vx = 0, vy = 0;
+  let dragging = false, lastX = 0, lastY = 0, t0 = performance.now();
+
+  const apply = () => { logo.style.transform = `rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg)`; };
+  apply();
+  requestAnimationFrame(() => logo.classList.add('ready'));
+
+  stage.addEventListener('pointerdown', e => {
+    dragging = true;
+    lastX = e.clientX; lastY = e.clientY;
+    vx = vy = 0;
+    stage.classList.add('dragging');
+    stage.setPointerCapture(e.pointerId);
+  });
+  stage.addEventListener('pointermove', e => {
+    if (!dragging) return;
+    const dx = e.clientX - lastX, dy = e.clientY - lastY;
+    lastX = e.clientX; lastY = e.clientY;
+    vy = dx * 0.35; vx = -dy * 0.35;
+    ry += vy; rx += vx;
+    rx = Math.max(-70, Math.min(70, rx));
+  });
+  const end = () => {
+    dragging = false;
+    stage.classList.remove('dragging');
+    ry = REST.y + ((((ry - REST.y + 180) % 360) + 360) % 360) - 180;
+  };
+  stage.addEventListener('pointerup', end);
+  stage.addEventListener('pointercancel', end);
+
+  if (reduce) {
+    // no idle motion; still follow drags
+    stage.addEventListener('pointermove', apply);
+  } else {
+    (function frame(now) {
+      if (!dragging) {
+        const s = (now - t0) / 1000;
+        const tx = REST.x + Math.sin(s * 0.6) * 3;
+        const ty = REST.y + Math.sin(s * 0.45) * 6;
+        vx = (vx + (tx - rx) * 0.02) * 0.9;  // spring + damping
+        vy = (vy + (ty - ry) * 0.02) * 0.9;
+        rx += vx; ry += vy;
+      }
+      apply();
+      requestAnimationFrame(frame);
+    })(t0);
+  }
+
+  // ---------- Signup (front-end only) ----------
+  document.getElementById('signup').addEventListener('submit', e => {
+    e.preventDefault();
+    const p = document.createElement('p');
+    p.className = 'thanks';
+    p.textContent = 'Thank you — we’ll be in touch.';
+    e.target.replaceWith(p);
+  });
+</script>
+</body>
+</html>
