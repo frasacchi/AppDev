@@ -447,6 +447,10 @@
   // Temporarily hide opening hours and show a "Coming soon" placeholder
   const HIDE_HOURS = true;
 
+  const fmt = h => { h = h % 24; return h === 0 ? '12am' : h === 12 ? '12pm' : h < 12 ? h + 'am' : (h - 12) + 'pm'; };
+  const now = new Date();
+  const todayIdx = (now.getDay() + 6) % 7; // Mon = 0
+
   if (HIDE_HOURS) {
     const statusEl = document.getElementById('status');
     if (statusEl) statusEl.textContent = 'Coming soon';
@@ -488,40 +492,7 @@
     hs.textContent = document.getElementById('status').textContent;
     hs.style.setProperty('--i', 9);
   }
-  const fmt = h => { h = h % 24; return h === 0 ? '12am' : h === 12 ? '12pm' : h < 12 ? h + 'am' : (h - 12) + 'pm'; };
 
-  const now = new Date();
-  const todayIdx = (now.getDay() + 6) % 7; // Mon = 0
-  const tbody = document.getElementById('times-body');
-  hours.forEach(([d, h], i) => {
-    const tr = document.createElement('tr');
-    tr.className = 'reveal' + (i === todayIdx ? ' today' : '');
-    tr.style.setProperty('--i', i);
-    tr.innerHTML = `<td>${d}</td><td>${h ? fmt(h[0]) + ' – ' + fmt(h[1]) : 'Closed'}</td>`;
-    tbody.appendChild(tr);
-  });
-
-  // Open-now status (handles past-midnight closing from previous day)
-  (function status() {
-    const t = now.getHours() + now.getMinutes() / 60;
-    const today = hours[todayIdx][1];
-    const yest = hours[(todayIdx + 6) % 7][1];
-    const open = (today && t >= today[0] && t < today[1]) || (yest && yest[1] > 24 && t < yest[1] - 24);
-    document.getElementById('status').textContent = open ? 'Open now' : 'Currently closed';
-  })();
-
-  // Home page copy of the hours
-  const homeBody = document.getElementById('home-times');
-  hours.forEach(([d, h], i) => {
-    const tr = document.createElement('tr');
-    if (i === todayIdx) tr.className = 'today';
-    tr.style.setProperty('--i', i + 1);
-    tr.innerHTML = `<td>${d}</td><td>${h ? fmt(h[0]) + ' – ' + fmt(h[1]) : 'Closed'}</td>`;
-    homeBody.appendChild(tr);
-  });
-  const hs = document.getElementById('home-status');
-  hs.textContent = document.getElementById('status').textContent;
-  hs.style.setProperty('--i', 9);
   const hh = document.querySelector('.home-hours');
   if ('IntersectionObserver' in window) {
     const io = new IntersectionObserver(es => es.forEach(e => {
