@@ -38,7 +38,10 @@ function applyFont(key) {
   document.documentElement.style.setProperty("--font-heading", HEADING_FONT[key] || HEADING_FONT[DEFAULT_FONT]);
 
   const navMark = document.getElementById("nav-mark");
-  if (navMark) navMark.src = `assets/wordmarks/RobeWordmark${font.asset}.svg`;
+  if (navMark) {
+    navMark.style.setProperty("--nav-mark-url", `url("assets/wordmarks/RobeWordmark${font.asset}White.svg")`);
+    navMark.style.aspectRatio = String(font.aspect);
+  }
 
   const heroMark = document.getElementById("hero-mark");
   if (heroMark) heroMark.src = `assets/wordmarks/RobeWordmark${font.asset}White.svg`;
@@ -64,6 +67,81 @@ function buildFontToggle(container) {
     btn.dataset.font = key;
     btn.textContent = font.title;
     btn.addEventListener("click", () => chooseFont(key));
+    container.appendChild(btn);
+  });
+}
+
+// --- Purple palette + page-fill toggles.
+// "logo" is the exact violet baked into the wordmark SVGs (#5B2BD6); the rest are
+// candidates to compare against it. All are dark enough for white text.
+
+const PALETTES = {
+  plum:      { title: "Robe plum (current)", hex: "#3D1A5B" },
+  logo:      { title: "Logo violet",         hex: "#5B2BD6" },
+  royal:     { title: "Royal purple",        hex: "#4B2A9B" },
+  grape:     { title: "Grape",               hex: "#5A2D82" },
+  amethyst:  { title: "Amethyst",            hex: "#7040B0" },
+  orchid:    { title: "Orchid",              hex: "#8A3FA8" },
+  mulberry:  { title: "Mulberry",            hex: "#6B2A6E" },
+  aubergine: { title: "Aubergine",           hex: "#2E1245" },
+  lilac:     { title: "Lilac",               hex: "#7B5FC4" },
+};
+
+const PALETTE_KEY = "robePalette";
+const FILL_KEY = "robePurpleFill";
+const DEFAULT_PALETTE = "plum";
+const FILLS = { header: "Top & footer only", page: "Whole page" };
+
+function readPref(key, valid, fallback) {
+  try {
+    const v = localStorage.getItem(key);
+    if (v && valid[v]) return v;
+  } catch (e) {}
+  return fallback;
+}
+
+function applyPalette(key) {
+  const p = PALETTES[key] || PALETTES[DEFAULT_PALETTE];
+  document.documentElement.style.setProperty("--robe-plum", p.hex);
+  document.querySelectorAll(".swatch-toggle button").forEach((b) => {
+    b.classList.toggle("active", b.dataset.palette === key);
+  });
+}
+
+function applyFill(key) {
+  document.body.classList.toggle("full-purple", key === "page");
+  document.querySelectorAll(".fill-toggle button").forEach((b) => {
+    b.classList.toggle("active", b.dataset.fill === key);
+  });
+}
+
+function buildSwatchToggle(container) {
+  container.innerHTML = "";
+  Object.entries(PALETTES).forEach(([key, p]) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.dataset.palette = key;
+    btn.title = p.hex;
+    btn.innerHTML = `<span class="dot" style="background:${p.hex}"></span>${p.title}`;
+    btn.addEventListener("click", () => {
+      applyPalette(key);
+      try { localStorage.setItem(PALETTE_KEY, key); } catch (e) {}
+    });
+    container.appendChild(btn);
+  });
+}
+
+function buildFillToggle(container) {
+  container.innerHTML = "";
+  Object.entries(FILLS).forEach(([key, label]) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.dataset.fill = key;
+    btn.textContent = label;
+    btn.addEventListener("click", () => {
+      applyFill(key);
+      try { localStorage.setItem(FILL_KEY, key); } catch (e) {}
+    });
     container.appendChild(btn);
   });
 }
@@ -135,5 +213,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const toggleContainers = document.querySelectorAll(".font-toggle");
   toggleContainers.forEach(buildFontToggle);
   applyFont(currentFont());
+  document.querySelectorAll(".swatch-toggle").forEach(buildSwatchToggle);
+  document.querySelectorAll(".fill-toggle").forEach(buildFillToggle);
+  applyPalette(readPref(PALETTE_KEY, PALETTES, DEFAULT_PALETTE));
+  applyFill(readPref(FILL_KEY, FILLS, "header"));
   playSplash();
 });

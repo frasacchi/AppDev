@@ -11,12 +11,14 @@
 
 :root {
   --robe-plum: #3D1A5B;
-  --robe-plum-pressed: #2C1243;
   --robe-white: #FFFFFF;
-  --robe-surface: #FBFAFF;
-  --robe-ink: #221537;
-  --robe-ink-muted: #6B6386;
-  --robe-line: #E4DDF6;
+  /* Everything else derives from --robe-plum, so a palette swap is one variable. */
+  --robe-plum-pressed: color-mix(in srgb, var(--robe-plum) 72%, black);
+  --robe-surface: color-mix(in srgb, var(--robe-plum) 4%, white);
+  --robe-ink: color-mix(in srgb, var(--robe-plum) 30%, #0c0714);
+  --robe-ink-muted: color-mix(in srgb, var(--robe-plum) 45%, #8a8a94);
+  --robe-line: color-mix(in srgb, var(--robe-plum) 14%, white);
+  --nav-mark-color: var(--robe-plum);
   --font-heading: "Playfair Display", serif;
   --font-body: "Jost", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
@@ -104,7 +106,15 @@ header.site-header {
   gap: 16px;
 }
 
-#nav-mark { height: 26px; width: auto; }
+/* Wordmark is a mask so it takes the palette colour, not the SVG's baked-in violet. */
+#nav-mark {
+  height: 26px;
+  aspect-ratio: 2.151082;
+  background: var(--nav-mark-color);
+  -webkit-mask: var(--nav-mark-url) center / contain no-repeat;
+  mask: var(--nav-mark-url) center / contain no-repeat;
+  transition: background 0.2s;
+}
 
 nav.site-nav {
   display: flex;
@@ -160,6 +170,59 @@ nav.site-nav a:hover { color: var(--robe-plum); }
   color: var(--robe-plum);
   border-color: var(--robe-white);
 }
+
+.toggle-label {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.7;
+  margin: 20px 0 8px;
+}
+
+.fill-toggle { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+
+.fill-toggle button {
+  font-family: var(--font-body);
+  font-size: 13px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.4);
+  background: transparent;
+  color: var(--robe-white);
+  cursor: pointer;
+}
+
+.fill-toggle button.active {
+  background: var(--robe-white);
+  color: var(--robe-plum);
+  border-color: var(--robe-white);
+}
+
+.swatch-toggle { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; max-width: 620px; margin: 0 auto; }
+
+.swatch-toggle button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  padding: 5px 12px 5px 6px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.4);
+  background: transparent;
+  color: var(--robe-white);
+  cursor: pointer;
+}
+
+.swatch-toggle button .dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.85);
+}
+
+.swatch-toggle button.active { background: var(--robe-white); color: var(--robe-ink); border-color: var(--robe-white); }
+.swatch-toggle button.active .dot { border-color: rgba(0,0,0,0.15); }
 
 /* ---------- Hero ---------- */
 
@@ -350,6 +413,27 @@ footer {
 .store-badge .store-badge-big { font-size: 15px; font-family: var(--font-heading); font-weight: 700; display: block; }
 
 .footer-copy { font-size: 12px; opacity: 0.6; }
+
+/* ---------- Whole-page purple ---------- */
+
+body.full-purple,
+html:has(body.full-purple) { background: var(--robe-plum); }
+body.full-purple { --nav-mark-color: var(--robe-white); }
+
+body.full-purple header.site-header {
+  background: var(--robe-plum);
+  border-bottom-color: rgba(255,255,255,0.18);
+}
+body.full-purple nav.site-nav a { color: rgba(255,255,255,0.75); }
+body.full-purple nav.site-nav a:hover { color: var(--robe-white); }
+
+body.full-purple .hero { border-bottom: 1px solid rgba(255,255,255,0.14); }
+
+body.full-purple .section-eyebrow { color: rgba(255,255,255,0.7); }
+body.full-purple .section-heading h2 { color: var(--robe-white); }
+body.full-purple .section-heading p { color: rgba(255,255,255,0.78); }
+
+body.full-purple footer { background: var(--robe-plum-pressed); }
 
 /* ---------- Responsive ---------- */
 
