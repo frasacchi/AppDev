@@ -37,17 +37,13 @@ function applyFont(key) {
   const font = FONTS[key] || FONTS[DEFAULT_FONT];
   document.documentElement.style.setProperty("--font-heading", HEADING_FONT[key] || HEADING_FONT[DEFAULT_FONT]);
 
-  const navMark = document.getElementById("nav-mark");
-  if (navMark) {
-    navMark.style.setProperty("--nav-mark-url", `url("assets/wordmarks/RobeWordmark${font.asset}White.svg")`);
-    navMark.style.aspectRatio = String(font.aspect);
-  }
-
-  const heroMark = document.getElementById("hero-mark");
-  if (heroMark) heroMark.src = `assets/wordmarks/RobeWordmark${font.asset}White.svg`;
-
-  const footerMark = document.getElementById("footer-mark");
-  if (footerMark) footerMark.src = `assets/wordmarks/RobeWordmark${font.asset}White.svg`;
+  // All three marks are masks over the white artwork, so CSS decides their colour.
+  ["nav-mark", "hero-mark", "footer-mark"].forEach((id) => {
+    const mark = document.getElementById(id);
+    if (!mark) return;
+    mark.style.setProperty("--mark-url", `url("assets/wordmarks/RobeWordmark${font.asset}White.svg")`);
+    mark.style.setProperty("--mark-aspect", String(font.aspect));
+  });
 
   document.querySelectorAll(".font-toggle button").forEach((btn) => {
     btn.classList.toggle("active", btn.dataset.font === key);
@@ -90,7 +86,7 @@ const PALETTES = {
 const PALETTE_KEY = "robePalette";
 const FILL_KEY = "robePurpleFill";
 const DEFAULT_PALETTE = "plum";
-const FILLS = { header: "Top & footer only", page: "Whole page" };
+const FILLS = { header: "Top & footer only", page: "Whole page", white: "All white, purple logo" };
 
 function readPref(key, valid, fallback) {
   try {
@@ -110,6 +106,7 @@ function applyPalette(key) {
 
 function applyFill(key) {
   document.body.classList.toggle("full-purple", key === "page");
+  document.body.classList.toggle("all-white", key === "white");
   document.querySelectorAll(".fill-toggle button").forEach((b) => {
     b.classList.toggle("active", b.dataset.fill === key);
   });

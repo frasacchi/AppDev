@@ -107,14 +107,16 @@ header.site-header {
 }
 
 /* Wordmark is a mask so it takes the palette colour, not the SVG's baked-in violet. */
-#nav-mark {
-  height: 26px;
-  aspect-ratio: 2.151082;
-  background: var(--nav-mark-color);
-  -webkit-mask: var(--nav-mark-url) center / contain no-repeat;
-  mask: var(--nav-mark-url) center / contain no-repeat;
+#nav-mark, #hero-mark, #footer-mark {
+  height: var(--mark-h);
+  width: calc(var(--mark-h) * var(--mark-aspect, 2.15));
+  -webkit-mask: var(--mark-url) center / contain no-repeat;
+  mask: var(--mark-url) center / contain no-repeat;
   transition: background 0.2s;
 }
+
+#nav-mark { --mark-h: 26px; background: var(--nav-mark-color); }
+#hero-mark, #footer-mark { background: var(--robe-white); }
 
 nav.site-nav {
   display: flex;
@@ -233,11 +235,7 @@ nav.site-nav a:hover { color: var(--robe-plum); }
   text-align: center;
 }
 
-#hero-mark {
-  height: 64px;
-  width: auto;
-  margin: 0 auto 18px;
-}
+#hero-mark { --mark-h: 64px; margin: 0 auto 18px; }
 
 .hero .tagline {
   font-family: var(--font-heading);
@@ -391,7 +389,7 @@ footer {
   text-align: center;
 }
 
-#footer-mark { height: 30px; margin-bottom: 4px; }
+#footer-mark { --mark-h: 30px; margin-bottom: 4px; }
 
 .footer-tagline { font-family: var(--font-heading); font-style: italic; opacity: 0.85; font-size: 14px; }
 
@@ -434,6 +432,31 @@ body.full-purple .section-heading h2 { color: var(--robe-white); }
 body.full-purple .section-heading p { color: rgba(255,255,255,0.78); }
 
 body.full-purple footer { background: var(--robe-plum-pressed); }
+
+/* ---------- All white, purple logo ---------- */
+
+body.all-white,
+html:has(body.all-white) { background: var(--robe-white); }
+
+body.all-white .hero { background: var(--robe-white); color: var(--robe-ink); border-bottom: 1px solid var(--robe-line); }
+body.all-white .hero .tagline { color: var(--robe-ink-muted); opacity: 1; }
+body.all-white #hero-mark,
+body.all-white #footer-mark { background: var(--robe-plum); }
+
+body.all-white .hero .btn-solid { background: var(--robe-plum); color: var(--robe-white); }
+body.all-white .hero .btn-outline { color: var(--robe-plum); border-color: var(--robe-plum); }
+
+body.all-white .toggle-label { color: var(--robe-ink-muted); }
+body.all-white .font-toggle.on-plum button,
+body.all-white .fill-toggle button,
+body.all-white .swatch-toggle button { border-color: var(--robe-line); color: var(--robe-ink); background: var(--robe-white); }
+body.all-white .font-toggle.on-plum button.active,
+body.all-white .fill-toggle button.active,
+body.all-white .swatch-toggle button.active { background: var(--robe-plum); border-color: var(--robe-plum); color: var(--robe-white); }
+body.all-white .swatch-toggle button .dot { border-color: var(--robe-line); }
+
+body.all-white footer { background: var(--robe-white); color: var(--robe-ink); border-top: 1px solid var(--robe-line); }
+body.all-white .store-badge { color: var(--robe-ink); border-color: var(--robe-line); }
 
 /* ---------- Responsive ---------- */
 
