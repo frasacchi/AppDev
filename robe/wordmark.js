@@ -99,13 +99,44 @@ function readPref(key, valid, fallback) {
 function applyPalette(key) {
   const p = PALETTES[key] || PALETTES[DEFAULT_PALETTE];
   document.documentElement.style.setProperty("--robe-plum", p.hex);
-  document.querySelectorAll(".swatch-toggle button").forEach((b) => {
+  document.querySelectorAll(".swatch-toggle:not(.swatch2-toggle) button").forEach((b) => {
     b.classList.toggle("active", b.dataset.palette === key);
+  });
+}
+
+// Second shade, used for the page body in "Whole page" mode. "auto" leaves the
+// CSS default (a darker mix of the first shade) in place.
+const SHADE2_KEY = "robePalette2";
+const SHADE2_OPTIONS = { auto: { title: "Auto (darker)", hex: null }, ...PALETTES };
+
+function applyShade2(key) {
+  const p = SHADE2_OPTIONS[key] || SHADE2_OPTIONS.auto;
+  if (p.hex) document.documentElement.style.setProperty("--robe-plum-2", p.hex);
+  else document.documentElement.style.removeProperty("--robe-plum-2");
+  document.querySelectorAll(".swatch2-toggle button").forEach((b) => {
+    b.classList.toggle("active", b.dataset.palette === key);
+  });
+}
+
+function buildSwatch2Toggle(container) {
+  container.innerHTML = "";
+  Object.entries(SHADE2_OPTIONS).forEach(([key, p]) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.dataset.palette = key;
+    const dot = p.hex ? `background:${p.hex}` : "background:color-mix(in srgb, var(--robe-plum) 70%, black)";
+    btn.innerHTML = `<span class="dot" style="${dot}"></span>${p.title}`;
+    btn.addEventListener("click", () => {
+      applyShade2(key);
+      try { localStorage.setItem(SHADE2_KEY, key); } catch (e) {}
+    });
+    container.appendChild(btn);
   });
 }
 
 function applyFill(key) {
   document.body.classList.toggle("full-purple", key === "page");
+  document.body.classList.toggle("show-shade2", key === "page");
   document.body.classList.toggle("all-white", key === "white");
   document.querySelectorAll(".fill-toggle button").forEach((b) => {
     b.classList.toggle("active", b.dataset.fill === key);
@@ -210,7 +241,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const toggleContainers = document.querySelectorAll(".font-toggle");
   toggleContainers.forEach(buildFontToggle);
   applyFont(currentFont());
-  document.querySelectorAll(".swatch-toggle").forEach(buildSwatchToggle);
+  document.querySelectorAll(".swatch-toggle:not(.swatch2-toggle)").forEach(buildSwatchToggle);
+  document.querySelectorAll(".swatch2-toggle").forEach(buildSwatch2Toggle);
+  applyShade2(readPref(SHADE2_KEY, SHADE2_OPTIONS, "auto"));
   document.querySelectorAll(".fill-toggle").forEach(buildFillToggle);
   applyPalette(readPref(PALETTE_KEY, PALETTES, DEFAULT_PALETTE));
   applyFill(readPref(FILL_KEY, FILLS, "header"));

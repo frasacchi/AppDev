@@ -19,6 +19,8 @@
   --robe-ink-muted: color-mix(in srgb, var(--robe-plum) 45%, #8a8a94);
   --robe-line: color-mix(in srgb, var(--robe-plum) 14%, white);
   --nav-mark-color: var(--robe-plum);
+  /* Page-body shade in "Whole page" mode; JS overrides it with an explicit pick. */
+  --robe-plum-2: color-mix(in srgb, var(--robe-plum) 70%, black);
   --font-heading: "Playfair Display", serif;
   --font-body: "Jost", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
@@ -117,6 +119,12 @@ header.site-header {
 
 #nav-mark { --mark-h: 26px; background: var(--nav-mark-color); }
 #hero-mark, #footer-mark { background: var(--robe-white); }
+
+/* Text fallback inside each mark: shows "ROBE" only if this stylesheet fails to load. */
+.mark-fallback { visibility: hidden; }
+
+.shade2-wrap { display: none; }
+body.show-shade2 .shade2-wrap { display: block; }
 
 nav.site-nav {
   display: flex;
@@ -415,7 +423,7 @@ footer {
 /* ---------- Whole-page purple ---------- */
 
 body.full-purple,
-html:has(body.full-purple) { background: var(--robe-plum); }
+html:has(body.full-purple) { background: var(--robe-plum-2); }
 body.full-purple { --nav-mark-color: var(--robe-white); }
 
 body.full-purple header.site-header {
@@ -431,7 +439,7 @@ body.full-purple .section-eyebrow { color: rgba(255,255,255,0.7); }
 body.full-purple .section-heading h2 { color: var(--robe-white); }
 body.full-purple .section-heading p { color: rgba(255,255,255,0.78); }
 
-body.full-purple footer { background: var(--robe-plum-pressed); }
+body.full-purple footer { background: var(--robe-plum); }
 
 /* ---------- All white, purple logo ---------- */
 
