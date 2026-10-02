@@ -481,3 +481,6 @@ body.all-white .store-badge { color: var(--robe-ink); border-color: var(--robe-l
   section { padding: 40px 0; }
   main { padding: 0 16px; }
 }
+
+/* Live storefront card with no photo yet */
+.listing-photo-empty { aspect-ratio: 3 / 4; background: var(--robe-line); }
