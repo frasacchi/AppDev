@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="720" height="720">
+  <rect width="240" height="240" fill="#4A171D"/>
+  <!-- seen from above: the stem points at you, the olive sits on its tip,
+       and each leaf grows outward from the stem in its own direction -->
+  <!-- lower leaf: further away, so slightly smaller and darker -->
+  <ellipse cx="120" cy="120" rx="48" ry="21" fill="#C9BCA8"
+           transform="rotate(150 120 120) translate(56 0)"/>
+  <!-- upper leaf -->
+  <ellipse cx="120" cy="120" rx="54" ry="24" fill="#E0D5C4"
+           transform="rotate(-40 120 120) translate(60 0)"/>
+  <circle cx="120" cy="120" r="15" fill="#82955C"/>
+</svg>
