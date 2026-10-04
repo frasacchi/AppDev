@@ -5,12 +5,12 @@
 // lettering's font, and therefore the word's width, does.
 
 const FONTS = {
-  playfair:    { title: "Playfair Display", asset: "Playfair",    rShare: 0.251560, aspect: 2.151082 },
-  bodoni:      { title: "Bodoni Moda",      asset: "Bodoni",      rShare: 0.263769, aspect: 2.051515 },
-  cinzel:      { title: "Cinzel",           asset: "Cinzel",      rShare: 0.232169, aspect: 2.330736 },
-  abril:       { title: "Abril Fatface",    asset: "Abril",       rShare: 0.260933, aspect: 2.073810 },
-  prata:       { title: "Prata",            asset: "Prata",       rShare: 0.223994, aspect: 2.415801 },
-  librecaslon: { title: "Libre Caslon",     asset: "Librecaslon", rShare: 0.250803, aspect: 2.157576 },
+  playfair:    { title: "Playfair Display", asset: "Playfair",    rShare: 0.251560, aspect: 2.151082, trace: 4.5, fill: 0.3 },
+  bodoni:      { title: "Bodoni Moda",      asset: "Bodoni",      rShare: 0.263769, aspect: 2.051515, trace: 4.0, fill: 0.28 },
+  cinzel:      { title: "Cinzel",           asset: "Cinzel",      rShare: 0.232169, aspect: 2.330736, trace: 3.5, fill: 0.24 },
+  abril:       { title: "Abril Fatface",    asset: "Abril",       rShare: 0.260933, aspect: 2.073810, trace: 6.0, fill: 0.34 },
+  prata:       { title: "Prata",            asset: "Prata",       rShare: 0.223994, aspect: 2.415801, trace: 2.5, fill: 0.18 },
+  librecaslon: { title: "Libre Caslon",     asset: "Librecaslon", rShare: 0.250803, aspect: 2.157576, trace: 3.5, fill: 0.22 },
 };
 
 const HEADING_FONT = {
@@ -43,6 +43,12 @@ function applyFont(key) {
     if (!mark) return;
     mark.style.setProperty("--mark-url", `url("assets/wordmarks/RobeWordmark${font.asset}White.svg")`);
     mark.style.setProperty("--mark-aspect", String(font.aspect));
+    // The live R figure beside the lettering (see liveMarks below).
+    const live = LIVE_MARKS[id];
+    if (live) {
+      live.wrap.style.setProperty("--r-share", String(font.rShare));
+      live.figure.setWeight(font.trace, font.fill);
+    }
   });
 
   document.querySelectorAll(".font-toggle button").forEach((btn) => {
@@ -174,7 +180,31 @@ function buildFillToggle(container) {
   });
 }
 
-// --- Opening splash: R alone -> "OBE" reveals -> tagline fades in -> fades out.
+// --- Live marks: each logo's R is drawn by figure.js so her skirt can catch the
+// wind; the CSS-mask lettering beside it is clipped to start after the R.
+
+const LIVE_MARKS = {};
+
+function liveMarks() {
+  if (!window.RobeFigure) return;
+  ["nav-mark", "hero-mark", "footer-mark"].forEach((id) => {
+    const mark = document.getElementById(id);
+    if (!mark) return;
+    const wrap = document.createElement("span");
+    wrap.className = `live-mark live-${id}`;
+    mark.parentNode.insertBefore(wrap, mark);
+    wrap.appendChild(mark);
+    const figure = window.RobeFigure.create();
+    wrap.appendChild(figure.svg);
+    LIVE_MARKS[id] = { wrap, figure };
+    // A puff on hover and on tap.
+    wrap.addEventListener("mouseenter", () => figure.puff(0.85, 0.22, 1.1));
+    wrap.addEventListener("click", () => figure.puff(0.9, 0.22, 1.1));
+  });
+}
+
+// --- Opening splash: R alone -> a puff of wind in her skirt -> "OBE" reveals ->
+// tagline fades in -> fades out.
 
 function playSplash() {
   const splash = document.getElementById("splash");
@@ -195,6 +225,15 @@ function playSplash() {
   mark.style.height = `${rHeight}px`;
   mark.style.width = `${width}px`;
   wrap.style.height = `${rHeight}px`;
+  // The R is the live figure; the artwork shows only the lettering.
+  mark.style.clipPath = `inset(0 0 0 ${rShare * 100}%)`;
+  let splashFigure = null;
+  if (window.RobeFigure) {
+    splashFigure = window.RobeFigure.create(font.trace, font.fill);
+    splashFigure.svg.classList.add("splash-figure");
+    splashFigure.svg.style.height = `${rHeight}px`;
+    wrap.appendChild(splashFigure.svg);
+  }
 
   document.body.classList.add("no-scroll");
 
@@ -224,19 +263,29 @@ function playSplash() {
   }
 
   setTimeout(() => {
-    wrap.style.transition = "width 0.95s ease-in-out";
-    setProgress(1);
+    if (splashFigure) splashFigure.puff(1, 0.32, 1.25);
     setTimeout(() => {
-      tagline.classList.add("visible");
+      wrap.style.transition = "width 0.95s ease-in-out";
+      setProgress(1);
       setTimeout(() => {
-        splash.classList.add("fade-out");
-        setTimeout(() => { splash.style.display = "none"; finish(); }, 400);
-      }, 1000);
-    }, 700);
-  }, 350);
+        tagline.classList.add("visible");
+        setTimeout(() => {
+          splash.classList.add("fade-out");
+          setTimeout(() => {
+            splash.style.display = "none";
+            finish();
+            // The hero's logo catches a softer puff as the page appears.
+            const hero = LIVE_MARKS["hero-mark"];
+            if (hero) hero.figure.puff(0.75, 0.3, 1.2);
+          }, 400);
+        }, 1000);
+      }, 700);
+    }, 550);
+  }, 150);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  liveMarks();
   applyFont(currentFont());
   const toggleContainers = document.querySelectorAll(".font-toggle");
   toggleContainers.forEach(buildFontToggle);

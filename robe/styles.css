@@ -19,6 +19,10 @@
   --robe-ink-muted: color-mix(in srgb, var(--robe-plum) 45%, #8a8a94);
   --robe-line: color-mix(in srgb, var(--robe-plum) 14%, white);
   --nav-mark-color: var(--robe-plum);
+  /* Soft blush pink: playful brand surfaces and sparkles. Plum text on it is about 10 : 1. */
+  --robe-blush: #F6D9E1;
+  /* Deeper blush for drawn details. Decoration only, never text. */
+  --robe-blush-deep: #E9A8BA;
   /* Page-body shade in "Whole page" mode; JS overrides it with an explicit pick. */
   --robe-plum-2: color-mix(in srgb, var(--robe-plum) 70%, black);
   --font-heading: "Playfair Display", serif;
@@ -484,3 +488,43 @@ body.all-white .store-badge { color: var(--robe-ink); border-color: var(--robe-l
 
 /* Live storefront card with no photo yet */
 .listing-photo-empty { aspect-ratio: 3 / 4; background: var(--robe-line); }
+
+/* ---------- Live R figure (figure.js) ---------- */
+
+.live-mark { position: relative; display: inline-block; line-height: 0; cursor: pointer; }
+.live-mark > div { clip-path: inset(0 0 0 calc(var(--r-share, 0.25) * 100%)); }
+.live-mark > .robe-figure {
+  position: absolute; left: 0; top: 0;
+  height: 100%; width: auto; aspect-ratio: 250 / 462;
+  overflow: visible; pointer-events: none;
+}
+.live-nav-mark { color: var(--nav-mark-color); }
+.live-hero-mark, .live-footer-mark { color: var(--robe-white); }
+body.all-white .live-hero-mark, body.all-white .live-footer-mark { color: var(--robe-plum); }
+.live-hero-mark { display: block; width: fit-content; margin: 0 auto 18px; }
+.live-hero-mark > #hero-mark { margin: 0; }
+
+#splash-mark-wrap .splash-figure {
+  position: absolute; left: 0; top: 0;
+  width: auto; aspect-ratio: 250 / 462;
+  color: var(--robe-white); overflow: visible;
+}
+
+/* ---------- How it works: hand-drawn loops on blush ---------- */
+
+.step-art { height: 84px; margin: -4px 0 12px; border-radius: 12px; background: var(--robe-blush); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.step-art svg { height: 70px; width: auto; color: var(--robe-plum); overflow: visible; }
+.step-art .sway { transform-origin: 50% 6%; animation: sway 2.4s ease-in-out infinite alternate; }
+.step-art .hop { animation: hop 1.6s ease-in-out infinite; }
+.step-art .rise { animation: rise 3.2s linear infinite; }
+.step-art .rise:nth-child(2) { animation-delay: -1.1s; }
+.step-art .rise:nth-child(3) { animation-delay: -2.2s; }
+.step-art .twinkle { transform-box: fill-box; transform-origin: center; animation: twinkle 1.8s ease-in-out infinite; }
+@keyframes sway { from { transform: rotate(-6deg); } to { transform: rotate(6deg); } }
+@keyframes hop { 0%, 100% { transform: translateY(0); } 40% { transform: translateY(-12px); } 60% { transform: translateY(0); } 70% { transform: translateY(-4px); } }
+@keyframes rise { from { transform: translateY(18px); opacity: 0; } 20% { opacity: 1; } 85% { opacity: 1; } to { transform: translateY(-50px); opacity: 0; } }
+@keyframes twinkle { 0%, 100% { transform: scale(0.4); opacity: 0.4; } 50% { transform: scale(1); opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .step-art .sway, .step-art .hop, .step-art .rise, .step-art .twinkle { animation: none; }
+}
