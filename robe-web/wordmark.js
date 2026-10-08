@@ -3,14 +3,17 @@
 // per-font rShare/aspect geometry (from make_all_wordmarks.py's own viewBox
 // output), same reveal timing. The R figure never changes — only the OBE
 // lettering's font, and therefore the word's width, does.
+// `cuts`: where O's ink starts, where B and E begin, and where E's ink ends, as
+// shares of the wordmark's width, so the intro can type the letters one by one
+// (measured from the font files that tools/dev/make_all_wordmarks.py uses).
 
 const FONTS = {
-  playfair:    { title: "Playfair Display", asset: "Playfair",    rShare: 0.251560, aspect: 2.151082, trace: 4.5, fill: 0.3 },
-  bodoni:      { title: "Bodoni Moda",      asset: "Bodoni",      rShare: 0.263769, aspect: 2.051515, trace: 4.0, fill: 0.28 },
-  cinzel:      { title: "Cinzel",           asset: "Cinzel",      rShare: 0.232169, aspect: 2.330736, trace: 3.5, fill: 0.24 },
-  abril:       { title: "Abril Fatface",    asset: "Abril",       rShare: 0.260933, aspect: 2.073810, trace: 6.0, fill: 0.34 },
-  prata:       { title: "Prata",            asset: "Prata",       rShare: 0.223994, aspect: 2.415801, trace: 2.5, fill: 0.18 },
-  librecaslon: { title: "Libre Caslon",     asset: "Librecaslon", rShare: 0.250803, aspect: 2.157576, trace: 3.5, fill: 0.22 },
+  playfair:    { title: "Playfair Display", asset: "Playfair",    rShare: 0.251560, aspect: 2.151082, trace: 4.5, fill: 0.3, cuts: [0.258, 0.5302, 0.7765, 0.9851] },
+  bodoni:      { title: "Bodoni Moda",      asset: "Bodoni",      rShare: 0.263769, aspect: 2.051515, trace: 4.0, fill: 0.28, cuts: [0.274, 0.5234, 0.7711, 0.9873] },
+  cinzel:      { title: "Cinzel",           asset: "Cinzel",      rShare: 0.232169, aspect: 2.330736, trace: 3.5, fill: 0.24, cuts: [0.2439, 0.5376, 0.7777, 0.9908] },
+  abril:       { title: "Abril Fatface",    asset: "Abril",       rShare: 0.260933, aspect: 2.073810, trace: 6.0, fill: 0.34, cuts: [0.2697, 0.5255, 0.7701, 0.9831] },
+  prata:       { title: "Prata",            asset: "Prata",       rShare: 0.223994, aspect: 2.415801, trace: 2.5, fill: 0.18, cuts: [0.2367, 0.5056, 0.7556, 0.9809] },
+  librecaslon: { title: "Libre Caslon",     asset: "Librecaslon", rShare: 0.250803, aspect: 2.157576, trace: 3.5, fill: 0.22, cuts: [0.2648, 0.5249, 0.7611, 0.9773] },
 };
 
 const HEADING_FONT = {
@@ -148,85 +151,134 @@ function liveMarks() {
   });
 }
 
-// --- Opening splash: R alone -> a puff of wind in her skirt -> "OBE" reveals ->
-// tagline fades in -> fades out.
+// --- Opening splash (timings in intro-motion.js): the woman from the R stands
+// large, adjusts her hat, hits the R pose, then glides left into the logo while
+// O, B and E type in behind a blush caret; the tagline fades in and it all lifts.
 
 function playSplash() {
   const splash = document.getElementById("splash");
-  const wrap = document.getElementById("splash-mark-wrap");
-  const mark = document.getElementById("splash-mark");
+  const letters = splash ? [...splash.querySelectorAll(".splash-letter")] : [];
+  const caret = splash && splash.querySelector(".splash-caret");
+  const sparkle = splash && splash.querySelector(".splash-sparkle");
   const tagline = document.getElementById("splash-tagline");
-  if (!splash || !wrap || !mark || !tagline) return;
-
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const key = currentFont();
-  const font = FONTS[key] || FONTS[DEFAULT_FONT];
-
-  const rHeight = 96; // px — the R figure's fixed on-screen size, independent of font.
-  const width = rHeight * font.aspect;
-  const rShare = font.rShare;
-
-  mark.src = `assets/wordmarks/RobeWordmark${font.asset}White.svg`;
-  mark.style.height = `${rHeight}px`;
-  mark.style.width = `${width}px`;
-  wrap.style.height = `${rHeight}px`;
-  // The R is the live figure; the artwork shows only the lettering.
-  mark.style.clipPath = `inset(0 0 0 ${rShare * 100}%)`;
-  let splashFigure = null;
-  if (window.RobeFigure) {
-    splashFigure = window.RobeFigure.create(font.trace, font.fill);
-    splashFigure.svg.classList.add("splash-figure");
-    splashFigure.svg.style.height = `${rHeight}px`;
-    wrap.appendChild(splashFigure.svg);
-  }
-
-  document.body.classList.add("no-scroll");
-
-  function setProgress(progress) {
-    const centre = rShare + (1 - rShare) * progress;
-    const visibleWidth = width * centre;
-    wrap.style.width = `${visibleWidth}px`;
-    mark.style.transform = `translateX(0)`;
-    wrap.style.marginLeft = "auto";
-    wrap.style.marginRight = "auto";
-  }
-
-  setProgress(0);
-
-  const finish = () => {
-    document.body.classList.remove("no-scroll");
-  };
-
-  if (reduceMotion) {
-    setProgress(1);
-    tagline.classList.add("visible");
-    setTimeout(() => {
-      splash.classList.add("fade-out");
-      setTimeout(() => { splash.style.display = "none"; finish(); }, 400);
-    }, 1000);
+  const intro = window.RobeIntro;
+  if (!splash || letters.length !== 3 || !caret || !tagline || !intro || !window.RobeFigure) {
+    if (splash) splash.style.display = "none";
     return;
   }
 
-  setTimeout(() => {
-    if (splashFigure) splashFigure.puff(1, 0.32, 1.25);
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const font = FONTS[currentFont()] || FONTS[DEFAULT_FONT];
+  const FIG_ASPECT = 250 / 462;
+
+  const figure = window.RobeFigure.create(font.trace, font.fill);
+  figure.svg.classList.add("splash-figure");
+  splash.insertBefore(figure.svg, splash.firstChild);
+  letters.forEach((img) => { img.src = `assets/wordmarks/RobeWordmark${font.asset}White.svg`; });
+  document.body.classList.add("no-scroll");
+
+  // She starts with the R `start` tall (and grows), and ends as the logo's R, `end` tall.
+  let cx, cy, start, end, wordWidth, wordLeft;
+  function measure() {
+    cx = window.innerWidth / 2;
+    cy = window.innerHeight / 2 - 12;
+    start = Math.min(window.innerHeight * 0.34, 240);
+    end = Math.min(start, (window.innerWidth * 0.86) / font.aspect);
+    wordWidth = end * font.aspect;
+    wordLeft = cx - wordWidth / 2;
+    // Each copy of the artwork shows one letter, so each can strike on its own.
+    letters.forEach((img, i) => {
+      const a = i === 0 ? font.rShare : font.cuts[i];
+      const b = i === 2 ? 1 : font.cuts[i + 1];
+      img.style.width = `${wordWidth}px`;
+      img.style.height = `${end}px`;
+      img.style.left = `${wordLeft}px`;
+      img.style.top = `${cy - end / 2}px`;
+      img.style.clipPath = `inset(-10% ${(1 - b) * 100}% -10% ${a * 100}%)`;
+      img.style.transformOrigin = `${((a + b) / 2) * 100}% 95%`;
+    });
+    caret.style.width = `${Math.max(2, end * 0.016)}px`;
+    caret.style.height = `${(intro.CARET_BOTTOM - intro.CARET_TOP) * end}px`;
+    caret.style.top = `${cy - end / 2 + intro.CARET_TOP * end}px`;
+    tagline.style.left = `${cx}px`;
+    tagline.style.top = `${cy + end / 2 + 22}px`;
+  }
+
+  function draw(frame) {
+    const h = intro.figureHeight(frame, start, end);
+    const w = h * FIG_ASPECT;
+    // Centred on her own at first, then on the R's place in the centred word.
+    const endX = wordLeft + (end * FIG_ASPECT) / 2;
+    const fx = cx + (endX - cx) * frame.travel;
+    const left = fx - w / 2, top = cy - h / 2;
+    figure.svg.style.width = `${w}px`;
+    figure.svg.style.height = `${h}px`;
+    figure.svg.style.transform = `translate(${left}px, ${top}px)`;
+    figure.setFrame(frame.pose, frame.swish);
+
+    letters.forEach((img, i) => {
+      const s = intro.strike(frame.strikes[i]);
+      img.style.opacity = frame.strikes[i] > 0 ? s.alpha : 0;
+      img.style.transform = `translateY(${s.drop * end}px) scale(${s.scale})`;
+    });
+    caret.style.opacity = frame.caret;
+    // Just before O, then after each letter typed.
+    const gap = (frame.typed === 0 ? -0.03 : 0.01) * end;
+    caret.style.left = `${wordLeft + font.cuts[frame.typed] * wordWidth + gap}px`;
+
+    if (sparkle) {
+      if (frame.sparkle < 0) sparkle.style.opacity = 0;
+      else {
+        // A twinkle off the brim's tip once the hat is set.
+        const [tx, ty] = intro.hatPoint(intro.BRIM_TIP[0], intro.BRIM_TIP[1], frame.pose);
+        const size = h * 0.09 * Math.sin(Math.PI * frame.sparkle);
+        const x = left + ((tx - 14) / 250) * w + h * 0.02;
+        const y = top + ((ty + 6) / 462) * h - h * 0.03;
+        sparkle.style.opacity = 1;
+        sparkle.style.width = sparkle.style.height = `${size}px`;
+        sparkle.style.transform = `translate(${x - size / 2}px, ${y - size / 2}px) rotate(${frame.sparkle * 90}deg)`;
+      }
+    }
+    tagline.style.opacity = frame.tagline;
+    tagline.style.transform = `translate(-50%, ${(1 - frame.tagline) * 8}px)`;
+    splash.style.opacity = frame.fade;
+  }
+
+  function finish() {
+    splash.classList.add("fade-out");
+    splash.style.display = "none";
+    document.body.classList.remove("no-scroll");
+    window.removeEventListener("resize", measure);
+    // The header's logo catches a soft puff as the page appears.
+    const nav = LIVE_MARKS["nav-mark"];
+    if (nav) nav.figure.puff(0.6, 0.3, 1.2);
+  }
+
+  measure();
+  window.addEventListener("resize", measure);
+  splash.style.transition = "none";
+
+  if (reduceMotion) {
+    // The finished logo and tagline, a moment's pause, then it fades.
+    draw({ ...intro.at(intro.DURATION), fade: 1, caret: 0 });
     setTimeout(() => {
-      wrap.style.transition = "width 0.95s ease-in-out";
-      setProgress(1);
-      setTimeout(() => {
-        tagline.classList.add("visible");
-        setTimeout(() => {
-          splash.classList.add("fade-out");
-          setTimeout(() => {
-            splash.style.display = "none";
-            finish();
-            // The header's logo catches a softer puff as the page appears.
-            const nav = LIVE_MARKS["nav-mark"];
-            if (nav) nav.figure.puff(0.75, 0.3, 1.2);
-          }, 400);
-        }, 1000);
-      }, 700);
-    }, 550);
-  }, 150);
+      splash.style.transition = "";
+      splash.style.opacity = "";
+      splash.classList.add("fade-out");
+      setTimeout(finish, 400);
+    }, 1200);
+    return;
+  }
+
+  const begin = performance.now();
+  function tick(now) {
+    const t = (now - begin) / 1000;
+    draw(intro.at(t));
+    if (t < intro.DURATION) requestAnimationFrame(tick);
+    else finish();
+  }
+  draw(intro.at(0));
+  requestAnimationFrame(tick);
 }
 
 document.addEventListener("DOMContentLoaded", () => {

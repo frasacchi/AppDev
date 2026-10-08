@@ -9,17 +9,19 @@
   // The saved light/dark choice, applied before the page paints.
   try { const t = localStorage.getItem("robeTheme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch (e) {}
 </script>
-<link rel="stylesheet" href="styles.css?v=9">
+<link rel="stylesheet" href="styles.css?v=10">
 </head>
 <body>
 
   <a class="skip" href="#main">Skip to content</a>
 
   <div id="splash" aria-hidden="true">
-    <div id="splash-mark-wrap">
-      <img id="splash-mark" src="assets/wordmarks/RobeWordmarkPlayfairWhite.svg" alt="">
-      <div id="splash-tagline">Rent the dress, not the price.</div>
-    </div>
+    <img class="splash-letter" src="assets/wordmarks/RobeWordmarkPlayfairWhite.svg" alt="">
+    <img class="splash-letter" src="assets/wordmarks/RobeWordmarkPlayfairWhite.svg" alt="">
+    <img class="splash-letter" src="assets/wordmarks/RobeWordmarkPlayfairWhite.svg" alt="">
+    <div class="splash-caret"></div>
+    <svg class="splash-sparkle" viewBox="-10 -10 20 20"><path d="M0 -10 C1 -2 2 -1 10 0 C2 1 1 2 0 10 C-1 2 -2 1 -10 0 C-2 -1 -1 -2 0 -10Z"/></svg>
+    <div id="splash-tagline">Rent the dress, not the price.</div>
   </div>
 
   <svg class="defs" aria-hidden="true" focusable="false">
@@ -428,9 +430,10 @@
 
   <script src="config.js?v=5"></script>
   <script src="storefront.js?v=5"></script>
-  <script src="figure-data.js?v=6"></script>
-  <script src="figure.js?v=6"></script>
-  <script src="wordmark.js?v=7"></script>
+  <script src="figure-data.js?v=7"></script>
+  <script src="intro-motion.js?v=1"></script>
+  <script src="figure.js?v=7"></script>
+  <script src="wordmark.js?v=8"></script>
   <script src="motion.js?v=2"></script>
 </body>
 </html>

@@ -89,10 +89,12 @@ h1, h2, h3 { font-family: var(--font-heading); font-weight: 700; margin: 0 0 0.4
 
 #splash { position: fixed; inset: 0; background: var(--robe-plum); z-index: 1000; display: flex; align-items: center; justify-content: center; transition: opacity 0.4s ease-out; }
 #splash.fade-out { opacity: 0; pointer-events: none; }
-#splash-mark-wrap { position: relative; overflow: hidden; }
-#splash-mark { display: block; height: 96px; width: auto; }
-#splash-tagline { position: absolute; left: 0; right: 0; bottom: -38px; text-align: center; color: var(--robe-white); font-family: var(--font-heading); font-style: italic; font-size: 15px; opacity: 0; transition: opacity 0.45s ease-in; white-space: nowrap; }
-#splash-tagline.visible { opacity: 1; }
+/* The opening animation (wordmark.js + intro-motion.js) places these every frame. */
+#splash > * { position: absolute; left: 0; top: 0; }
+.splash-letter { opacity: 0; will-change: transform, opacity; }
+.splash-caret { background: var(--robe-blush-deep); border-radius: 2px; opacity: 0; }
+.splash-sparkle { fill: var(--robe-blush-deep); opacity: 0; overflow: visible; }
+#splash-tagline { color: var(--robe-white); font-family: var(--font-heading); font-style: italic; font-size: 15px; opacity: 0; white-space: nowrap; transform: translateX(-50%); }
 body.no-scroll { overflow: hidden; height: 100%; }
 
 /* ---------- Top bar ---------- */
@@ -433,7 +435,7 @@ main > section, .statement { max-width: 1080px; margin: 0 auto; padding: 88px 24
 .live-mark > .robe-figure { position: absolute; left: 0; top: 0; height: 100%; width: auto; aspect-ratio: 250 / 462; overflow: visible; pointer-events: none; }
 .live-nav-mark { color: var(--nav-mark-color); }
 .live-hero-mark, .live-footer-mark { color: var(--mark); }
-#splash-mark-wrap .splash-figure { position: absolute; left: 0; top: 0; width: auto; aspect-ratio: 250 / 462; color: var(--robe-white); overflow: visible; }
+#splash .splash-figure { color: var(--robe-white); overflow: visible; }
 
 /* ---------- Scroll reveals (motion.js adds .motion-ok) ---------- */
 
