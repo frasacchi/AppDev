@@ -73,9 +73,10 @@ function buildFontToggle(container) {
   });
 }
 
-// --- Purple palette + page-fill toggles.
-// "logo" is the exact violet baked into the wordmark SVGs (#5B2BD6); the rest are
-// candidates to compare against it. All are dark enough for white text.
+// --- Purple palette picker (in the page's Design picks panel). "logo" is the
+// exact violet baked into the wordmark SVGs (#5B2BD6); the rest are candidates to
+// compare against it. All are dark enough for white text. Light or dark pages are
+// the header's theme toggle (motion.js).
 
 const PALETTES = {
   plum:      { title: "Robe plum (current)", hex: "#3D1A5B" },
@@ -90,9 +91,7 @@ const PALETTES = {
 };
 
 const PALETTE_KEY = "robePalette";
-const FILL_KEY = "robePurpleFill";
 const DEFAULT_PALETTE = "plum";
-const FILLS = { header: "Top & footer only", page: "Whole page", white: "All white, purple logo" };
 
 function readPref(key, valid, fallback) {
   try {
@@ -105,47 +104,8 @@ function readPref(key, valid, fallback) {
 function applyPalette(key) {
   const p = PALETTES[key] || PALETTES[DEFAULT_PALETTE];
   document.documentElement.style.setProperty("--robe-plum", p.hex);
-  document.querySelectorAll(".swatch-toggle:not(.swatch2-toggle) button").forEach((b) => {
+  document.querySelectorAll(".swatch-toggle button").forEach((b) => {
     b.classList.toggle("active", b.dataset.palette === key);
-  });
-}
-
-// Second shade, used for the page body in "Whole page" mode. "auto" leaves the
-// CSS default (a darker mix of the first shade) in place.
-const SHADE2_KEY = "robePalette2";
-const SHADE2_OPTIONS = { auto: { title: "Auto (darker)", hex: null }, ...PALETTES };
-
-function applyShade2(key) {
-  const p = SHADE2_OPTIONS[key] || SHADE2_OPTIONS.auto;
-  if (p.hex) document.documentElement.style.setProperty("--robe-plum-2", p.hex);
-  else document.documentElement.style.removeProperty("--robe-plum-2");
-  document.querySelectorAll(".swatch2-toggle button").forEach((b) => {
-    b.classList.toggle("active", b.dataset.palette === key);
-  });
-}
-
-function buildSwatch2Toggle(container) {
-  container.innerHTML = "";
-  Object.entries(SHADE2_OPTIONS).forEach(([key, p]) => {
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.dataset.palette = key;
-    const dot = p.hex ? `background:${p.hex}` : "background:color-mix(in srgb, var(--robe-plum) 70%, black)";
-    btn.innerHTML = `<span class="dot" style="${dot}"></span>${p.title}`;
-    btn.addEventListener("click", () => {
-      applyShade2(key);
-      try { localStorage.setItem(SHADE2_KEY, key); } catch (e) {}
-    });
-    container.appendChild(btn);
-  });
-}
-
-function applyFill(key) {
-  document.body.classList.toggle("full-purple", key === "page");
-  document.body.classList.toggle("show-shade2", key === "page");
-  document.body.classList.toggle("all-white", key === "white");
-  document.querySelectorAll(".fill-toggle button").forEach((b) => {
-    b.classList.toggle("active", b.dataset.fill === key);
   });
 }
 
@@ -160,21 +120,6 @@ function buildSwatchToggle(container) {
     btn.addEventListener("click", () => {
       applyPalette(key);
       try { localStorage.setItem(PALETTE_KEY, key); } catch (e) {}
-    });
-    container.appendChild(btn);
-  });
-}
-
-function buildFillToggle(container) {
-  container.innerHTML = "";
-  Object.entries(FILLS).forEach(([key, label]) => {
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.dataset.fill = key;
-    btn.textContent = label;
-    btn.addEventListener("click", () => {
-      applyFill(key);
-      try { localStorage.setItem(FILL_KEY, key); } catch (e) {}
     });
     container.appendChild(btn);
   });
@@ -274,9 +219,9 @@ function playSplash() {
           setTimeout(() => {
             splash.style.display = "none";
             finish();
-            // The hero's logo catches a softer puff as the page appears.
-            const hero = LIVE_MARKS["hero-mark"];
-            if (hero) hero.figure.puff(0.75, 0.3, 1.2);
+            // The header's logo catches a softer puff as the page appears.
+            const nav = LIVE_MARKS["nav-mark"];
+            if (nav) nav.figure.puff(0.75, 0.3, 1.2);
           }, 400);
         }, 1000);
       }, 700);
@@ -290,11 +235,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const toggleContainers = document.querySelectorAll(".font-toggle");
   toggleContainers.forEach(buildFontToggle);
   applyFont(currentFont());
-  document.querySelectorAll(".swatch-toggle:not(.swatch2-toggle)").forEach(buildSwatchToggle);
-  document.querySelectorAll(".swatch2-toggle").forEach(buildSwatch2Toggle);
-  applyShade2(readPref(SHADE2_KEY, SHADE2_OPTIONS, "auto"));
-  document.querySelectorAll(".fill-toggle").forEach(buildFillToggle);
+  document.querySelectorAll(".swatch-toggle").forEach(buildSwatchToggle);
   applyPalette(readPref(PALETTE_KEY, PALETTES, DEFAULT_PALETTE));
-  applyFill(readPref(FILL_KEY, FILLS, "header"));
   playSplash();
 });
