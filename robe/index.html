@@ -1,19 +1,13 @@
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Robe — rent the dress, not the price</title>
-<meta name="description" content="Rent clothes from private wardrobes and shops across London. Robe for iOS and Android.">
-<script>
-  // The saved light/dark choice, applied before the page paints.
-  try { const t = localStorage.getItem("robeTheme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch (e) {}
-</script>
-<link rel="stylesheet" href="styles.css?v=9">
+<meta name="description" content="Rent clothes from private wardrobes and shops. Robe for iOS and Android.">
+<link rel="stylesheet" href="styles.css?v=6">
 </head>
 <body>
-
-  <a class="skip" href="#main">Skip to content</a>
 
   <div id="splash" aria-hidden="true">
     <div id="splash-mark-wrap">
@@ -22,123 +16,35 @@
     </div>
   </div>
 
-  <svg class="defs" aria-hidden="true" focusable="false">
-    <filter id="crayon" x="-10%" y="-10%" width="120%" height="120%">
-      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="3" result="grain"/>
-      <feDisplacementMap in="SourceGraphic" in2="grain" scale="2.2" xChannelSelector="R" yChannelSelector="G"/>
-    </filter>
-  </svg>
-
-  <header class="topbar">
-    <a class="brand" href="#main" aria-label="Robe home">
-      <div id="nav-mark" role="img" aria-label="Robe"><span class="mark-fallback">ROBE</span></div>
-    </a>
-    <div class="rail-count" aria-live="polite">
-      <div class="odometer" id="rail-odometer" aria-label="8 pieces on the rail">8</div>
-      <span class="rail-count-label">pieces on the rail</span>
-    </div>
-    <nav class="site-nav" id="site-nav" aria-label="Main navigation">
+  <header class="site-header">
+    <div id="nav-mark" role="img" aria-label="Robe"><span class="mark-fallback">ROBE</span></div>
+    <nav class="site-nav">
       <a href="#listings">Browse</a>
       <a href="#how-it-works">How it works</a>
-      <a href="#promises">Why Robe</a>
-      <a href="#download" class="nav-cta">Get the app</a>
+      <a href="#download">Get the app</a>
     </nav>
-    <button class="theme-toggle" type="button" aria-label="Switch to light mode"><span aria-hidden="true">☾</span></button>
-    <button class="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav"><span></span><span></span><span></span></button>
   </header>
 
-  <main id="main">
-    <section class="hero" aria-label="Robe">
-      <div class="hero-doodles" aria-hidden="true">
-          <span class="doodle d1" data-depth="0.35"><svg viewBox="0 0 80 100"><path d="M33 8 l3 9 h8 l3 -9 l6 6 l-3 8 q14 26 18 62 q-28 7 -56 0 q4 -36 18 -62 l-3 -8 z" fill="var(--robe-blush)"/><path d="M28 36 q12 5 24 0 M36 50 q2 18 -2 40 M47 52 q4 18 4 38" class="detail"/></svg></span>
-          <span class="doodle d2" data-depth="0.6"><svg viewBox="0 0 80 72"><path d="M40 66 c-34 -22 -36 -46 -22 -56 c9 -6 18 -2 22 8 c4 -10 13 -14 22 -8 c14 10 12 34 -22 56z" fill="var(--robe-blush-deep)"/><path d="M22 22 q4 -6 10 -4" class="detail"/></svg></span>
-          <span class="doodle d3" data-depth="0.45"><svg viewBox="0 0 90 90"><path d="M10 40 l30 -30 h30 a8 8 0 0 1 8 8 v30 l-30 30 q-6 6 -12 0 l-26 -26 q-6 -6 0 -12z" fill="var(--robe-lilac-light, #DBD0F6)"/><circle cx="62" cy="26" r="6" fill="none"/><path d="M28 50 l14 14 M34 42 l18 18" class="detail"/></svg></span>
-          <span class="doodle d4" data-depth="0.25"><svg viewBox="0 0 90 90"><rect x="14" y="40" width="62" height="42" rx="4" fill="var(--robe-blush)"/><rect x="10" y="28" width="70" height="14" rx="4" fill="var(--robe-blush)"/><path d="M45 28 v54" stroke-width="7" stroke="var(--robe-blush-deep)"/><path d="M45 28 q-22 -22 -26 -6 q2 8 26 6 q22 -22 26 -6 q-2 8 -26 6" fill="var(--robe-blush-deep)"/></svg></span>
-          <span class="doodle d5" data-depth="0.7"><svg viewBox="0 0 70 70"><path d="M35 4 q4 26 31 31 q-27 5 -31 31 q-4 -26 -31 -31 q27 -5 31 -31z" fill="var(--robe-blush)"/></svg></span>
-          <span class="doodle d6" data-depth="0.3"><svg viewBox="0 0 100 70"><path d="M50 22 v-6 q0 -8 8 -8 q8 0 8 8 q0 6 -6 8 M50 22 l-42 30 q-4 6 4 6 h76 q8 0 4 -6 z" fill="none"/></svg></span>
-          <span class="doodle d7" data-depth="0.5"><svg viewBox="0 0 110 70"><path d="M8 52 q30 -2 46 -22 q8 -10 18 -10 q22 0 30 30 v6 h-14 l-6 -14 q-10 6 -26 10 l-46 6 q-6 -2 -2 -6z" fill="var(--robe-lilac-light, #DBD0F6)"/><path d="M84 50 l-4 16" stroke-width="5"/></svg></span>
-          <span class="doodle d8" data-depth="0.4"><svg viewBox="0 0 80 100"><rect x="8" y="6" width="64" height="88" rx="6" fill="var(--robe-blush)"/><rect x="16" y="14" width="22" height="22" rx="3" fill="none"/><rect x="42" y="14" width="22" height="22" rx="3" fill="none"/><rect x="16" y="40" width="22" height="22" rx="3" fill="none"/><rect x="42" y="40" width="22" height="22" rx="3" fill="var(--robe-blush-deep)"/><rect x="16" y="66" width="22" height="22" rx="3" fill="none"/><rect x="42" y="66" width="22" height="22" rx="3" fill="none"/></svg></span>
-          <span class="doodle d9" data-depth="0.55"><svg viewBox="0 0 120 60"><path d="M6 40 q14 -30 30 -8 t30 -6 t30 -10" fill="none" class="detail"/><path d="M98 10 l16 -6 l-4 6z" fill="currentColor"/><ellipse cx="102" cy="8" rx="2" ry="1" fill="none"/></svg></span>
-      </div>
-      <div class="hero-copy">
-        <p class="hero-kicker">Clothes rental across London</p>
-        <h1 class="hero-title"><span class="line">Rent the dress,</span> <span class="line soft">not the price.</span></h1>
-        <p class="hero-sub">Ten-day rentals from wardrobes and boutiques near you. Cleaned, checked and delivered to your door or a locker round the corner.</p>
-        <div class="store-badges">
-          <a class="store-badge" href="#download"><img src="assets/badges/app-store.png" alt="Download on the App Store" width="157" height="52"></a>
-          <a class="store-badge" href="#download"><img src="assets/badges/google-play.png" alt="Get it on Google Play" width="178" height="52"></a>
-        </div>
-        <ul class="proof">
-          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12 l5 5 l11 -11"/></svg>Cleaned &amp; checked</li>
-          <li><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M4 10 h16 M9 3 v4 M15 3 v4"/></svg>10-day rentals</li>
-          <li><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="3"/><path d="M3 10 h18"/></svg>Deposit held, not charged</li>
-        </ul>
-      </div>
-      <div class="hero-base">
-        <span>Wear more. Own less.</span>
-        <a href="#phones">Scroll to explore <span aria-hidden="true">↓</span></a>
-      </div>
-    </section>
+  <section class="hero">
+    <div id="hero-mark" role="img" aria-label="Robe"><span class="mark-fallback">ROBE</span></div>
+    <p class="tagline">Rent the dress, not the price.</p>
+    <div class="hero-actions">
+      <a class="btn btn-solid" href="#listings">Browse the wardrobe</a>
+      <a class="btn btn-outline" href="#how-it-works">How it works</a>
+    </div>
+    <div class="toggle-label">Wordmark style</div>
+    <div class="font-toggle on-plum" aria-label="Wordmark style"></div>
+    <div class="toggle-label">Purple</div>
+    <div class="swatch-toggle" aria-label="Purple shade"></div>
+    <div class="toggle-label">Apply purple to</div>
+    <div class="fill-toggle" aria-label="Where the purple is used"></div>
+    <div class="shade2-wrap">
+      <div class="toggle-label">Second shade (page body)</div>
+      <div class="swatch-toggle swatch2-toggle" aria-label="Second purple shade"></div>
+    </div>
+  </section>
 
-    <section class="phones" id="phones" aria-label="The Robe app">
-      <div class="section-heading center">
-        <div class="section-eyebrow">The app</div>
-        <h2>Every wardrobe in London, <span class="soft">in your pocket.</span></h2>
-      </div>
-      <div class="phone-stage">
-        <figure class="phone phone-left" aria-label="A listing in the Robe app: a scarlet maxi gown, £45 for 10 days">
-          <div class="phone-screen">
-            <div class="app-photo" style="background-image:url(assets/garments/garment-01.jpg)"></div>
-            <div class="app-detail">
-              <div class="app-brand">Self-Portrait</div>
-              <div class="app-title">Scarlet maxi gown</div>
-              <div class="app-price">£45 <span>/ 10 days</span></div>
-              <div class="app-button">Rent</div>
-            </div>
-          </div>
-        </figure>
-        <figure class="phone phone-right" aria-label="Checkout in the Robe app: choosing a parcel locker on a map">
-          <div class="phone-screen">
-            <div class="app-step">Delivery</div>
-            <svg class="app-map" viewBox="0 0 200 220" aria-hidden="true">
-              <rect width="200" height="220" fill="#EEF0EA"/>
-              <path d="M-10 60 L210 30 M-10 150 L210 110 M60 -10 L90 230 M150 -10 L130 230" stroke="#fff" stroke-width="10"/>
-              <path d="M160 -10 q-30 80 10 120 t20 120" stroke="#B9DCE6" stroke-width="22" fill="none"/>
-              <circle cx="100" cy="110" r="70" fill="rgba(61,26,91,.06)" stroke="rgba(61,26,91,.4)" stroke-width="1.5"/>
-              <g class="map-pin" transform="translate(56 70)"><circle r="9" fill="#fff" stroke="#3D1A5B" stroke-width="2.5"/></g>
-              <g class="map-pin" transform="translate(132 150)"><circle r="9" fill="#fff" stroke="#3D1A5B" stroke-width="2.5"/></g>
-              <g class="map-pin picked" transform="translate(96 104)"><circle class="ripple" r="13" fill="none" stroke="#E9A8BA" stroke-width="3"/><circle r="13" fill="#3D1A5B" stroke="#E9A8BA" stroke-width="3"/><path d="M-5 -1 h10 v7 h-10z M-5 -1 l5 -5 l5 5" fill="none" stroke="#fff" stroke-width="2"/></g>
-            </svg>
-            <div class="app-callout">
-              <div class="callout-title">InPost locker</div>
-              <div class="callout-sub">Mare Street · 0.4 km</div>
-              <div class="callout-chips"><span class="on">Selected</span><span>Within 3 km</span></div>
-            </div>
-          </div>
-        </figure>
-        <figure class="phone phone-centre" aria-label="The Robe app's home screen: a search bar, a banner and new listings">
-          <div class="phone-screen">
-            <div class="app-bar"><img src="assets/wordmarks/RobeWordmarkPlayfairWhite.svg" alt=""></div>
-            <div class="app-search">Search for dresses, brands…</div>
-            <div class="app-hero">Rent the dress,<br>not the price.</div>
-            <div class="app-grid">
-              <div style="background-image:url(assets/garments/garment-05.jpg)"></div>
-              <div style="background-image:url(assets/garments/garment-14.jpg)"></div>
-              <div style="background-image:url(assets/garments/garment-09.jpg)"></div>
-              <div style="background-image:url(assets/garments/garment-02.jpg)"></div>
-            </div>
-          </div>
-        </figure>
-        <div class="buy-rent" aria-hidden="true">
-          <span class="buy">Buy</span>
-          <span class="switch"><span class="knob"></span></span>
-          <span class="rent">Rent</span>
-        </div>
-      </div>
-    </section>
-
-    <p class="statement reveal">Your next outfit is already in someone's wardrobe. <span class="soft">Borrow it for ten days.</span></p>
-
+  <main>
     <section id="listings">
       <div class="section-heading">
         <div class="section-eyebrow">On Robe right now</div>
@@ -222,215 +128,67 @@
       </div>
     </section>
 
-    <section class="labels" aria-label="Labels and neighbourhoods on Robe">
-      <h2 class="labels-title reveal">Labels you'll find. <span class="soft">Wardrobes across London.</span></h2>
-      <div class="lane" aria-label="Labels you might find">
-        <div class="belt">
-          <ul><li>Self-Portrait</li><li>Reformation</li><li>Ghost</li><li>Rixo</li><li>Jenny Packham</li><li>Needle &amp; Thread</li><li>Massimo Dutti</li><li>Reiss</li><li>&amp; Other Stories</li><li>Uniqlo</li></ul>
-          <ul aria-hidden="true"><li>Self-Portrait</li><li>Reformation</li><li>Ghost</li><li>Rixo</li><li>Jenny Packham</li><li>Needle &amp; Thread</li><li>Massimo Dutti</li><li>Reiss</li><li>&amp; Other Stories</li><li>Uniqlo</li></ul>
-        </div>
-      </div>
-      <div class="lane lane-back" aria-label="Neighbourhoods">
-        <div class="belt">
-          <ul><li>Hackney</li><li>Brixton</li><li>Camden</li><li>Knightsbridge</li><li>Marylebone</li><li>Islington</li><li>Peckham</li><li>Notting Hill</li><li>Shoreditch</li><li>Clapham</li></ul>
-          <ul aria-hidden="true"><li>Hackney</li><li>Brixton</li><li>Camden</li><li>Knightsbridge</li><li>Marylebone</li><li>Islington</li><li>Peckham</li><li>Notting Hill</li><li>Shoreditch</li><li>Clapham</li></ul>
-        </div>
-      </div>
-    </section>
-
     <section id="how-it-works">
       <div class="section-heading">
         <div class="section-eyebrow">How it works</div>
         <h2>Borrow it. Wear it. Buy it if you fall in love.</h2>
         <p>Rent from private wardrobes and shops, with every piece cleaned and checked before it reaches you.</p>
       </div>
-      <ol class="steps">
-        <li class="step-card">
-          <div class="step-top"><div class="step-number">1</div></div>
-          <div class="step-art" aria-hidden="true"><svg viewBox="0 0 120 72">
-            <path class="twinkle" d="M24 12 q1 5 6 6 q-5 1 -6 6 q-1 -5 -6 -6 q5 -1 6 -6z" fill="var(--robe-blush-deep)"/>
-            <rect x="44" y="5" width="32" height="62" rx="6" fill="#fff" stroke="currentColor" stroke-width="2"/>
-            <path d="M56 10 h8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity=".5"/>
-            <rect x="49" y="15" width="22" height="25" rx="3" fill="var(--robe-blush)"/>
-            <g class="sway-soft"><path d="M57.5 19 L58.5 22.5 H61.5 L62.5 19 L64.5 21 L63.3 24 Q67 29 68 36 Q60 38 52 36 Q53 29 56.7 24 L55.5 21 Z" fill="#fff" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></g>
-            <path d="M49 45 h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            <path d="M49 50 h8" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".45"/>
-            <rect class="press" x="49" y="55" width="22" height="7" rx="3.5" fill="currentColor"/>
-            <circle class="tap-ring" cx="60" cy="58.5" r="5" fill="none" stroke="var(--robe-blush-deep)" stroke-width="1.6"/>
-            <path class="float-heart" d="M86 30 c-7 -5 -5 -12 0 -8 c5 -4 7 3 0 8z" fill="var(--robe-blush-deep)" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
-            <path class="float-heart late" d="M96 36 c-5 -4 -4 -9 0 -6 c4 -3 5 2 0 6z" fill="var(--robe-blush-deep)"/>
-          </svg></div>
+      <div class="steps">
+        <div class="step-card">
+          <div class="step-number">1</div>
+          <div class="step-art" aria-hidden="true"><svg viewBox="0 0 60 72"><g class="sway"><path d="M30 4 q4 -3 6 1 q1 3 -6 6 v4 l-16 8 h32 l-16 -8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M24 24 l2 6 h8 l2 -6 l3 4 l-2 4 q8 14 11 34 q-18 4 -36 0 q3 -20 11 -34 l-2 -4 z" fill="#fff" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></g><path class="twinkle" d="M52 8 q1 5 6 6 q-5 1 -6 6 q-1 -5 -6 -6 q5 -1 6 -6z" fill="var(--robe-blush-deep)"/></svg></div>
           <h3>Browse &amp; rent</h3>
           <p>Find a piece, pick your dates, and check out with your deposit held on your card.</p>
-        </li>
-        <li class="step-card">
-          <div class="step-top"><div class="step-number">2</div></div>
-          <div class="step-art" aria-hidden="true"><svg viewBox="0 0 120 72">
-            <path d="M4 68 h112" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".5"/>
-            <rect x="78" y="12" width="36" height="56" rx="3" fill="#fff" stroke="currentColor" stroke-width="2"/>
-            <rect x="81" y="16" width="13" height="14" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/>
-            <rect x="98" y="16" width="13" height="14" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/>
-            <rect x="81" y="33" width="13" height="14" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/>
-            <rect x="98" y="33" width="13" height="14" rx="1.5" fill="currentColor" opacity=".18"/>
-            <rect x="81" y="50" width="13" height="14" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/>
-            <rect x="98" y="50" width="13" height="14" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/>
-            <circle cx="91" cy="23" r="1" fill="currentColor"/><circle cx="108" cy="23" r="1" fill="currentColor"/>
-            <circle cx="91" cy="40" r="1" fill="currentColor"/><circle cx="91" cy="57" r="1" fill="currentColor"/><circle cx="108" cy="57" r="1" fill="currentColor"/>
-            <g class="deliver">
-              <rect x="11" y="48" width="22" height="19" rx="2" fill="#fff" stroke="currentColor" stroke-width="2"/>
-              <rect x="9" y="42" width="26" height="7" rx="2" fill="#fff" stroke="currentColor" stroke-width="2"/>
-              <rect x="20" y="42" width="4" height="25" fill="var(--robe-blush-deep)"/>
-              <path d="M22 42 q-8 -9 -11 -2 q4 4 11 2 q8 -9 11 -2 q-4 4 -11 2" fill="var(--robe-blush-deep)" stroke="currentColor" stroke-width="1.4"/>
-            </g>
-            <rect class="door" x="98" y="33" width="13" height="14" rx="1.5" fill="#fff" stroke="currentColor" stroke-width="1.5"/>
-            <path class="twinkle" d="M58 10 q1 5 6 6 q-5 1 -6 6 q-1 -5 -6 -6 q5 -1 6 -6z" fill="var(--robe-blush-deep)"/>
-          </svg></div>
+        </div>
+        <div class="step-card">
+          <div class="step-number">2</div>
+          <div class="step-art" aria-hidden="true"><svg viewBox="0 0 80 72"><path d="M4 68 h72" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".6"/><g class="hop"><rect x="22" y="40" width="30" height="26" rx="2" fill="#fff" stroke="currentColor" stroke-width="2"/><rect x="19" y="33" width="36" height="8" rx="2" fill="#fff" stroke="currentColor" stroke-width="2"/><rect x="34" y="33" width="6" height="33" fill="var(--robe-blush-deep)"/><path d="M37 33 q-9 -10 -12 -2 q4 4 12 2 q9 -10 12 -2 q-4 4 -12 2" fill="var(--robe-blush-deep)" stroke="currentColor" stroke-width="1.6"/></g><path class="twinkle" d="M66 10 q1 5 6 6 q-5 1 -6 6 q-1 -5 -6 -6 q5 -1 6 -6z" fill="var(--robe-blush-deep)"/></svg></div>
           <h3>It arrives, ready to wear</h3>
-          <p>Delivered to your door or a parcel locker near you, already cleaned and inspected.</p>
-        </li>
-        <li class="step-card">
-          <div class="step-top"><div class="step-number">3</div></div>
-          <div class="step-art step-art-wear" aria-hidden="true">
-            <svg class="wind" viewBox="0 0 36 60"><path d="M2 22 q8 -6 16 0 t16 0" /><path d="M6 38 q7 -5 14 0 t14 0" /></svg>
-            <span class="wear-figure" data-figure></span>
-            <svg class="calendar" viewBox="0 0 44 50">
-              <rect x="2" y="6" width="40" height="42" rx="5" fill="#fff" stroke="currentColor" stroke-width="2"/>
-              <path d="M2 17 h40 v-6 a5 5 0 0 0 -5 -5 h-30 a5 5 0 0 0 -5 5z" fill="var(--robe-blush-deep)" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-              <path d="M13 2 v8 M31 2 v8" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
-              <text class="cal-day" x="22" y="39" text-anchor="middle">10</text>
-            </svg>
-          </div>
+          <p>Delivered to your door or a pickup point, already cleaned and inspected.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-number">3</div>
+          <div class="step-art" aria-hidden="true"><svg viewBox="0 0 70 72"><g class="sway"><path d="M30 4 q4 -3 6 1 q1 3 -6 6 v4 l-16 8 h32 l-16 -8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M24 24 l2 6 h8 l2 -6 l3 4 l-2 4 q8 14 11 34 q-18 4 -36 0 q3 -20 11 -34 l-2 -4 z" fill="#fff" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></g><g><circle class="rise" cx="56" cy="60" r="5" fill="none" stroke="currentColor" stroke-width="1.6"/><circle class="rise" cx="8" cy="62" r="4" fill="none" stroke="currentColor" stroke-width="1.6"/><circle class="rise" cx="62" cy="64" r="3" fill="none" stroke="currentColor" stroke-width="1.6"/></g></svg></div>
           <h3>Wear it for 10 days</h3>
           <p>You get a short window to accept the delivery or flag a problem before the rental clock starts.</p>
-        </li>
-        <li class="step-card optional">
-          <div class="step-top"><div class="step-number">4</div><span class="optional-chip">Optional</span></div>
-          <div class="step-art" aria-hidden="true"><svg viewBox="0 0 120 72">
-            <defs><clipPath id="porthole"><circle cx="60" cy="43" r="13"/></clipPath></defs>
-            <rect x="38" y="5" width="44" height="62" rx="5" fill="#fff" stroke="currentColor" stroke-width="2"/>
-            <path d="M38 18 h44" stroke="currentColor" stroke-width="1.6" opacity=".6"/>
-            <circle cx="46" cy="11.5" r="2.4" fill="none" stroke="currentColor" stroke-width="1.5"/>
-            <circle cx="53" cy="11.5" r="2.4" fill="none" stroke="currentColor" stroke-width="1.5"/>
-            <rect x="64" y="9" width="12" height="5" rx="1.5" fill="var(--robe-blush-deep)"/>
-            <circle cx="60" cy="43" r="17" fill="#fff" stroke="currentColor" stroke-width="2"/>
-            <g clip-path="url(#porthole)">
-              <circle cx="60" cy="43" r="13" fill="var(--robe-blush)"/>
-              <g class="tumble">
-                <circle cx="60" cy="43" r="13" fill="none"/>
-                <path d="M57.5 33 L58.5 36.5 H61.5 L62.5 33 L64.5 35 L63.3 38 Q67 43 68 50 Q60 52 52 50 Q53 43 56.7 38 L55.5 35 Z" fill="#fff" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
-              </g>
-              <path class="slosh" d="M30 48 q5 -3 10 0 t10 0 t10 0 t10 0 t10 0 t10 0 v20 h-60z" fill="var(--robe-blush-deep)" opacity=".45"/>
-            </g>
-            <circle cx="60" cy="43" r="13" fill="none" stroke="currentColor" stroke-width="1.4" opacity=".6"/>
-            <g><circle class="rise" cx="26" cy="58" r="4" fill="none" stroke="currentColor" stroke-width="1.5"/><circle class="rise" cx="94" cy="62" r="5" fill="none" stroke="currentColor" stroke-width="1.5"/><circle class="rise" cx="100" cy="56" r="2.6" fill="none" stroke="currentColor" stroke-width="1.5"/><circle class="rise" cx="20" cy="64" r="2.4" fill="none" stroke="currentColor" stroke-width="1.5"/></g>
-            <path class="twinkle" d="M100 10 q1 5 6 6 q-5 1 -6 6 q-1 -5 -6 -6 q5 -1 6 -6z" fill="var(--robe-blush-deep)"/>
-          </svg></div>
-          <h3>A fresh clean, if asked</h3>
-          <p>If the owner or shop asks for it, drop it at a partner laundry near you when your 10 days are up. They clean it, check it and send it home.</p>
-        </li>
-        <li class="step-card">
-          <div class="step-top"><div class="step-number">5</div></div>
-          <div class="step-art" aria-hidden="true"><svg viewBox="0 0 120 72">
-            <path d="M4 68 h44" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".5"/>
-            <path class="return-arrow" pathLength="1" d="M12 38 C 10 18, 38 14, 38 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            <path class="return-head" d="M33.5 28 L38 33 L42.5 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <g class="parcel">
-              <rect x="10" y="42" width="30" height="25" rx="2" fill="#fff" stroke="currentColor" stroke-width="2"/>
-              <path d="M10 49 h30" stroke="currentColor" stroke-width="1.6" opacity=".5"/>
-              <rect x="15" y="53" width="15" height="10" rx="1.5" fill="var(--robe-blush)" stroke="currentColor" stroke-width="1.2"/>
-              <path d="M18 56.5 h9 M18 59.5 h6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
-            </g>
-            <text class="or" x="62" y="44" text-anchor="middle">or</text>
-            <g class="tag-swing">
-              <path d="M96 4 q-3 8 0 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-              <path d="M86 25 L92 18 H100 L106 25 V58 Q106 61 103 61 H89 Q86 61 86 58 Z" fill="#fff" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-              <circle cx="96" cy="23" r="2" fill="none" stroke="currentColor" stroke-width="1.5"/>
-              <path class="beat" d="M96 47 c-8 -5.5 -6 -13 0 -9 c6 -4 8 3.5 0 9z" fill="var(--robe-blush-deep)" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
-              <path d="M90 54 h12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" opacity=".5"/>
-            </g>
-            <path class="twinkle" d="M114 30 q1 4 5 5 q-4 1 -5 5 q-1 -4 -5 -5 q4 -1 5 -5z" fill="var(--robe-blush-deep)"/>
-            <path class="twinkle late" d="M76 8 q1 4 5 5 q-4 1 -5 5 q-1 -4 -5 -5 q4 -1 5 -5z" fill="var(--robe-blush-deep)"/>
-          </svg></div>
-          <h3>Return it, or buy it</h3>
-          <p>Post it back with the prepaid label, or buy it outright if you can't bear to let it go.</p>
-        </li>
-      </ol>
-    </section>
-
-    <section class="reading" aria-label="Why rent">
-      <div class="reading-stage">
-        <h2 class="reading-sentence" aria-label="You'll wear that dress for one night. It deserves more than one. Rent it for ten days, then send it on to its next party.">
-          <span class="w">You'll</span> <span class="w">wear</span> <span class="w">that</span> <span class="w">dress</span> <span class="w">for</span> <span class="w">one</span> <span class="w">night.</span>
-          <span class="w">It</span> <span class="w">deserves</span> <span class="w">more</span> <span class="w">than</span> <span class="w">one.</span>
-          <span class="w">Rent</span> <span class="w">it</span> <span class="w">for</span> <span class="phrase"><span class="w">ten</span> <span class="w">days,</span><svg class="underline" viewBox="0 0 200 20" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M4 12 q50 -8 100 -2 t92 0"/></svg></span>
-          <span class="w">then</span> <span class="w">send</span> <span class="w">it</span> <span class="w">on</span> <span class="w">to</span> <span class="w">its</span> <span class="w">next</span> <span class="w">party.</span>
-        </h2>
-        <div class="reading-progress" aria-hidden="true"><span></span></div>
-      </div>
-    </section>
-
-    <section class="promises" id="promises" aria-label="What you can count on">
-      <div class="section-heading center">
-        <div class="section-eyebrow">Why Robe</div>
-        <h2>Made for borrowing, <span class="soft">not for keeping.</span></h2>
-      </div>
-      <div class="promise-rail">
-        <div class="promise-belt">
-          <div class="promise-list">
-            <article class="promise"><h3>Cleaned and checked</h3><p>Every piece is cleaned and inspected before it reaches you.</p></article>
-            <article class="promise"><h3>A hold, not a charge</h3><p>Most deposits are a temporary hold on your card, released within 48 hours of the item being checked in.</p></article>
-            <article class="promise"><h3>Ten days from delivery</h3><p>The rental clock starts when you confirm delivery. Need longer? Ask the owner for ten more.</p></article>
-            <article class="promise"><h3>Lockers round the corner</h3><p>Collect from an InPost locker or a Post Office within 3 km of you.</p></article>
-            <article class="promise"><h3>A fresh clean, if asked</h3><p>Some owners ask for a partner laundry clean when you're done. It's arranged at checkout.</p></article>
-            <article class="promise"><h3>Robe Rewards</h3><p>Every 3 rentals returned in good condition earn 50% off the rent of your next one.</p></article>
-          </div>
-          <div class="promise-list" aria-hidden="true">
-            <article class="promise"><h3>Cleaned and checked</h3><p>Every piece is cleaned and inspected before it reaches you.</p></article>
-            <article class="promise"><h3>A hold, not a charge</h3><p>Most deposits are a temporary hold on your card, released within 48 hours of the item being checked in.</p></article>
-            <article class="promise"><h3>Ten days from delivery</h3><p>The rental clock starts when you confirm delivery. Need longer? Ask the owner for ten more.</p></article>
-            <article class="promise"><h3>Lockers round the corner</h3><p>Collect from an InPost locker or a Post Office within 3 km of you.</p></article>
-            <article class="promise"><h3>A fresh clean, if asked</h3><p>Some owners ask for a partner laundry clean when you're done. It's arranged at checkout.</p></article>
-            <article class="promise"><h3>Robe Rewards</h3><p>Every 3 rentals returned in good condition earn 50% off the rent of your next one.</p></article>
-          </div>
         </div>
-      </div>
-    </section>
-
-    <section class="finale" id="download" aria-label="Get the app">
-      <div class="finale-mark">
-        <span class="landing-ring" aria-hidden="true"></span>
-        <div id="hero-mark" role="img" aria-label="Robe"><span class="mark-fallback">ROBE</span></div>
-      </div>
-      <h2>Wear something new. <span class="soft">Own a little less.</span></h2>
-      <div class="store-badges">
-        <a class="store-badge" href="#download"><img src="assets/badges/app-store.png" alt="Download on the App Store" width="157" height="52"></a>
-        <a class="store-badge" href="#download"><img src="assets/badges/google-play.png" alt="Get it on Google Play" width="178" height="52"></a>
+        <div class="step-card">
+          <div class="step-number">4</div>
+          <div class="step-art" aria-hidden="true"><svg viewBox="0 0 80 72"><path d="M6 60 q20 -10 40 -2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".5"/><g class="hop"><path d="M40 20 l12 -10 l10 12 l-12 10 z" fill="#fff" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="52" cy="16" r="2" fill="currentColor"/><path d="M52 16 q-14 -10 -22 -4" fill="none" stroke="currentColor" stroke-width="1.6"/></g><path class="twinkle" d="M20 24 q1 5 6 6 q-5 1 -6 6 q-1 -5 -6 -6 q5 -1 6 -6z" fill="var(--robe-blush-deep)"/></svg></div>
+          <h3>Return it, or buy it</h3>
+          <p>Send it back with the label provided, or buy it outright if you don't want to let go.</p>
+        </div>
       </div>
     </section>
   </main>
 
-  <footer class="site-footer">
-    <div id="footer-mark" role="img" aria-label="Robe"><span class="mark-fallback">ROBE</span></div>
-    <p class="footer-tagline">Rent the dress, not the price.</p>
-    <nav class="footer-links" aria-label="Footer">
-      <a href="#listings">Browse</a><a href="#how-it-works">How it works</a><a href="#promises">Why Robe</a><a href="#download">Get the app</a>
-    </nav>
-    <p class="footer-copy">© 2026 Robe. Not affiliated with Apple or Google.</p>
+  <footer id="download">
+    <div class="footer-inner">
+      <div id="footer-mark" role="img" aria-label="Robe"><span class="mark-fallback">ROBE</span></div>
+      <p class="footer-tagline">Rent the dress, not the price.</p>
+      <div class="store-badges">
+        <a class="store-badge" href="#">
+          <span class="store-badge-text">
+            <span class="store-badge-small">Download on the</span>
+            <span class="store-badge-big">App Store</span>
+          </span>
+        </a>
+        <a class="store-badge" href="#">
+          <span class="store-badge-text">
+            <span class="store-badge-small">Get it on</span>
+            <span class="store-badge-big">Google Play</span>
+          </span>
+        </a>
+      </div>
+      <p class="footer-copy">© 2026 Robe. Not affiliated with Apple or Google.</p>
+    </div>
   </footer>
-
-  <button class="picks-toggle" type="button" aria-expanded="false" aria-controls="design-picks">Design picks</button>
-  <aside class="design-picks" id="design-picks" hidden aria-label="Design picks">
-    <div class="toggle-label">Wordmark style</div>
-    <div class="font-toggle" aria-label="Wordmark style"></div>
-    <div class="toggle-label">Purple</div>
-    <div class="swatch-toggle" aria-label="Purple shade"></div>
-  </aside>
 
   <script src="config.js?v=5"></script>
   <script src="storefront.js?v=5"></script>
   <script src="figure-data.js?v=6"></script>
   <script src="figure.js?v=6"></script>
-  <script src="wordmark.js?v=7"></script>
-  <script src="motion.js?v=2"></script>
+  <script src="wordmark.js?v=6"></script>
 </body>
 </html>
