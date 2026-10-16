@@ -207,6 +207,30 @@
     return page;
   }
 
+  // Premium shops that chose it dress their item pages in their own colours: the page, text,
+  // buttons and bar, and their name on a card in their colours (the apps' ShopBrand.itemPagesInColours).
+  const BRAND_ITEM_PAGES = ["harrods", "zara", "selfridges"];
+  function brandOf(piece) {
+    const shops = window.RobeTown && window.RobeTown.SHOPS;
+    const key = shops && Object.keys(shops).find((k) => shops[k].owner === piece.owner.name);
+    return key && BRAND_ITEM_PAGES.includes(key) ? key : null;
+  }
+  /** Dresses the page in a shop's colours (light, as the shop's own are), or back to Robe's when `key` is null. */
+  function brandPage(key) {
+    const root = document.documentElement;
+    if (key) {
+      document.body.dataset.brandPage = key;
+      if (root.dataset.brandForced === undefined) root.dataset.brandForced = root.dataset.theme || "";
+      root.dataset.theme = "light";
+    } else {
+      delete document.body.dataset.brandPage;
+      if (root.dataset.brandForced !== undefined) {
+        if (root.dataset.brandForced) root.dataset.theme = root.dataset.brandForced; else delete root.dataset.theme;
+        delete root.dataset.brandForced;
+      }
+    }
+  }
+
   /** A premium shop's page: its building, its name and story, and its pieces. */
   function shopPage(key) {
     const shop = window.RobeTown && window.RobeTown.SHOPS[key];
@@ -404,13 +428,26 @@
     [piece.size, piece.condition, piece.colour].forEach((t) => facts.appendChild(el("li", "", t)));
     info.appendChild(facts);
     info.appendChild(el("p", "item-details", piece.details));
-    const owner = el("div", "item-owner");
-    owner.appendChild(el("span", "item-avatar", piece.owner.name.split(" ").map((w) => w[0]).join("").slice(0, 2)));
-    const who = el("div");
-    who.appendChild(el("strong", "", piece.owner.name));
-    who.appendChild(el("span", "", piece.owner.shop ? `Shop · ${piece.owner.area}` : `A wardrobe in ${piece.owner.area}`));
-    owner.appendChild(who);
-    info.appendChild(owner);
+    const brand = brandOf(piece);
+    brandPage(brand);
+    if (brand) {
+      // The shop's name on a card in its own colours.
+      const shop = window.RobeTown.SHOPS[brand];
+      const owner = el("a", "item-owner brand-owner");
+      owner.href = `#/shop/${brand}`;
+      const who = el("div");
+      who.append(el("strong", "brand-owner-name", shop.name), el("small", "", shop.tagline.toUpperCase()));
+      owner.append(who, el("span", "brand-owner-go", "Visit shop ›"));
+      info.appendChild(owner);
+    } else {
+      const owner = el("div", "item-owner");
+      owner.appendChild(el("span", "item-avatar", piece.owner.name.split(" ").map((w) => w[0]).join("").slice(0, 2)));
+      const who = el("div");
+      who.appendChild(el("strong", "", piece.owner.name));
+      who.appendChild(el("span", "", piece.owner.shop ? `Shop · ${piece.owner.area}` : `A wardrobe in ${piece.owner.area}`));
+      owner.appendChild(who);
+      info.appendChild(owner);
+    }
     const actions = el("div", "qv-actions");
     const add = el("button", "qv-cta", "Add to bag");
     add.type = "button";
@@ -539,6 +576,7 @@
     const parts = path.split("/").filter(Boolean);
     const params = new URLSearchParams(query || "");
     document.title = "Robe — shop";
+    brandPage(null);
     let tab = "home", view;
     if (parts[0] === "search") { tab = "search"; view = search(params); }
     else if (parts[0] === "item") { tab = "search"; view = item(parts[1]); }
@@ -595,6 +633,8 @@
   toggle.addEventListener("click", () => {
     const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
     document.documentElement.dataset.theme = next;
+    // The reader's choice wins over a shop's light page.
+    delete document.documentElement.dataset.brandForced;
     try { localStorage.setItem("robeTheme", next); } catch (e) {}
     paintToggle();
   });

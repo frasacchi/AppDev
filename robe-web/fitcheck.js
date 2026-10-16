@@ -241,10 +241,10 @@
 
   /** How to measure a piece laid flat, on a body, and why a garment measures more than the body inside it. */
   function measureGuide(category, highlight) {
-    const box = el("div", "fit-guide");
+    // Not "fit-guide": that's the faint waist line in the overlay.
+    const box = el("div", "fit-measure-guide");
     box.append(figure(category, "garment", highlight),
-      el("p", "fit-hint", "Lay it flat and measure straight across: about half of all the way round. A garment measures more than the body inside it; that extra is the room to move."),
-      fitStyles());
+      el("p", "fit-hint", "Lay it flat and measure straight across: about half of all the way round. A garment measures more than the body inside it; that extra is the room to move."));
     return box;
   }
 

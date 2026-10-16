@@ -186,7 +186,7 @@ body.no-scroll { overflow: hidden; height: 100%; }
 .access-or { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
 .qv-note a { color: inherit; }
 /* The official App Store and Google Play badges (assets/badges). */
-.store-badge { display: inline-block; border-radius: 12px; line-height: 0; transition: transform 0.25s var(--ease-spring), box-shadow 0.25s; }
+.store-badge { display: inline-block; border-radius: 9px; line-height: 0; transition: transform 0.25s var(--ease-spring), box-shadow 0.25s; }
 .store-badge img { height: 52px; width: auto; }
 .store-badge:hover { transform: translateY(-3px); box-shadow: 0 14px 30px -16px var(--robe-blush-deep); }
 
@@ -787,7 +787,9 @@ main > section.list-yours { max-width: none; margin: 40px 0 0; padding: 72px max
 .fit-figure .fig-tape.back.on { stroke-opacity: 0.6; stroke-width: 1.8; }
 .fit-figure .fig-label { font: 11px var(--font-body); fill: currentColor; fill-opacity: 0.7; }
 .fit-figure .fig-label.on { fill: #E83E8C; fill-opacity: 1; font-weight: 700; }
-.fit-guide .fit-figure-garment { width: 100%; max-width: 260px; height: auto; margin: 0 auto; }
+.fit-measure-guide .fit-figure-garment { width: 100%; max-width: 260px; height: auto; margin: 0 auto; }
+.fit-invite .fit-add { width: 100%; min-height: 46px; padding: 12px 20px; border-radius: 999px; }
+.fit-basis { flex-wrap: wrap; border-radius: 16px; text-align: left; }
 .fit-styles { display: flex; justify-content: space-around; gap: 8px; margin: 4px 0; }
 .fit-styles figure { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 4px; }
 .fit-styles .fit-figure { width: 58px; height: auto; }

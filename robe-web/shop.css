@@ -174,3 +174,21 @@ body[data-page="shop"] { min-height: 100svh; }
 #shop-main > .rising { animation: rise-in 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
 @keyframes rise-in { from { opacity: 0; transform: translateY(56px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { #shop-main.sinking > *, #shop-main > .rising { transition: none; animation: none; transform: none; opacity: 1; } }
+
+/* A premium shop's item page in its own colours (shop.js BRAND_ITEM_PAGES): page, text, buttons and bar,
+   and its name on a card in its colours. Shown light, as the shops' own colours are. */
+body[data-brand-page="harrods"] { --bg: #F6F1E4; --bg-raised: #FFFDF7; --text: #1E2B24; --muted: #6B6452; --card-text: #1E2B24; --card-muted: #6B6452; --line: rgba(197, 160, 90, 0.45); --robe-grape: #00483A; --brand-bar: #00483A; --brand-on-bar: #CDA864; --brand-rule: #C5A05A; }
+body[data-brand-page="zara"] { --bg: #FFFFFF; --bg-raised: #EDEBE8; --text: #000000; --muted: #5E5E5E; --card-text: #000000; --card-muted: #5E5E5E; --line: rgba(0, 0, 0, 0.18); --robe-grape: #000000; --brand-bar: #000000; --brand-on-bar: #FFFFFF; --brand-rule: #000000; }
+body[data-brand-page="selfridges"] { --bg: #FFFBE6; --bg-raised: #FFFFFF; --text: #111111; --muted: #5C5640; --card-text: #111111; --card-muted: #5C5640; --line: rgba(255, 214, 10, 0.6); --robe-grape: #111111; --brand-bar: #FFE14D; --brand-on-bar: #111111; --brand-rule: #FFD60A; }
+body[data-brand-page] { background: var(--bg); color: var(--text); }
+body[data-brand-page] .shop-top { background: var(--brand-bar); }
+body[data-brand-page="selfridges"] .shop-mark img { filter: invert(1); }
+body[data-brand-page="selfridges"] .shop-top .theme-toggle { color: #111; border-color: rgba(0, 0, 0, 0.3); }
+.item-owner.brand-owner { justify-content: space-between; padding: 16px 20px; background: var(--brand-bar); color: var(--brand-on-bar); border: 1px solid var(--brand-rule); text-decoration: none; transition: transform 0.12s; }
+.item-owner.brand-owner:hover { transform: translateY(-1px); }
+.item-owner.brand-owner small { display: block; margin-top: 4px; font-size: 11px; letter-spacing: 0.12em; color: inherit; opacity: 0.85; }
+.brand-owner-name { font-size: 26px; text-transform: uppercase; line-height: 1.1; }
+.brand-owner-go { font-size: 14px; font-weight: 600; color: inherit !important; }
+body[data-brand-page="harrods"] .brand-owner-name { font-family: Cinzel, Georgia, serif; letter-spacing: 0.12em; }
+body[data-brand-page="zara"] .brand-owner-name { font-family: "Bodoni Moda", Didot, serif; letter-spacing: -0.04em; font-size: 32px; }
+body[data-brand-page="selfridges"] .brand-owner-name { font-family: Jost, Arial, sans-serif; font-weight: 700; letter-spacing: -0.02em; }
