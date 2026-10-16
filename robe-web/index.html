@@ -6,10 +6,18 @@
 <title>Robe — rent the dress, not the price</title>
 <meta name="description" content="Rent clothes from private wardrobes and shops across London. Robe for iOS and Android.">
 <script>
-  // The saved light/dark choice, applied before the page paints.
-  try { const t = localStorage.getItem("robeTheme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch (e) {}
+  // Light or dark, applied before the page paints: the reader's saved choice,
+  // or otherwise whatever their device is set to.
+  (function () {
+    var theme = null;
+    try { theme = localStorage.getItem("robeTheme"); } catch (e) {}
+    if (theme !== "light" && theme !== "dark") {
+      theme = window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+    }
+    document.documentElement.dataset.theme = theme;
+  })();
 </script>
-<link rel="stylesheet" href="styles.css?v=10">
+<link rel="stylesheet" href="styles.css?v=19">
 </head>
 <body>
 
@@ -36,13 +44,14 @@
       <div id="nav-mark" role="img" aria-label="Robe"><span class="mark-fallback">ROBE</span></div>
     </a>
     <div class="rail-count" aria-live="polite">
-      <div class="odometer" id="rail-odometer" aria-label="8 pieces on the rail">8</div>
+      <div class="odometer" id="rail-odometer" aria-label="26 pieces on the rail">26</div>
       <span class="rail-count-label">pieces on the rail</span>
     </div>
     <nav class="site-nav" id="site-nav" aria-label="Main navigation">
       <a href="#listings">Browse</a>
       <a href="#how-it-works">How it works</a>
       <a href="#promises">Why Robe</a>
+      <a href="shop.html" class="nav-login">Log in</a>
       <a href="#download" class="nav-cta">Get the app</a>
     </nav>
     <button class="theme-toggle" type="button" aria-label="Switch to light mode"><span aria-hidden="true">☾</span></button>
@@ -66,6 +75,10 @@
         <p class="hero-kicker">Clothes rental across London</p>
         <h1 class="hero-title"><span class="line">Rent the dress,</span> <span class="line soft">not the price.</span></h1>
         <p class="hero-sub">Ten-day rentals from wardrobes and boutiques near you. Cleaned, checked and delivered to your door or a locker round the corner.</p>
+        <div class="hero-access">
+          <a class="access-login" href="shop.html">Log in to shop <span aria-hidden="true">→</span></a>
+          <span class="access-or">or get the app</span>
+        </div>
         <div class="store-badges">
           <a class="store-badge" href="#download"><img src="assets/badges/app-store.png" alt="Download on the App Store" width="157" height="52"></a>
           <a class="store-badge" href="#download"><img src="assets/badges/google-play.png" alt="Get it on Google Play" width="178" height="52"></a>
@@ -90,7 +103,7 @@
       <div class="phone-stage">
         <figure class="phone phone-left" aria-label="A listing in the Robe app: a scarlet maxi gown, £45 for 10 days">
           <div class="phone-screen">
-            <div class="app-photo" style="background-image:url(assets/garments/garment-01.jpg)"></div>
+            <div class="app-photo" style="--bd1:#DBF0E7;--bd2:#B9DFCE;--bd3:#7DBF9F;--img:url(assets/garments/garment-01.webp)"></div>
             <div class="app-detail">
               <div class="app-brand">Self-Portrait</div>
               <div class="app-title">Scarlet maxi gown</div>
@@ -118,16 +131,16 @@
             </div>
           </div>
         </figure>
-        <figure class="phone phone-centre" aria-label="The Robe app's home screen: a search bar, a banner and new listings">
+        <figure class="phone phone-centre" aria-label="The Robe app's home screen: search on a grape wave, the banner and the shop window">
           <div class="phone-screen">
             <div class="app-bar"><img src="assets/wordmarks/RobeWordmarkPlayfairWhite.svg" alt=""></div>
-            <div class="app-search">Search for dresses, brands…</div>
-            <div class="app-hero">Rent the dress,<br>not the price.</div>
-            <div class="app-grid">
-              <div style="background-image:url(assets/garments/garment-05.jpg)"></div>
-              <div style="background-image:url(assets/garments/garment-14.jpg)"></div>
-              <div style="background-image:url(assets/garments/garment-09.jpg)"></div>
-              <div style="background-image:url(assets/garments/garment-02.jpg)"></div>
+            <div class="app-wave"><div class="app-search">Search for dresses, brands…</div></div>
+            <div class="app-hero">Rent the dress,<br><em>not the price.</em></div>
+            <div class="app-window-title">The window</div>
+            <div class="app-window">
+              <div style="--bd1:#E9E2F7;--bd2:#CDBFEA;--bd3:#9D88CF;--img:url(assets/garments/garment-14.webp)"></div>
+              <div style="--bd1:#DBF0E7;--bd2:#B9DFCE;--bd3:#7DBF9F;--img:url(assets/garments/garment-05.webp)"></div>
+              <div style="--bd1:#DBE8F0;--bd2:#B9D1DF;--bd3:#7DA7BF;--img:url(assets/garments/garment-01.webp)"></div>
             </div>
           </div>
         </figure>
@@ -144,83 +157,117 @@
     <section id="listings">
       <div class="section-heading">
         <div class="section-eyebrow">On Robe right now</div>
-        <h2>From private wardrobes and shop rails</h2>
-        <p>A small taste of what's on the app — cleaned, checked, and ready to wear.</p>
+        <h2>Shop the window. <span class="soft">Walk into town.</span></h2>
+        <p>Pieces from private wardrobes and shop rails, each on its own colour. Swipe through the window, tap one for every photo, and <a href="shop.html">log in to shop</a> them all.</p>
       </div>
+
+      <div class="shop-window" id="shop-window">
+        <div class="window-tabs" role="tablist" aria-label="Corners of the shop"></div>
+        <div class="window-stage">
+          <button class="window-prev" type="button" aria-label="Previous piece"><span aria-hidden="true">‹</span></button>
+          <div class="window-track" aria-label="The window"></div>
+          <button class="window-next" type="button" aria-label="Next piece"><span aria-hidden="true">›</span></button>
+        </div>
+        <div class="window-caption" aria-live="polite"></div>
+        <div class="window-dots" aria-hidden="true"></div>
+      </div>
+
+      <div class="looks-heading reveal">
+        <h3>Everything on the rail</h3>
+      </div>
+      <div class="filter-chips" id="grid-filters" aria-label="Show"></div>
       <div class="listing-grid">
-
-        <div class="listing-card">
-          <img class="listing-photo" src="assets/garments/garment-01.jpg" alt="Scarlet maxi gown">
+        <article class="listing-card">
+          <div class="card-photo"><img class="photo-main" src="assets/garments/garment-01.webp" alt="Scarlet maxi gown" loading="lazy"></div>
           <div class="listing-body">
-            <div class="brand">Self-Portrait</div>
+            <div class="piece-brand">Self-Portrait</div>
             <div class="title">Scarlet maxi gown</div>
-            <div class="price">£45 <span>/ 10 days</span></div>
+            <div class="meta"><span class="price">£45 <span>/ 10 days</span></span><span class="size">UK 10</span></div>
           </div>
-        </div>
-
-        <div class="listing-card">
-          <img class="listing-photo" src="assets/garments/garment-05.jpg" alt="Black satin evening gown">
+        </article>
+        <article class="listing-card">
+          <div class="card-photo"><img class="photo-main" src="assets/garments/garment-05.webp" alt="Black satin evening gown" loading="lazy"></div>
           <div class="listing-body">
-            <div class="brand">Needle &amp; Thread</div>
+            <div class="piece-brand">Needle &amp; Thread</div>
             <div class="title">Black satin evening gown</div>
-            <div class="price">£55 <span>/ 10 days</span></div>
+            <div class="meta"><span class="price">£55 <span>/ 10 days</span></span><span class="size">UK 8</span></div>
           </div>
-        </div>
-
-        <div class="listing-card">
-          <img class="listing-photo" src="assets/garments/garment-14.jpg" alt="Silver column gown">
+        </article>
+        <article class="listing-card">
+          <div class="card-photo"><img class="photo-main" src="assets/garments/garment-14.webp" alt="Silver column gown" loading="lazy"></div>
           <div class="listing-body">
-            <div class="brand">Jenny Packham</div>
+            <div class="piece-brand">Jenny Packham</div>
             <div class="title">Silver column gown</div>
-            <div class="price">£85 <span>/ 10 days</span></div>
+            <div class="meta"><span class="price">£85 <span>/ 10 days</span></span><span class="size">UK 10</span></div>
           </div>
-        </div>
-
-        <div class="listing-card">
-          <img class="listing-photo" src="assets/garments/garment-09.jpg" alt="Floral chiffon gown">
+        </article>
+        <article class="listing-card">
+          <div class="card-photo"><img class="photo-main" src="assets/garments/garment-09.webp" alt="Floral chiffon gown" loading="lazy"></div>
           <div class="listing-body">
-            <div class="brand">Needle &amp; Thread</div>
+            <div class="piece-brand">Needle &amp; Thread</div>
             <div class="title">Floral chiffon gown</div>
-            <div class="price">£38 <span>/ 10 days</span></div>
+            <div class="meta"><span class="price">£38 <span>/ 10 days</span></span><span class="size">UK 14</span></div>
           </div>
-        </div>
-
-        <div class="listing-card">
-          <img class="listing-photo" src="assets/garments/garment-02.jpg" alt="Polka dot midi dress">
+        </article>
+        <article class="listing-card">
+          <div class="card-photo"><img class="photo-main" src="assets/garments/garment-02.webp" alt="Polka dot midi dress" loading="lazy"></div>
           <div class="listing-body">
-            <div class="brand">Reformation</div>
+            <div class="piece-brand">Reformation</div>
             <div class="title">Polka dot midi dress</div>
-            <div class="price">£22 <span>/ 10 days</span></div>
+            <div class="meta"><span class="price">£22 <span>/ 10 days</span></span><span class="size">UK 8</span></div>
           </div>
-        </div>
-
-        <div class="listing-card">
-          <img class="listing-photo" src="assets/garments/garment-03.jpg" alt="Daisy print tea dress">
+        </article>
+        <article class="listing-card">
+          <div class="card-photo"><img class="photo-main" src="assets/garments/garment-03.webp" alt="Daisy print tea dress" loading="lazy"></div>
           <div class="listing-body">
-            <div class="brand">Ghost</div>
+            <div class="piece-brand">Ghost</div>
             <div class="title">Daisy print tea dress</div>
-            <div class="price">£18 <span>/ 10 days</span></div>
+            <div class="meta"><span class="price">£18 <span>/ 10 days</span></span><span class="size">UK 12</span></div>
           </div>
-        </div>
-
-        <div class="listing-card">
-          <img class="listing-photo" src="assets/garments/garment-07.jpg" alt="Checked wool blazer">
+        </article>
+        <article class="listing-card">
+          <div class="card-photo"><img class="photo-main" src="assets/garments/garment-07.webp" alt="Checked wool blazer" loading="lazy"></div>
           <div class="listing-body">
-            <div class="brand">Massimo Dutti</div>
+            <div class="piece-brand">Massimo Dutti</div>
             <div class="title">Checked wool blazer</div>
-            <div class="price">£20 <span>/ 10 days</span></div>
+            <div class="meta"><span class="price">£20 <span>/ 10 days</span></span><span class="size">UK 12</span></div>
           </div>
-        </div>
-
-        <div class="listing-card">
-          <img class="listing-photo" src="assets/garments/garment-11.jpg" alt="Burgundy skater dress">
+        </article>
+        <article class="listing-card">
+          <div class="card-photo"><img class="photo-main" src="assets/garments/garment-11.webp" alt="Burgundy skater dress" loading="lazy"></div>
           <div class="listing-body">
-            <div class="brand">Zara</div>
+            <div class="piece-brand">Zara</div>
             <div class="title">Burgundy skater dress</div>
-            <div class="price">£14 <span>/ 10 days</span></div>
+            <div class="meta"><span class="price">£14 <span>/ 10 days</span></span><span class="size">UK 10</span></div>
           </div>
-        </div>
+        </article>
+      </div>
+    </section>
 
+    <section class="town-section" aria-labelledby="town-title">
+      <div class="section-heading">
+        <div class="section-eyebrow">The shops on Robe</div>
+        <h2 id="town-title">Robe Town. <span class="soft">Tap a shop to walk in.</span></h2>
+        <p>Harrods, Zara and Selfridges rent on Robe too. Pick a building and step inside its shop.</p>
+      </div>
+      <div id="robe-town"></div>
+    </section>
+
+    <section class="list-yours" aria-label="Rent out your wardrobe">
+      <div class="list-yours-copy">
+        <div class="list-yours-kicker">Rent out</div>
+        <h2>Your wardrobe, <em>earning while you sleep.</em></h2>
+        <p>That dress you wore once can pay for itself. Shops and private wardrobes list on Robe the same way.</p>
+      </div>
+      <div class="list-yours-card">
+        <h3>List a piece</h3>
+        <ol>
+          <li><span>1</span>Photograph it: the front, the back and a close-up. The app lifts it off its background.</li>
+          <li><span>2</span>Set the rent and the deposit. Robe suggests both.</li>
+          <li><span>3</span>Send it when it's rented. Cleaning is arranged at checkout, and it comes back to you.</li>
+        </ol>
+        <a class="list-yours-cta" href="#download">List in the app <span aria-hidden="true">→</span></a>
+        <p class="list-yours-note">Premium shops list with no fees.</p>
       </div>
     </section>
 
@@ -411,11 +458,31 @@
     </section>
   </main>
 
+  <dialog class="quick-view" id="quick-view" aria-labelledby="qv-title">
+    <button class="qv-close" type="button" aria-label="Close"><span aria-hidden="true">×</span></button>
+    <div class="qv-gallery">
+      <div class="qv-photo"></div>
+      <div class="qv-thumbs"></div>
+    </div>
+    <div class="qv-details">
+      <div class="qv-brand"></div>
+      <h2 class="qv-title" id="qv-title"></h2>
+      <div class="qv-price"></div>
+      <ul class="qv-facts"></ul>
+      <div class="qv-fit"></div>
+      <div class="qv-actions">
+        <a class="qv-cta" href="shop.html">Log in to rent</a>
+        <button class="heart qv-save" type="button"></button>
+      </div>
+      <p class="qv-note">Ten days from delivery. Cleaning is arranged at checkout, and your deposit is released once it's checked. Or <a href="#download">get the app</a>.</p>
+    </div>
+  </dialog>
+
   <footer class="site-footer">
     <div id="footer-mark" role="img" aria-label="Robe"><span class="mark-fallback">ROBE</span></div>
     <p class="footer-tagline">Rent the dress, not the price.</p>
     <nav class="footer-links" aria-label="Footer">
-      <a href="#listings">Browse</a><a href="#how-it-works">How it works</a><a href="#promises">Why Robe</a><a href="#download">Get the app</a>
+      <a href="shop.html">Shop</a><a href="#listings">Browse</a><a href="#how-it-works">How it works</a><a href="#promises">Why Robe</a><a href="#download">Get the app</a>
     </nav>
     <p class="footer-copy">© 2026 Robe. Not affiliated with Apple or Google.</p>
   </footer>
@@ -429,7 +496,19 @@
   </aside>
 
   <script src="config.js?v=5"></script>
-  <script src="storefront.js?v=5"></script>
+  <script src="fitcheck.js?v=2"></script>
+  <script src="brand-sizes.js?v=1"></script>
+  <script src="fitfinder.js?v=1"></script>
+  <script src="town.js?v=4"></script>
+  <script>
+    // Walking into a shop on the landing page opens it in the web shop (after logging in).
+    document.addEventListener("DOMContentLoaded", function () {
+      var town = document.getElementById("robe-town");
+      if (town && window.RobeTown) window.RobeTown.mount(town, function (key) { location.href = "shop.html#/shop/" + key; });
+    });
+  </script>
+  <script src="showcase.js?v=6"></script>
+  <script src="storefront.js?v=6"></script>
   <script src="figure-data.js?v=7"></script>
   <script src="intro-motion.js?v=1"></script>
   <script src="figure.js?v=7"></script>

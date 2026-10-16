@@ -18,7 +18,7 @@
     }, { threshold }).observe(el);
   }
 
-  // --- Light or dark. Dark is the default; the choice is remembered.
+  // --- Light or dark. It follows the device until the reader picks one; the choice is remembered.
   function setUpTheme() {
     const button = document.querySelector(".theme-toggle");
     if (!button) return;
@@ -33,6 +33,16 @@
       try { localStorage.setItem("robeTheme", root.dataset.theme); } catch (e) {}
       show();
     });
+    // With no saved choice, a change of the device's setting changes the page too.
+    if (window.matchMedia) {
+      window.matchMedia("(prefers-color-scheme: light)").addEventListener("change", (event) => {
+        let saved = null;
+        try { saved = localStorage.getItem("robeTheme"); } catch (e) {}
+        if (saved === "light" || saved === "dark") return;
+        root.dataset.theme = event.matches ? "light" : "dark";
+        show();
+      });
+    }
   }
 
   // --- The mobile menu and the Design picks panel open and close the same way.

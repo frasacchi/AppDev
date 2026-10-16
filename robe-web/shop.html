@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Robe — shop</title>
+<meta name="description" content="Rent dresses, knits, tailoring and bags from wardrobes and shops across London.">
+<script>
+  // Light or dark, applied before the page paints: the reader's saved choice,
+  // or otherwise whatever their device is set to.
+  (function () {
+    var theme = null;
+    try { theme = localStorage.getItem("robeTheme"); } catch (e) {}
+    if (theme !== "light" && theme !== "dark") {
+      theme = window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+    }
+    document.documentElement.dataset.theme = theme;
+  })();
+</script>
+<link rel="stylesheet" href="styles.css?v=19">
+<link rel="stylesheet" href="shop.css?v=4">
+</head>
+<body data-page="shop">
+
+  <a class="skip" href="#shop-main">Skip to content</a>
+
+  <!-- The way in while Robe is in testing: the demo key, or the app. -->
+  <section class="gate" id="gate" hidden aria-labelledby="gate-title">
+    <div class="gate-card">
+      <a class="gate-mark" href="index.html" aria-label="Robe home"><img src="assets/wordmarks/RobeWordmarkPlayfairWhite.svg" alt=""></a>
+      <h1 id="gate-title">Log in to shop</h1>
+      <p>Robe is in testing. Enter the demo key you were given to rent on the web, or get the app.</p>
+      <form class="gate-form" id="gate-form" novalidate>
+        <label for="gate-key">Demo key</label>
+        <input id="gate-key" name="key" type="text" autocomplete="one-time-code" autocapitalize="characters" spellcheck="false" placeholder="ROBE-XXXX-XXXX" aria-describedby="gate-error">
+        <p class="gate-error" id="gate-error" role="alert" hidden>That key didn't work. Check it and try again.</p>
+        <button class="gate-button" type="submit">Log in</button>
+      </form>
+      <div class="gate-or"><span>or</span></div>
+      <div class="store-badges">
+        <a class="store-badge" href="index.html#download"><img src="assets/badges/app-store.png" alt="Download on the App Store" width="157" height="52"></a>
+        <a class="store-badge" href="index.html#download"><img src="assets/badges/google-play.png" alt="Get it on Google Play" width="178" height="52"></a>
+      </div>
+      <p class="gate-note">No key? Ask the Robe team for one. <a href="index.html">Back to the site</a></p>
+    </div>
+  </section>
+
+  <div class="shop" id="shop" hidden>
+    <header class="shop-top">
+      <a class="shop-mark" href="#/" aria-label="Robe shop home"><img src="assets/wordmarks/RobeWordmarkPlayfairWhite.svg" alt=""></a>
+      <form class="shop-search" id="shop-search" role="search">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+        <input id="shop-query" type="search" placeholder="Search for dresses, brands…" aria-label="Search">
+        <kbd aria-hidden="true">/</kbd>
+      </form>
+      <button class="theme-toggle" type="button" aria-label="Switch to light mode"><span aria-hidden="true">☾</span></button>
+    </header>
+
+    <main id="shop-main" tabindex="-1"></main>
+
+    <nav class="dock" aria-label="Shop">
+      <a href="#/" data-tab="home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-4v-6h-6v6H5a1 1 0 0 1-1-1z"/></svg><span>Home</span></a>
+      <a href="#/search" data-tab="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><span>Search</span></a>
+      <a href="#/saved" data-tab="saved"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-9.3-9.2C1.4 8 3.3 4.6 6.7 4.6c2.1 0 3.6 1.2 5.3 3.2 1.7-2 3.2-3.2 5.3-3.2 3.4 0 5.3 3.4 4 6.7-1.8 4.6-9.3 9.2-9.3 9.2z"/></svg><span>Saved</span></a>
+      <a href="#/bag" data-tab="bag"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-1 12H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg><span>Bag</span><b class="dock-count" id="bag-count" hidden>0</b></a>
+      <a href="#/profile" data-tab="profile"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg><span>Profile</span></a>
+    </nav>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </div>
+
+  <script src="fitcheck.js?v=2"></script>
+  <script src="brand-sizes.js?v=1"></script>
+  <script src="fitfinder.js?v=1"></script>
+  <script src="town.js?v=4"></script>
+  <script src="showcase.js?v=6"></script>
+  <script src="shop.js?v=7"></script>
+</body>
+</html>

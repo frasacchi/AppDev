@@ -1,0 +1,176 @@
+/* The web shop (shop.html): the site's colours (styles.css), a grape top bar
+   like the apps', and a dark floating dock like Bounty's. Pieces, cards, the
+   window and the photo viewer come from styles.css. */
+
+body[data-page="shop"] { min-height: 100svh; }
+[hidden] { display: none !important; }
+
+/* ---------- The gate: log in, or get the app ---------- */
+
+.gate { min-height: 100svh; display: grid; place-items: center; padding: 32px 16px; background: radial-gradient(120% 80% at 25% 0%, #5A189A, #2A1822 70%); }
+.gate-card { width: min(440px, 100%); padding: 32px 28px; border-radius: 30px; background: rgba(28, 13, 22, 0.62); border: 1px solid #43293A; color: #FBF1F6; text-align: center; box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.7); }
+.gate-card.shake { animation: shake 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97); }
+@keyframes shake { 20% { transform: translateX(-12px); } 40% { transform: translateX(10px); } 60% { transform: translateX(-6px); } 80% { transform: translateX(3px); } }
+.gate-mark img { height: 40px; width: auto; margin: 0 auto 20px; }
+.gate-card h1 { font-size: 34px; margin-bottom: 8px; }
+.gate-card > p { color: #D9C6D2; margin: 0 0 22px; line-height: 1.5; }
+.gate-form { display: flex; flex-direction: column; gap: 10px; text-align: left; }
+.gate-form label { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--robe-banner-pink); }
+.gate-form input { height: 52px; padding: 0 18px; border-radius: 16px; border: 1.5px solid #5B3A50; background: #FFF8FB; color: #1D1238; font: 500 18px var(--font-body); letter-spacing: 0.08em; }
+.gate-form input:focus { outline: 2px solid var(--robe-banner-pink); outline-offset: 2px; }
+.gate-form input[aria-invalid="true"] { border-color: #FF8A80; }
+.gate-error { margin: 0; color: #FFB0A8; font-size: 14px; }
+.gate-button { height: 52px; margin-top: 4px; border: 0; border-radius: 999px; background: #fff; color: var(--robe-aubergine); font: 500 17px var(--font-body); cursor: pointer; transition: transform 0.12s, filter 0.12s; }
+.gate-button:hover { filter: brightness(0.96); }
+.gate-button:active { transform: scale(0.97); }
+.gate-or { display: flex; align-items: center; gap: 12px; margin: 22px 0 16px; color: #D9C6D2; font-size: 13px; }
+.gate-or::before, .gate-or::after { content: ""; flex: 1; height: 1px; background: #43293A; }
+.gate-note { margin: 18px 0 0; font-size: 13px; color: #D9C6D2; }
+.gate-note a { color: var(--robe-banner-pink); }
+
+/* ---------- Top bar and dock ---------- */
+
+.shop-top { position: sticky; top: 0; z-index: 100; display: flex; align-items: center; gap: 16px; padding: 12px max(16px, calc(50% - 620px)); background: var(--robe-grape); }
+.shop-mark img { height: 30px; width: auto; }
+.shop-search { flex: 1; max-width: 560px; margin: 0 auto; display: flex; align-items: center; gap: 10px; height: 46px; padding: 0 16px; border-radius: 999px; background: var(--bg-raised); box-shadow: 0 8px 20px -12px rgba(0, 0, 0, 0.5); }
+.shop-search svg { width: 20px; height: 20px; flex: none; fill: none; stroke: var(--robe-grape); stroke-width: 2.2; stroke-linecap: round; }
+:root[data-theme="dark"] .shop-search svg, :root:not([data-theme]) .shop-search svg { stroke: #C4A6FF; }
+.shop-search input { flex: 1; min-width: 0; border: 0; background: none; color: var(--text); font: 16px var(--font-body); outline: none; }
+.shop-search:focus-within { outline: 2px solid var(--robe-banner-pink); outline-offset: 2px; }
+.shop-search kbd { font: 12px var(--font-body); color: var(--muted); border: 1px solid var(--line); border-radius: 6px; padding: 1px 7px; }
+.shop-top .theme-toggle { color: #fff; border-color: rgba(255, 255, 255, 0.3); }
+
+.dock { position: fixed; left: 50%; bottom: 20px; z-index: 120; transform: translateX(-50%); display: flex; gap: 2px; max-width: calc(100vw - 32px); padding: 6px; border-radius: 999px; background: rgba(29, 21, 32, 0.86); backdrop-filter: saturate(160%) blur(20px); -webkit-backdrop-filter: saturate(160%) blur(20px); box-shadow: 0 20px 50px rgba(29, 21, 32, 0.28), inset 0 1px rgba(255, 255, 255, 0.08); }
+@media (prefers-reduced-transparency: reduce) { .dock { background: #1D1520; backdrop-filter: none; } }
+.dock a { position: relative; display: inline-flex; align-items: center; gap: 8px; height: 48px; padding: 0 16px; border-radius: 999px; color: #D9C6D2; text-decoration: none; font-size: 15px; transition: background 0.2s, color 0.2s, transform 0.1s ease-out; }
+.dock a:hover { color: #FBF1F6; }
+.dock a:active { transform: scale(0.95); }
+.dock a[aria-current="page"] { background: #FBF1F6; color: #1D1520; }
+.dock a:focus-visible { outline: 2px solid var(--robe-banner-pink); outline-offset: 2px; }
+.dock svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.dock-count { position: absolute; top: 4px; left: 28px; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 999px; background: #C2185B; color: #fff; font: 600 11px/18px var(--font-body); text-align: center; }
+.dock a.catch svg { animation: catch 0.5s var(--ease-spring); }
+@keyframes catch { 30% { transform: scale(1.3) rotate(-8deg); } 60% { transform: scale(0.9); } 100% { transform: none; } }
+.flight { position: fixed; z-index: 500; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 18px; pointer-events: none; }
+
+.toast { position: fixed; left: 50%; bottom: 96px; z-index: 130; transform: translate(-50%, 20px); padding: 10px 18px; border-radius: 999px; background: #1D1520; color: #FBF1F6; font-size: 14px; opacity: 0; pointer-events: none; transition: opacity 0.2s, transform 0.3s var(--ease-spring); }
+.toast.on { opacity: 1; transform: translate(-50%, 0); }
+
+/* ---------- Pages ---------- */
+
+#shop-main { outline: none; }
+.shop-page { max-width: 1240px; margin: 0 auto; padding: 28px 24px 140px; animation: page-in 0.42s cubic-bezier(0.22, 0.61, 0.36, 1); }
+@keyframes page-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.shop-title { margin-top: 56px; }
+.shop-title h2 { font-size: clamp(26px, 3vw, 36px); margin: 0; }
+.shop-title p { margin: 4px 0 0; color: var(--muted); }
+.shop-empty { margin-top: 32px; padding: 40px 24px; border-radius: 26px; border: 1.5px dashed var(--line); text-align: center; color: var(--muted); }
+.shop-empty p { margin: 0 0 16px; }
+.shop-empty a.chip { display: inline-flex; align-items: center; text-decoration: none; }
+
+/* Home's greeting: an aubergine band with the promise, like Bounty's hero. */
+.shop-page .shop-window { margin-top: 20px; }
+.shop-page.shop-home { padding-bottom: 96px; }
+
+.shop-shops { display: flex; gap: 16px; margin-top: 16px; flex-wrap: wrap; }
+.shop-tag { width: 200px; padding: 26px 18px 22px; border-radius: 6px; text-align: center; text-decoration: none; display: flex; flex-direction: column; gap: 6px; transition: transform 0.18s cubic-bezier(0.22, 0.61, 0.36, 1); }
+.shop-tag:hover { transform: translateY(-4px); }
+.shop-tag:active { transform: scale(0.98); }
+.shop-tag.harrods { background: #004B33; color: #C9A961; outline: 1px solid #C9A961; outline-offset: -8px; }
+.shop-tag.zara { background: #000; color: #fff; outline: 1px solid #fff; outline-offset: -8px; }
+.shop-tag-for { font-family: var(--font-heading); font-style: italic; font-size: 16px; }
+.shop-tag strong { font-family: var(--font-heading); font-size: 28px; letter-spacing: 0.06em; text-transform: uppercase; }
+.shop-tag-line { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.85; }
+.shop-tag-from { font-family: var(--font-heading); font-style: italic; font-size: 16px; margin-top: 6px; }
+
+.see-all { display: flex; align-items: center; justify-content: space-between; margin-top: 56px; padding: 20px 24px; border-radius: 22px; background: var(--robe-lilac-light); color: var(--robe-grape); text-decoration: none; font-size: 22px; transition: transform 0.12s; }
+.see-all:active { transform: scale(0.98); }
+.see-all strong { display: block; font-family: var(--font-heading); font-size: 22px; }
+.see-all small { font-size: 14px; opacity: 0.8; }
+
+/* Search: filters beside the results, as on Bounty. */
+.search-page { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 32px; align-items: start; }
+.search-filters { position: sticky; top: 90px; display: flex; flex-direction: column; gap: 22px; padding: 20px; border-radius: 22px; background: var(--bg-raised); border: 1px solid var(--line); }
+.filter-group { border: 0; margin: 0; padding: 0; }
+.filter-group legend { padding: 0; margin-bottom: 10px; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+.filter-row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.filter-row .chip { min-height: 36px; padding: 0 14px; font-size: 13px; }
+.price-range { width: 100%; accent-color: var(--robe-grape); }
+.price-out { font-size: 14px; color: var(--muted); }
+.sort-select { width: 100%; height: 40px; padding: 0 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--bg); color: var(--text); font: 14px var(--font-body); }
+.search-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }
+.search-heading h2 { font-size: clamp(26px, 3vw, 36px); margin: 0; }
+.search-heading p { margin: 0; color: var(--muted); }
+.search-results .listing-grid { grid-template-columns: repeat(3, 1fr); }
+
+/* A piece's page. */
+.item-back { display: inline-block; color: var(--muted); text-decoration: none; margin-bottom: 16px; }
+.item-back:hover { color: var(--text); }
+.item-layout { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 40px; align-items: start; }
+.item-gallery { display: flex; flex-direction: column; gap: 12px; position: sticky; top: 90px; }
+.item-photo { border-radius: 26px; }
+.item-photo:focus-visible { outline: 2px solid var(--robe-banner-pink); outline-offset: 3px; }
+.item-info { display: flex; flex-direction: column; padding-top: 8px; }
+.item-title { font-size: clamp(32px, 4vw, 48px); margin: 4px 0 8px; }
+.item-price { font-size: 22px; font-weight: 600; }
+.item-price span { font-size: 15px; font-weight: 400; color: var(--muted); }
+.item-details { color: var(--muted); line-height: 1.6; margin: 0 0 20px; }
+.item-owner { display: flex; align-items: center; gap: 12px; padding: 14px; margin-bottom: 20px; border-radius: 18px; background: var(--bg-raised); border: 1px solid var(--line); }
+.item-owner strong { display: block; }
+.item-owner span:not(.item-avatar) { font-size: 14px; color: var(--muted); }
+.item-avatar { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: var(--robe-blush); color: var(--robe-plum); font-weight: 600; flex: none; }
+.item-info .qv-actions { margin-top: 0; }
+
+/* The bag. */
+.bag-layout { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 32px; align-items: start; margin-top: 24px; }
+.bag-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+.bag-row { display: flex; align-items: center; gap: 16px; padding: 12px; border-radius: 20px; background: var(--bg-raised); border: 1px solid var(--line); }
+.bag-photo { width: 72px; flex: none; aspect-ratio: 3 / 4; border-radius: 14px; overflow: hidden; --b1: var(--bd1); --b2: var(--bd2); --b3: var(--bd3); background: radial-gradient(120% 90% at 25% 12%, var(--bd1), var(--bd2) 52%, var(--bd3)); }
+.bag-photo img { width: 100%; height: 100%; object-fit: cover; }
+.bag-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.bag-text strong { font-family: var(--font-heading); font-size: 18px; }
+.bag-text span:last-child { color: var(--muted); font-size: 14px; }
+.bag-remove { border: 0; background: none; color: var(--muted); font: 14px var(--font-body); cursor: pointer; text-decoration: underline; }
+.bag-summary { position: sticky; top: 90px; padding: 22px; border-radius: 22px; background: var(--robe-aubergine); color: #FBF1F6; }
+.bag-summary h3 { margin: 0 0 12px; font-size: 22px; }
+.bag-summary dl { display: grid; grid-template-columns: 1fr auto; gap: 8px; margin: 0 0 12px; }
+.bag-summary dd { margin: 0; font-weight: 600; }
+.bag-summary p { color: #D9C6D2; font-size: 14px; line-height: 1.5; }
+.bag-summary .qv-cta { margin: 16px 0 0; background: #fff; color: var(--robe-aubergine); }
+.bag-note { font-size: 13px !important; }
+
+/* Profile. */
+.profile-card { margin-top: 24px; padding: 24px; border-radius: 26px; background: var(--robe-grape); color: #fff; }
+.profile-kicker { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--robe-banner-pink); }
+.profile-card h3 { font-style: italic; font-size: 28px; margin: 8px 0 4px; }
+.profile-card p { margin: 0; opacity: 0.9; }
+.profile-rows { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 20px; }
+.profile-rows p { width: 100%; margin: 0 0 6px; color: var(--muted); }
+.profile-rows a.chip { display: inline-flex; align-items: center; text-decoration: none; }
+
+/* ---------- Narrow screens ---------- */
+
+@media (max-width: 1279px) {
+  .dock a span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .dock a { padding: 0 14px; }
+}
+@media (max-width: 900px) {
+  .search-page { grid-template-columns: 1fr; }
+  .search-filters { position: static; }
+  .search-results .listing-grid { grid-template-columns: repeat(2, 1fr); }
+  .item-layout, .bag-layout { grid-template-columns: 1fr; }
+  .item-gallery, .bag-summary { position: static; }
+}
+@media (max-width: 560px) {
+  .shop-top { gap: 10px; }
+  .shop-mark img { height: 24px; }
+  .shop-search kbd { display: none; }
+  .shop-page { padding: 18px 16px 120px; }
+  .shop-tag { width: calc(50% - 8px); }
+}
+
+/* A search entered on Home: Home sinks away under the bar, the results rise in (shop.js). */
+#shop-main.sinking > * { transition: opacity 0.26s ease-in, transform 0.26s ease-in; opacity: 0; transform: translateY(48px); }
+#shop-main > .rising { animation: rise-in 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+@keyframes rise-in { from { opacity: 0; transform: translateY(56px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { #shop-main.sinking > *, #shop-main > .rising { transition: none; animation: none; transform: none; opacity: 1; } }
