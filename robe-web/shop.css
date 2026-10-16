@@ -192,3 +192,50 @@ body[data-brand-page="selfridges"] .shop-top .theme-toggle { color: #111; border
 body[data-brand-page="harrods"] .brand-owner-name { font-family: Cinzel, Georgia, serif; letter-spacing: 0.12em; }
 body[data-brand-page="zara"] .brand-owner-name { font-family: "Bodoni Moda", Didot, serif; letter-spacing: -0.04em; font-size: 32px; }
 body[data-brand-page="selfridges"] .brand-owner-name { font-family: Jost, Arial, sans-serif; font-weight: 700; letter-spacing: -0.02em; }
+
+/* Checkout on the website (shop.js checkoutPage) and the delivery picker (pickup.js). */
+.checkout-steps { display: flex; gap: 8px; list-style: none; margin: 8px 0 20px; padding: 0; counter-reset: step; }
+.checkout-steps li { counter-increment: step; display: flex; align-items: center; gap: 8px; padding: 6px 14px 6px 6px; border-radius: 999px; background: var(--bg-raised); color: var(--muted); font-size: 14px; }
+.checkout-steps li::before { content: counter(step); display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--line); color: inherit; font-size: 12px; font-weight: 600; }
+.checkout-steps li.on { color: var(--text); font-weight: 600; } .checkout-steps li.on::before { background: var(--robe-grape); color: #fff; }
+.checkout-steps li.done::before { content: "✓"; background: color-mix(in srgb, var(--robe-grape) 25%, transparent); }
+.checkout-body { max-width: 760px; }
+.checkout-card { padding: 20px; border-radius: 22px; background: var(--bg-raised); border: 1px solid var(--line); }
+.checkout-card h3 { margin: 0 0 10px; }
+.checkout-check { display: flex; gap: 10px; align-items: flex-start; margin: 12px 0; font-size: 15px; line-height: 1.45; cursor: pointer; }
+.checkout-check input { width: 20px; height: 20px; margin-top: 2px; accent-color: var(--robe-grape); flex: none; }
+.checkout-lines { display: grid; grid-template-columns: 1fr auto; gap: 8px 16px; margin: 0 0 12px; }
+.checkout-lines dd { margin: 0; text-align: right; }
+.checkout-total { font-weight: 700; padding-top: 8px; border-top: 1px solid var(--line); }
+.checkout-demo { font-size: 13px; color: var(--muted); }
+.checkout-nav { display: flex; gap: 10px; justify-content: flex-end; max-width: 760px; margin-top: 16px; }
+.checkout-nav .qv-cta { min-width: 160px; min-height: 46px; border: 0; cursor: pointer; font: 600 15px var(--font-body); }
+.checkout-nav .qv-cta:disabled { opacity: 0.45; cursor: not-allowed; }
+.checkout-done .qv-cta { display: inline-block; margin-top: 8px; padding: 12px 22px; }
+.profile-rentals { margin-top: 24px; max-width: 760px; }
+.pickup h3 { margin: 0 0 6px; }
+.pickup-hint { margin: 0 0 12px; color: var(--muted); font-size: 14px; line-height: 1.45; }
+.pickup-form { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+.pickup-form input { flex: 1; min-width: 180px; height: 46px; padding: 0 14px; border-radius: 14px; border: 1px solid var(--line); background: var(--bg-raised); color: var(--text); font: 15px var(--font-body); }
+.pickup-form .qv-cta { border: 0; min-height: 46px; padding: 0 22px; cursor: pointer; font: 600 15px var(--font-body); }
+.pickup-status { min-height: 20px; margin: 4px 0; font-size: 14px; color: var(--muted); }
+.pickup-map { height: 360px; border-radius: 22px; overflow: hidden; border: 1px solid var(--line); margin: 8px 0; z-index: 0; }
+.pickup-legend { display: flex; gap: 16px; align-items: center; font-size: 13px; color: var(--muted); margin-bottom: 8px; }
+.pickup-legend span:first-child { flex: 1; }
+.pickup-key::before { content: ""; display: inline-block; width: 10px; height: 10px; margin-right: 6px; border-radius: 50%; background: var(--kind); vertical-align: -1px; }
+.pickup-list { list-style: none; margin: 0; padding: 0; max-height: 320px; overflow: auto; }
+.pickup-row { display: flex; align-items: center; gap: 12px; width: 100%; padding: 10px 6px; border: 0; border-bottom: 1px solid var(--line); background: none; color: inherit; text-align: left; font: inherit; cursor: pointer; }
+.pickup-row.on { background: color-mix(in srgb, var(--robe-grape) 10%, transparent); border-radius: 12px; }
+.pickup-icon { display: grid; place-items: center; flex: none; width: 32px; height: 32px; border-radius: 50%; font-size: 15px; }
+.pickup-text { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.pickup-text small, .pickup-distance { color: var(--muted); font-size: 13px; }
+.pickup-chosen { font-size: 14px; } .pickup-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 8px; }
+.pickup-pin { width: 34px; height: 34px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); border: 2px solid #fff; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35); display: flex; align-items: center; justify-content: center; gap: 1px; }
+.pickup-pin b { transform: rotate(45deg); font-size: 13px; line-height: 1; }
+.pickup-pin.chosen { border: 3px solid #5A189A; }
+.pickup-popup { display: flex; flex-direction: column; gap: 6px; min-width: 200px; font-family: var(--font-body); }
+.pickup-popup small { color: #5E4A63; }
+.pickup-popup .qv-cta { border: 0; padding: 8px 14px; cursor: pointer; font: 600 14px var(--font-body); }
+.pickup-kinds { display: flex; gap: 6px; }
+.pickup-kind { padding: 4px 10px; border-radius: 999px; border: 1.5px solid var(--kind); background: transparent; color: #1E1B24; font: 600 12px var(--font-body); cursor: pointer; }
+.pickup-kind.on { background: var(--kind); color: var(--on-kind); }

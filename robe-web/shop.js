@@ -488,6 +488,129 @@
     return page;
   }
 
+  // --- Checkout: the whole order on the website, as in the apps (a demo while Robe is in testing:
+  // no card is charged and no card details are asked for). Delivery point, cleaning, review and pay,
+  // then the order is kept in this browser and shows on Profile. ---
+  const CLEANING_FEE = 8;
+  const loadOrders = () => load("robeOrders", []);
+
+  function checkoutPage() {
+    const pieces = bag.map(byId).filter(Boolean);
+    if (!pieces.length) return empty("Your bag is empty.", "#/", "Shop the window");
+    const page = el("div", "shop-page checkout-page");
+    page.appendChild(title("Check out", pieces.length === 1 ? "One piece, ten days." : `${pieces.length} pieces, rented together for ten days.`));
+    const STEPS = ["Delivery", "Cleaning", "Pay"];
+    let step = 0, cleaning = true, consent = false;
+    const bar = el("ol", "checkout-steps");
+    const body = el("div", "checkout-body");
+    const nav = el("div", "checkout-nav");
+    page.append(bar, body, nav);
+
+    const rent = () => pieces.reduce((s, p) => s + p.rent, 0);
+    const cleaningCost = () => (cleaning ? CLEANING_FEE * pieces.length : 0);
+    const deposits = () => pieces.reduce((s, p) => s + p.deposit, 0);
+
+    function draw() {
+      bar.replaceChildren(...STEPS.map((name, i) => {
+        const li = el("li", i === step ? "on" : i < step ? "done" : "", name);
+        li.setAttribute("aria-current", String(i === step));
+        return li;
+      }));
+      nav.replaceChildren();
+      if (step > 0) {
+        const back = el("button", "chip", "Back");
+        back.type = "button";
+        back.addEventListener("click", () => { step--; draw(); });
+        nav.appendChild(back);
+      }
+      if (step === 0) {
+        const picker = el("section");
+        const next = el("button", "qv-cta", "Continue");
+        next.type = "button";
+        const sync = () => { next.disabled = !(window.RobePickup && window.RobePickup.chosen); };
+        if (window.RobePickup) window.RobePickup.mount(picker, sync);
+        next.addEventListener("click", () => { step = 1; draw(); });
+        body.replaceChildren(picker);
+        nav.appendChild(next);
+        sync();
+      } else if (step === 1) {
+        const box = el("section", "checkout-card");
+        box.appendChild(el("h3", "", "Cleaning when you're done"));
+        const label = el("label", "checkout-check");
+        const box1 = el("input");
+        Object.assign(box1, { type: "checkbox", checked: cleaning });
+        box1.addEventListener("change", () => { cleaning = box1.checked; });
+        label.append(box1, el("span", "", `Add partner cleaning: £${CLEANING_FEE} a piece. When your ten days are up, drop them at a partner laundry; they clean each one and send it back to its owner.`));
+        box.append(label, el("p", "pickup-hint", "Without it, post each piece back to its owner as it is, on the label that comes with it."));
+        body.replaceChildren(box);
+        const next = el("button", "qv-cta", "Continue");
+        next.type = "button";
+        next.addEventListener("click", () => { step = 2; draw(); });
+        nav.appendChild(next);
+      } else if (step === 2) {
+        const pickup = window.RobePickup && window.RobePickup.chosen;
+        const box = el("section", "checkout-card");
+        box.appendChild(el("h3", "", "Review and pay"));
+        const lines = el("dl", "checkout-lines");
+        pieces.forEach((p) => lines.append(el("dt", "", `${p.title} · ${p.size}`), el("dd", "", `£${p.rent}`)));
+        if (cleaning) lines.append(el("dt", "", `Partner cleaning × ${pieces.length}`), el("dd", "", `£${cleaningCost()}`));
+        lines.append(el("dt", "checkout-total", "Charged now"), el("dd", "checkout-total", `£${rent() + cleaningCost()}`));
+        lines.append(el("dt", "", "Deposits, held on your card, not charged"), el("dd", "", `£${deposits()}`));
+        box.appendChild(lines);
+        if (pickup) box.appendChild(el("p", "pickup-hint", `Delivered to ${pickup.name}, ${pickup.address}. Your ten days start when you collect it.`));
+        const label = el("label", "checkout-check");
+        const agree = el("input");
+        Object.assign(agree, { type: "checkbox", checked: consent });
+        label.append(agree, el("span", "", "I agree to the deposit, damage and late-return terms: deposits are held, not charged, and released once each piece is back and checked."));
+        box.appendChild(label);
+        box.appendChild(el("p", "checkout-demo", "Robe is in testing: this is a demo payment. No card is charged and no card details are asked for."));
+        body.replaceChildren(box);
+        const pay = el("button", "qv-cta", `Pay £${rent() + cleaningCost()}`);
+        pay.type = "button";
+        pay.disabled = !consent;
+        agree.addEventListener("change", () => { consent = agree.checked; pay.disabled = !consent; });
+        pay.addEventListener("click", () => {
+          pay.disabled = true;
+          pay.textContent = "Paying…";
+          setTimeout(() => {
+            const order = {
+              id: "ROBE-" + Math.random().toString(36).slice(2, 7).toUpperCase(),
+              at: new Date().toISOString(),
+              pieces: pieces.map((p) => p.id),
+              charged: rent() + cleaningCost(),
+              deposits: deposits(),
+              cleaning,
+              pickup,
+            };
+            keep("robeOrders", [order, ...loadOrders()]);
+            bag = [];
+            keep("robeBag", bag);
+            updateBagCount();
+            step = 3;
+            draw(order);
+          }, 900);
+        });
+        nav.appendChild(pay);
+      }
+    }
+    // The confirmation, after paying.
+    const baseDraw = draw;
+    draw = function (order) {
+      if (step !== 3) return baseDraw();
+      bar.replaceChildren();
+      nav.replaceChildren();
+      const done = el("section", "checkout-card checkout-done");
+      done.append(el("h3", "", "It's on its way"), el("p", "", `Order ${order.id}. £${order.charged} paid; £${order.deposits} in deposits held on your card.`));
+      if (order.pickup) done.appendChild(el("p", "pickup-hint", `The owners post it to ${order.pickup.name}. We'll tell you when it's ready to collect.`));
+      const see = el("a", "qv-cta", "See your rentals");
+      see.href = "#/profile";
+      done.appendChild(see);
+      body.replaceChildren(done);
+    };
+    draw();
+    return page;
+  }
+
   function bagPage() {
     const page = el("div", "shop-page");
     page.appendChild(title("Your bag", `Up to ${BAG_CAPACITY} pieces, rented together.`));
@@ -526,10 +649,10 @@
     const summary = el("aside", "bag-summary");
     summary.innerHTML = `<h3>Summary</h3><dl><dt>Rent, ten days</dt><dd>£${rent}</dd><dt>Deposits held</dt><dd>£${deposits}</dd></dl>`
       + "<p>Deposits are held on your card, not charged, and released once each piece is back and checked.</p>";
-    const checkout = el("a", "qv-cta", "Check out in the app");
-    checkout.href = "index.html#download";
+    const checkout = el("a", "qv-cta", "Check out");
+    checkout.href = "#/checkout";
     summary.appendChild(checkout);
-    summary.appendChild(el("p", "bag-note", "While Robe is in testing, payment, delivery and lockers are in the app. Your bag here is kept in this browser."));
+    summary.appendChild(el("p", "bag-note", "Choose a locker or Post Office near you, then pay. While Robe is in testing, payment is a demo: no card is charged."));
     layout.append(list, summary);
     page.appendChild(layout);
     return page;
@@ -542,6 +665,32 @@
     card.innerHTML = '<div class="profile-kicker">Demo account</div><h3>Robe Rewards</h3>'
       + "<p>Every 3 rentals returned in good condition earn 50% off the rent of your next one.</p>";
     page.appendChild(card);
+    // Orders placed on the website (this browser).
+    const orders = loadOrders();
+    if (orders.length) {
+      const rentals = el("section", "profile-rentals");
+      rentals.appendChild(el("h3", "", "Your rentals"));
+      const ul = el("ul", "bag-list");
+      orders.forEach((o) => {
+        const first = byId(o.pieces[0]);
+        const li = el("li", "bag-row");
+        if (first) {
+          const photo = el("a", "bag-photo");
+          photo.href = `#/item/${first.id}`;
+          R.paintBackdrop(photo, first);
+          photo.appendChild(img(first.photos[0]));
+          li.appendChild(photo);
+        }
+        const text = el("div", "bag-text");
+        text.append(el("div", "piece-brand", `${o.id} · ${new Date(o.at).toLocaleDateString("en-GB")}`),
+          el("strong", "", o.pieces.map((id) => (byId(id) || {}).title).filter(Boolean).join(", ")),
+          el("span", "", `Paid · being posted${o.pickup ? ` to ${o.pickup.name}` : ""} · £${o.charged}`));
+        li.appendChild(text);
+        ul.appendChild(li);
+      });
+      rentals.appendChild(ul);
+      page.appendChild(rentals);
+    }
     const rows = el("div", "profile-rows");
     const counts = el("p", "", `${R.saved.size} saved · ${bag.length} in your bag`);
     const app = el("a", "chip", "Get the app");
@@ -583,6 +732,7 @@
     else if (parts[0] === "shop") { tab = "home"; view = shopPage(parts[1]); }
     else if (parts[0] === "saved") { tab = "saved"; view = saved(); }
     else if (parts[0] === "bag") { tab = "bag"; view = bagPage(); }
+    else if (parts[0] === "checkout") { tab = "bag"; view = checkoutPage(); }
     else if (parts[0] === "profile") { tab = "profile"; view = profile(); }
     else view = home();
     main.replaceChildren(view);
