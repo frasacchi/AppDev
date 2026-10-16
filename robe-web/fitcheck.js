@@ -121,52 +121,133 @@
     return svg;
   }
 
-  /** How to measure a piece laid flat: its outline, an arrow across each width and one down its length; `highlight` in pink. */
-  function measureGuide(category, highlight) {
-    const typical = category === "bottoms" ? { waist: 36, hips: 50, length: 75 }
-      : category === "tops" || category === "knitwear" ? { chest: 48, waist: 44, length: 62 }
-      : category === "jackets" ? { chest: 50, waist: 46, length: 70 }
-      : category === "gowns" ? { chest: 45, waist: 36, hips: 49, length: 140 } : { chest: 45, waist: 36, hips: 49, length: 100 };
-    const steps = category === "bottoms" ? { waist: 0, hips: 1 }
-      : ["tops", "knitwear", "jackets"].includes(category) ? { chest: 1, waist: 2 } : { chest: 1, waist: 2, hips: 3 };
-    const pts = outline(typical, category);
-    const W = 300, H = 170, left = 64, right = 64;
-    const tallest = pts[pts.length - 1][0], widest = Math.max(...pts.map((p) => p[1]));
-    const s = Math.min((H - 16) / tallest, ((W - left - right) / 2 - 4) / widest);
-    const cx = left + (W - left - right) / 2, y = (v) => 8 + v * s;
+  // --- The guides' figure, as in the apps (BodyFigure.kt / BodyFigure.swift): a body in thin
+  // line art with the garment over it in soft pink, like a fashion size guide. A front view in a
+  // 100 x 260 frame, x from the middle (mirror the right side), y down from the top of the head.
+  const FIG = { headTop: 4, chin: 30, neck: 37, shoulder: 42, bust: 64, waist: 92, hip: 120, crotch: 136, knee: 186, ankle: 246, sole: 252, headY: 17, headRX: 9, headRY: 13 };
+  const BODY_SIDE = [[4, 30], [4.5, 37], [19, 42], [17, 54], [15, 64], [12.5, 80], [11.5, 92], [14.5, 106], [17, 120], [16, 140], [13, 160], [11, 186], [10, 210], [8.5, 230], [7, 246], [9.5, 252]];
+  const INNER_LEG = [[0, 136], [2.5, 160], [3.5, 186], [3, 215], [3, 246], [1.5, 252]];
+  const ARM = [[19, 42], [23, 52], [25, 72], [26.5, 96], [27, 118], [25.5, 128], [22.5, 128], [21.5, 118], [20, 96], [18.5, 72], [17, 56]];
+  function halfAt(points, y) {
+    if (y <= points[0][1]) return points[0][0];
+    for (let i = 1; i < points.length; i++) {
+      const [ax, ay] = points[i - 1], [bx, by] = points[i];
+      if (y <= by) return by === ay ? Math.max(ax, bx) : ax + (bx - ax) * (y - ay) / (by - ay);
+    }
+    return points[points.length - 1][0];
+  }
+  const DRESS_TOP = [[0, 40], [6, 37], [19.5, 42.5], [25.5, 57], [20.5, 60]];
+  const DRESS_SIDE = [[20.5, 60], [17.5, 64], [14.5, 80], [13.5, 92], [17, 106], [19.5, 120], [20, 150]];
+  /** The garment for a category over the body: { outline, side, top, hem }, `room` widening it; null for a bag. */
+  function garmentShape(category, room = 1) {
+    let g;
+    if (category === "dresses") { const side = DRESS_SIDE.concat([[20.5, 186]]); g = { outline: DRESS_TOP.concat(side, [[0, 186]]), side, top: 37, hem: 186 }; }
+    else if (category === "gowns") { const side = DRESS_SIDE.concat([[22.5, 200], [25, 246]]); g = { outline: DRESS_TOP.concat(side, [[0, 246]]), side, top: 37, hem: 246 }; }
+    else if (category === "tops") { const side = [[20.5, 60], [17.5, 64], [15, 80], [14.5, 92], [17.5, 108], [19, 124]]; g = { outline: DRESS_TOP.concat(side, [[0, 124]]), side, top: 37, hem: 124 }; }
+    else if (category === "knitwear") {
+      const side = [[18, 64], [16, 80], [15.5, 92], [18, 108], [19.5, 124]];
+      g = { outline: [[0, 40], [6, 37], [19.5, 42.5], [25.5, 60], [28.5, 122], [23.5, 124], [21, 64]].concat(side, [[0, 124]]), side, top: 37, hem: 124 };
+    } else if (category === "jackets") {
+      const side = [[19.5, 64], [17.5, 80], [17, 92], [19.5, 110], [21, 128]];
+      g = { outline: [[0, 52], [7.5, 37], [21, 42], [27, 58], [29.5, 122], [24.5, 124], [22, 64]].concat(side, [[0, 128]]), side, top: 37, hem: 128 };
+    } else if (category === "bottoms") { const side = [[13, 90], [13, 92], [17.5, 106], [19.5, 120], [21, 150], [23, 186]]; g = { outline: [[0, 90]].concat(side, [[0, 186]]), side, top: 90, hem: 186 }; }
+    else return null;
+    if (room === 1) return g;
+    const wider = (p) => [p[0] * room, p[1]];
+    return { ...g, outline: g.outline.map(wider), side: g.side.map(wider) };
+  }
+  const FIT_STYLES = [["Slim", 0.93], ["Relaxed", 1.1], ["Oversized", 1.32]];
+
+  /**
+   * The figure as an SVG: the body wearing `category`'s garment (none when null), with the tapes
+   * of `mode` ("body": around the bust, waist and hips, and height; "garment": straight across it
+   * laid flat, and its length; "plain": none). `highlight` is drawn in pink.
+   */
+  function figure(category, mode, highlight, room = 1, labels = true) {
+    const show = labels && mode !== "plain";
+    const left = show ? 56 : 2, right = show ? 44 : 2, W = left + 100 + right, H = 260;
+    const cx = left + 50;
+    const pt = (x, y) => `${(cx + x).toFixed(1)} ${y.toFixed(1)}`;
+    const path = (points, flip, closed) => "M" + points.map(([x, y]) => pt(flip ? -x : x, y)).join(" L") + (closed ? " Z" : "");
     const svg = document.createElementNS(SVG, "svg");
     svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
-    svg.setAttribute("class", "fit-guide-drawing");
+    svg.setAttribute("class", `fit-figure fit-figure-${mode}`);
     svg.setAttribute("role", "img");
-    svg.setAttribute("aria-label", "How to measure: " + areas(category).map((a) => `${AREAS[a].title}: ${AREAS[a].how}`).join("; "));
-    const shape = document.createElementNS(SVG, "path");
-    shape.setAttribute("d", `M${cx} 8 ` + pts.map(([py, w]) => `L${(cx + w * s).toFixed(1)} ${y(py).toFixed(1)}`).join(" ")
-      + " " + pts.slice().reverse().map(([py, w]) => `L${(cx - w * s).toFixed(1)} ${y(py).toFixed(1)}`).join(" ") + " Z");
-    shape.setAttribute("class", "guide-shape");
-    svg.appendChild(shape);
+    const kind = category ? KINDS[category].toLowerCase() : "garment";
+    svg.setAttribute("aria-label", mode === "body" ? "A body with a tape around the bust, waist and hips"
+      : mode === "garment" ? `A ${kind} on a body, measured straight across, laid flat` : `A ${kind} on a body`);
     const add = (tag, attrs, text) => {
       const n = document.createElementNS(SVG, tag);
       Object.entries(attrs).forEach(([k, v]) => n.setAttribute(k, v));
       if (text) n.textContent = text;
       svg.appendChild(n);
+      return n;
     };
-    areas(category).forEach((a) => {
-      const cls = a === highlight ? "guide-arrow on" : "guide-arrow";
-      if (a === "length") {
-        const x = cx + widest * s + 14;
-        add("line", { x1: x, x2: x, y1: 8, y2: y(tallest), class: cls, "marker-start": "url(#guide-head)", "marker-end": "url(#guide-head)" });
-        add("text", { x: x + 6, y: (8 + y(tallest)) / 2 + 4, class: cls }, AREAS[a].title);
-      } else if (steps[a] != null) {
-        const [py, w] = pts[steps[a]], half = w * s - 3;
-        add("line", { x1: cx - half, x2: cx + half, y1: y(py), y2: y(py), class: cls, "marker-start": "url(#guide-head)", "marker-end": "url(#guide-head)" });
-        add("text", { x: cx - half - 8, y: y(py) + 4, "text-anchor": "end", class: cls }, AREAS[a].title);
+    const g = category ? garmentShape(category, room) : null;
+    // The garment first, so the body's lines show through it, as in a size guide.
+    if (g) add("path", { d: path(g.outline) + " L" + g.outline.slice().reverse().map(([x, y]) => pt(-x, y)).join(" L") + " Z", class: "fig-garment" });
+    add("ellipse", { cx, cy: FIG.headY, rx: FIG.headRX, ry: FIG.headRY, class: "fig-body" });
+    for (const flip of [false, true]) {
+      add("path", { d: path(BODY_SIDE, flip), class: "fig-body" });
+      add("path", { d: path(INNER_LEG, flip), class: "fig-body" });
+      add("path", { d: path(ARM, flip, true), class: "fig-body" });
+      add("path", { d: path([BODY_SIDE[BODY_SIDE.length - 1], INNER_LEG[INNER_LEG.length - 1]], flip), class: "fig-body" });
+    }
+    const arrow = (x1, y1, x2, y2, on) => add("line", { x1, y1, x2, y2, class: on ? "fig-tape on" : "fig-tape", "marker-start": "url(#fig-head)", "marker-end": "url(#fig-head)" });
+    const label = (text, x, y, on, anchor) => { if (show) add("text", { x, y: y + 4, "text-anchor": anchor, class: on ? "fig-label on" : "fig-label" }, text); };
+    const BODY_TITLES = { chest: "Bust", waist: "Waist", hips: "Hips" };
+    if (mode === "body") {
+      [["chest", FIG.bust], ["waist", FIG.waist], ["hips", FIG.hip]].forEach(([a, y]) => {
+        const on = a === highlight, half = halfAt(BODY_SIDE, y) + 1.5;
+        // Around the body: the front of the tape solid and dipping, the back dashed.
+        add("path", { d: `M${pt(-half, y)} Q${pt(0, y + 4)} ${pt(half, y)}`, class: on ? "fig-tape on" : "fig-tape" });
+        add("path", { d: `M${pt(-half, y)} Q${pt(0, y - 3)} ${pt(half, y)}`, class: on ? "fig-tape back on" : "fig-tape back" });
+        label(BODY_TITLES[a], left - 6, y, on, "end");
+      });
+      const on = highlight === "length", x = cx + 32;
+      arrow(x, FIG.headTop, x, FIG.sole, on);
+      label("Height", x + 5, H / 2, on, "start");
+    } else if (mode === "garment" && g) {
+      const at = { chest: FIG.bust - 2, waist: FIG.waist, hips: FIG.hip };
+      areas(category).filter((a) => a !== "length").forEach((a) => {
+        const on = a === highlight, y = at[a], half = halfAt(g.side, y) - 2;
+        arrow(cx - half, y, cx + half, y, on);
+        label(AREAS[a].title, left - 6, y, on, "end");
+      });
+      if (areas(category).includes("length")) {
+        const on = highlight === "length", x = cx + Math.max(...g.side.map((p) => p[0])) + 5;
+        arrow(x, g.top, x, g.hem, on);
+        label("Length", x + 5, (g.top + g.hem) / 2, on, "start");
       }
-    });
+    }
     const defs = document.createElementNS(SVG, "defs");
-    defs.innerHTML = '<marker id="guide-head" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M2 1 L8 5 L2 9" fill="none" stroke="context-stroke" stroke-width="1.6"/></marker>';
+    defs.innerHTML = '<marker id="fig-head" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M2 1 L8 5 L2 9" fill="none" stroke="context-stroke" stroke-width="1.6"/></marker>';
     svg.prepend(defs);
     return svg;
   }
+
+  /** Slim, relaxed, oversized: the same body with more room each time (after a fashion size guide). */
+  function fitStyles() {
+    const strip = el("div", "fit-styles");
+    strip.setAttribute("role", "img");
+    strip.setAttribute("aria-label", "Slim, relaxed and oversized: the same body with more room each time");
+    FIT_STYLES.forEach(([name, room]) => {
+      const c = el("figure");
+      c.append(figure("dresses", "plain", null, room, false), el("figcaption", "", name));
+      strip.appendChild(c);
+    });
+    return strip;
+  }
+
+  /** How to measure a piece laid flat, on a body, and why a garment measures more than the body inside it. */
+  function measureGuide(category, highlight) {
+    const box = el("div", "fit-guide");
+    box.append(figure(category, "garment", highlight),
+      el("p", "fit-hint", "Lay it flat and measure straight across: about half of all the way round. A garment measures more than the body inside it; that extra is the room to move."),
+      fitStyles());
+    return box;
+  }
+
 
   /** The form for adding or editing a garment that fits the reader. */
   function editor(initial, category, done) {
@@ -334,7 +415,7 @@
   }
 
   window.RobeFit = {
-    areas, compare, yours, bestReference, outline, overlay, measureGuide, mount, mountGarments,
+    areas, compare, yours, bestReference, outline, overlay, measureGuide, figure, fitStyles, mount, mountGarments,
     /** Calls `fn` whenever the garments change; returns a function that stops it. */
     onChange: (fn) => { listeners.add(fn); return () => listeners.delete(fn); },
     get garments() { return garments; },

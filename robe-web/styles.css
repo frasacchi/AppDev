@@ -711,7 +711,6 @@ main > section.list-yours { max-width: none; margin: 40px 0 0; padding: 72px max
 .fit-badge-tooSmall::before { background: #B42318; } .fit-badge-snug::before { background: #C77700; } .fit-badge-roomier::before, .fit-badge-roomy::before { background: #3D1A5B; }
 .fit-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .fit-measured { padding: 3px 9px; border-radius: 999px; border: 1px solid color-mix(in srgb, var(--robe-grape) 50%, transparent); color: var(--robe-grape); font-size: 12px; font-weight: 500; }
-.fit-measured::before { content: "📏 "; }
 .fit-cut { margin: 0 0 12px; font-size: 14px; }
 .fit-v-tooSmall { color: #B42318; } .fit-v-snug { color: #9A5B00; } .fit-v-likeYours { color: var(--robe-grape); }
 .fit-note { margin: 0 0 8px; font-size: 13px; color: var(--robe-grape); }
@@ -735,6 +734,70 @@ main > section.list-yours { max-width: none; margin: 40px 0 0; padding: 72px max
 .fit-dialog .fit-check { margin: 0; padding: 0; border: 0; background: none; }
 .fit-dialog-close { position: sticky; top: 0; float: right; margin: 6px 0 0; padding: 8px 16px; border: 0; border-radius: 999px; background: var(--robe-grape); color: #fff; font: 600 14px var(--font-body); cursor: pointer; z-index: 1; }
 
+/* Find my fit, redesigned: an inviting card, a tinted verdict, three ways (any one is enough), and the body-and-garment figure. */
+.fit-check.fit-invite { display: flex; gap: 16px; align-items: flex-start; background: color-mix(in srgb, #E83E8C 12%, var(--bg)); border: 1.5px solid color-mix(in srgb, #E83E8C 45%, transparent); }
+.fit-invite-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
+.fit-invite-text .fit-hint { margin: 0; }
+.fit-invite .fit-figure { flex: none; width: 70px; height: auto; }
+.fit-invite .fit-add { margin-top: 4px; }
+.fit-found { border-width: 1.5px; }
+.fit-tint-likeYours { background: color-mix(in srgb, var(--robe-grape) 8%, var(--bg)); border-color: color-mix(in srgb, var(--robe-grape) 40%, transparent); }
+.fit-tint-snug { background: color-mix(in srgb, #C77700 8%, var(--bg)); border-color: color-mix(in srgb, #C77700 40%, transparent); }
+.fit-tint-tooSmall { background: color-mix(in srgb, #B42318 8%, var(--bg)); border-color: color-mix(in srgb, #B42318 40%, transparent); }
+.fit-tint-roomier, .fit-tint-roomy { background: color-mix(in srgb, #3D1A5B 6%, var(--bg)); border-color: color-mix(in srgb, #3D1A5B 30%, transparent); }
+.fit-kicker { color: var(--card-muted, var(--muted)); font-weight: 500; }
+.fit-found .fit-verdict { font-size: 30px; margin: 4px 0 8px; }
+.fit-basis { display: inline-flex; gap: 4px; margin: 0 0 10px; padding: 7px 12px; border: 0; border-radius: 999px; background: var(--bg-raised); color: inherit; font: 500 13px var(--font-body); cursor: pointer; }
+.fit-basis b { color: var(--robe-grape); }
+.fit-table-box { margin: 10px 0; padding: 10px 14px; border-radius: 16px; background: var(--bg-raised); }
+.fit-table-box > strong { display: block; margin-bottom: 6px; font-size: 14px; }
+.fit-table-box .fit-rows { margin: 0; }
+.fit-table-box .fit-rows li + li { padding-top: 10px; border-top: 1px solid var(--line); }
+.fit-link { padding: 6px 0; border: 0; background: none; color: var(--robe-grape); font: 600 14px var(--font-body); cursor: pointer; }
+.fit-enough { display: inline-block; margin: 2px 0 12px; padding: 6px 12px; border-radius: 999px; background: color-mix(in srgb, var(--robe-grape) 12%, transparent); color: var(--robe-grape); font-size: 13px; font-weight: 600; }
+.fit-enough::before { content: "✓ "; }
+.fit-ways { display: flex; flex-direction: column; gap: 10px; }
+.fit-way { display: flex; align-items: center; gap: 14px; width: 100%; padding: 14px; border: 1px solid var(--line); border-radius: 20px; background: var(--bg-raised); color: inherit; text-align: left; font: inherit; cursor: pointer; transition: border-color 0.2s, transform 0.2s; }
+.fit-way:hover { border-color: var(--robe-grape); transform: translateY(-1px); }
+.fit-way.saved { border: 2px solid var(--robe-grape); }
+.fit-way-icon { flex: none; display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; background: color-mix(in srgb, #E83E8C 16%, transparent); color: var(--heading, inherit); }
+.fit-way-icon svg { width: 24px; height: 24px; }
+.fit-way-text { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.fit-way-text strong { font-size: 16px; }
+.fit-way-text small { color: var(--card-muted, var(--muted)); font-size: 13px; }
+.fit-way-text em { font-style: normal; font-size: 12px; color: var(--card-muted, var(--muted)); }
+.fit-way-text em.fit-way-saved { color: var(--robe-grape); font-weight: 600; }
+.fit-way-go { font-size: 22px; color: var(--card-muted, var(--muted)); }
+.fit-rentals { margin-top: 16px; }
+.fit-dialog-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 6px 0 8px; }
+.fit-dialog-head .fit-dialog-close { float: none; position: static; margin: 0; }
+.fit-back { padding: 6px 0; border: 0; background: none; color: var(--robe-grape); font: 600 14px var(--font-body); cursor: pointer; }
+.fit-page { display: flex; flex-direction: column; gap: 10px; }
+.fit-select { display: flex; flex-direction: column; gap: 4px; font-size: 13px; font-weight: 500; }
+.fit-select select { height: 46px; padding: 0 12px; border-radius: 14px; border: 1px solid var(--line); background: var(--bg-raised); color: var(--text); font: 15px var(--font-body); }
+.fit-measure { display: flex; gap: 12px; align-items: flex-start; }
+.fit-measure .fit-figure { flex: none; width: 160px; height: auto; }
+.fit-measure .fit-editor { flex: 1; min-width: 0; }
+.fit-figure { display: block; color: var(--heading, #3D1A5B); }
+.fit-figure .fig-body { fill: none; stroke: currentColor; stroke-width: 1.2; stroke-linejoin: round; stroke-linecap: round; }
+.fit-figure .fig-garment { fill: color-mix(in srgb, #E83E8C 28%, transparent); stroke: color-mix(in srgb, #E83E8C 70%, transparent); stroke-width: 1.4; stroke-linejoin: round; }
+.fit-figure .fig-tape { fill: none; stroke: currentColor; stroke-opacity: 0.5; stroke-width: 1.3; stroke-linecap: round; }
+.fit-figure .fig-tape.back { stroke-dasharray: 4 4; stroke-opacity: 0.3; }
+.fit-figure .fig-tape.on { stroke: #E83E8C; stroke-opacity: 1; stroke-width: 2.6; }
+.fit-figure .fig-tape.back.on { stroke-opacity: 0.6; stroke-width: 1.8; }
+.fit-figure .fig-label { font: 11px var(--font-body); fill: currentColor; fill-opacity: 0.7; }
+.fit-figure .fig-label.on { fill: #E83E8C; fill-opacity: 1; font-weight: 700; }
+.fit-guide .fit-figure-garment { width: 100%; max-width: 260px; height: auto; margin: 0 auto; }
+.fit-styles { display: flex; justify-content: space-around; gap: 8px; margin: 4px 0; }
+.fit-styles figure { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.fit-styles .fit-figure { width: 58px; height: auto; }
+.fit-styles figcaption { font-size: 12px; font-weight: 500; }
+:root[data-theme="dark"] .fit-figure { color: #E9DDF5; }
+:root[data-theme="dark"] :is(.fit-v-likeYours, .fit-basis b, .fit-link, .fit-back, .fit-enough, .fit-way-saved, .fit-note, .fit-measured) { color: #C4A6FF; }
+:root[data-theme="dark"] .fit-way.saved { border-color: #C4A6FF; }
+:root[data-theme="dark"] .fit-v-snug { color: #F2B75B; } :root[data-theme="dark"] .fit-v-tooSmall { color: #FF8A80; }
+@media (max-width: 480px) { .fit-measure { flex-direction: column; align-items: center; } .fit-measure .fit-editor { width: 100%; } }
+
 /* ---------- Robe Town (town.js): the shops as buildings in an illustrated city ---------- */
 
 .town-section #robe-town { margin-top: 32px; }
@@ -745,7 +808,11 @@ main > section.town-section { padding-bottom: 0; }
 .town-frame::before { top: 0; height: 22%; background: linear-gradient(var(--bg), color-mix(in srgb, var(--bg) 75%, transparent) 35%, transparent); }
 .town-frame::after { bottom: 0; height: 9%; background: linear-gradient(transparent, color-mix(in srgb, var(--bg) 80%, transparent) 70%, var(--bg)); }
 .town-frame.walking::before, .town-frame.walking::after { opacity: 0; }
-.town-svg { display: block; width: min(100%, 1240px); height: auto; }
+.town-stage { position: relative; width: min(100%, 1240px); }
+.town-svg { display: block; width: 100%; height: auto; }
+/* The title ribbon, over the sky's fade so it stays sharp; it goes with the pins when walking in. */
+.town-ribbon { position: absolute; z-index: 2; pointer-events: none; transition: opacity 0.3s; }
+.town-frame.walking .town-ribbon { opacity: 0; }
 /* Wider than the drawing: its sides fade into the page too. */
 @media (min-width: 1240px) { .town-svg { -webkit-mask-image: linear-gradient(to right, transparent, #000 9%, #000 91%, transparent); mask-image: linear-gradient(to right, transparent, #000 9%, #000 91%, transparent); } }
 .town-door { cursor: pointer; outline: none; }

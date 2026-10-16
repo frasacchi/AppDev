@@ -26,7 +26,7 @@
 
   // --- The demo key (the apps' DemoAccess): letters and digits, upper case, by SHA-256 ---
 
-  const KEY_HASH = "c117641d069c4199c5994ab992aba049c7fc1aa6200d46c273dc18a210688c60";
+  const KEY_HASHES = ["c117641d069c4199c5994ab992aba049c7fc1aa6200d46c273dc18a210688c60", "e6f21df78410965db30b1131879aa4a8db5a04a7dc3a8dcfc78867e3e460ae16"];
   const normalise = (text) => text.replace(/[^0-9a-z]/gi, "").toUpperCase();
   async function sha256Hex(text) {
     const bytes = new TextEncoder().encode(text);
@@ -92,7 +92,7 @@
     const field = document.getElementById("gate-key");
     const error = document.getElementById("gate-error");
     const key = normalise(field.value);
-    if (key && (await sha256Hex(key)) === KEY_HASH) {
+    if (key && KEY_HASHES.includes(await sha256Hex(key))) {
       unlocked = true;
       keep("robeShopUnlocked", true);
       error.hidden = true;

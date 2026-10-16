@@ -12,6 +12,8 @@
   "use strict";
 
   const W = 1200, H = 1000;
+  // The title ribbon's box: drawn again over the sky's fade, so it stays sharp (make_town.py's RIBBON).
+  const RIBBON = [436, 14, 328, 62];
   // The walk in (Town.kt): up to the door, the door opening, the step inside.
   const APPROACH_MS = 800, OPEN_MS = 650, STEP_IN_MS = 420;
   const DOOR_FILL = 0.42, STEP_IN = 1.8, DOOR_SWING = 78;
@@ -129,7 +131,18 @@
         const wash = document.createElementNS(SVGNS, "rect");
         Object.entries({ x: 0, y: 0, width: W, height: H, class: "town-wash", opacity: 0 }).forEach(([k, v]) => wash.setAttribute(k, v));
         svg.appendChild(wash);
-        frame.replaceChildren(svg);
+        // The svg and the ribbon share a stage the drawing's width; the page's fades lie over the
+        // svg, and the ribbon over them.
+        const stage = document.createElement("div");
+        stage.className = "town-stage";
+        const ribbon = document.createElement("img");
+        ribbon.className = "town-ribbon";
+        ribbon.src = `assets/town/ribbon-${time}.webp${V}`;
+        ribbon.alt = "";
+        const [rx, ry, rw, rh] = RIBBON;
+        Object.assign(ribbon.style, { left: `${(rx / W) * 100}%`, top: `${(ry / H) * 100}%`, width: `${(rw / W) * 100}%`, height: `${(rh / H) * 100}%` });
+        stage.append(svg, ribbon);
+        frame.replaceChildren(stage);
       }
     }
     async function enter(svg, key) {
