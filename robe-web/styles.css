@@ -789,6 +789,10 @@ main > section.list-yours { max-width: none; margin: 40px 0 0; padding: 72px max
 .fit-figure .fig-label.on { fill: #E83E8C; fill-opacity: 1; font-weight: 700; }
 .fit-measure-guide .fit-figure-garment { width: 100%; max-width: 260px; height: auto; margin: 0 auto; }
 .fit-invite .fit-add { width: 100%; min-height: 46px; padding: 12px 20px; border-radius: 999px; }
+/* The site's pill buttons when they're <button>s: the site's font, no browser border; full height in a column form. */
+button.qv-cta { border: 0; cursor: pointer; font: 500 15px var(--font-body); }
+button.qv-cta:disabled { opacity: 0.45; cursor: not-allowed; }
+.fit-editor > button.qv-cta { flex: none; width: 100%; height: 48px; margin-top: 6px; }
 .fit-basis { flex-wrap: wrap; border-radius: 16px; text-align: left; }
 .fit-styles { display: flex; justify-content: space-around; gap: 8px; margin: 4px 0; }
 .fit-styles figure { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 4px; }

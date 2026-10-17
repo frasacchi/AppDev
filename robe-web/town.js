@@ -19,7 +19,7 @@
   const DOOR_FILL = 0.42, STEP_IN = 1.8, DOOR_SWING = 78;
   const CLOSEUP = [200, 220], LEAF_MARGIN = 4;
   // The images' version, so a browser never keeps an old drawing.
-  const V = "?v=4";
+  const V = "?v=5";
   const SHOPS = {
     harrods: { name: "Harrods", owner: "Harrods", tagline: "Knightsbridge · London", rect: [24, 432, 444, 438], door: [128, 798, 44, 64], wash: "#F6F1E4",
       about: "Occasionwear and tailoring from the Harrods rental edit. Every piece is checked in and pressed by Harrods before it's sent." },
