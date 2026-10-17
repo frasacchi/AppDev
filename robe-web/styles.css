@@ -965,3 +965,42 @@ main > section.town-section { padding-bottom: 0; }
 .promise-list .promise { width: auto !important; min-width: 0; }
 @media (max-width: 860px) { .promise-list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 560px) { .promise-list { grid-template-columns: 1fr; } }
+
+/* Why Robe: six promises as drawn scenes (the What is Robe? cards' style), three to a row. */
+.why-scenes { grid-template-columns: repeat(3, minmax(0, 1fr)); max-width: 980px; margin: 40px auto 0; padding: 0 24px; }
+.why-scenes .what-art { max-width: 240px; margin: 0 auto; }
+.why-scenes .what-scene h3 { font-size: 19px; }
+@media (max-width: 860px) { .why-scenes { grid-template-columns: repeat(2, minmax(0, 1fr)); } .why-scenes .what-scene:last-child { grid-column: auto; max-width: none; } }
+@media (max-width: 560px) { .why-scenes { grid-template-columns: 1fr; } }
+.what-art .lens { fill: color-mix(in srgb, #9CD3F2 45%, transparent); stroke: var(--robe-plum); stroke-width: 3; }
+.what-art .handle { stroke: var(--robe-plum); stroke-width: 6; stroke-linecap: round; }
+.what-art .magnifier { transform: translate(70px, 70px); }
+.in .what-art .magnifier { animation: why-search 2.6s ease-in-out forwards; }
+@keyframes why-search { 0% { transform: translate(70px, 70px); } 30% { transform: translate(122px, 92px); } 60% { transform: translate(84px, 122px); } 100% { transform: translate(112px, 64px); } }
+.what-art .tick-dot { fill: #2E9E62; } .what-art .tick-mark { fill: none; stroke: #fff; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.what-art .tick { transform-box: fill-box; transform-origin: center; transform: scale(0); }
+.in .what-art .tick { animation: what-pop 0.45s cubic-bezier(0.3, 1.6, 0.5, 1) 2.5s forwards; }
+.what-art .card { fill: #9D6BD8; stroke: var(--robe-plum); stroke-width: 2.2; }
+.what-art .card-stripe { fill: #3D1A5B; }
+.what-art .chip-gold { fill: #FFD66B; stroke: var(--robe-plum); stroke-width: 1.6; }
+.what-art .lock-body { fill: #FFC72C; stroke: var(--robe-plum); stroke-width: 2.2; }
+.what-art .shackle { fill: none; stroke: var(--robe-plum); stroke-width: 5; stroke-linecap: round; }
+.what-art .shackle { transform-box: fill-box; transform-origin: 0% 100%; }
+.in .what-art .shackle { animation: why-unlock 3.2s ease-in-out 0.8s infinite; }
+@keyframes why-unlock { 0%, 25% { transform: translateY(0) rotate(0); } 45%, 80% { transform: translateY(-8px) rotate(-28deg); } 100% { transform: translateY(0) rotate(0); } }
+.what-art .hold-text { font-size: 13px; }
+.what-art .stamp { fill: transparent; stroke: var(--robe-plum); stroke-width: 2; }
+.in .what-art .stamps g:nth-child(1) .stamp { animation: why-stamp 0.4s ease 0.4s forwards; }
+.in .what-art .stamps g:nth-child(2) .stamp { animation: why-stamp 0.4s ease 0.9s forwards; }
+.in .what-art .stamps g:nth-child(3) .stamp { animation: why-stamp 0.4s ease 1.4s forwards; }
+@keyframes why-stamp { to { fill: #FF8FB8; } }
+.what-art .badge-dot { fill: #E83E8C; stroke: var(--robe-plum); stroke-width: 2; }
+.what-art .badge-text { fill: #fff; font: 800 14px var(--font-body); text-anchor: middle; }
+.what-art .badge-small { fill: #fff; font: 600 10px var(--font-body); text-anchor: middle; }
+.what-art .badge { transform-box: fill-box; transform-origin: center; transform: scale(0); }
+.in .what-art .badge { animation: what-pop 0.5s cubic-bezier(0.3, 1.6, 0.5, 1) 1.9s forwards; }
+@media (prefers-reduced-motion: reduce) {
+  .what-art .tick, .what-art .badge { transform: none; }
+  .what-art .magnifier { transform: translate(112px, 64px); }
+  .what-art .stamp { fill: #FF8FB8; }
+}

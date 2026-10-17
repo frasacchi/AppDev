@@ -1,4 +1,4 @@
-// What is Robe? Each drawn scene plays once it comes into view (styles.css .what-scene.in); the
+// Why Robe: each drawn promise plays once it comes into view (styles.css .what-scene.in); the
 // parcel travels across the map along its route (SVG animateMotion). Still with Reduce Motion.
 (function () {
   "use strict";
