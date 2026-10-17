@@ -162,10 +162,14 @@ function playSplash() {
   const sparkle = splash && splash.querySelector(".splash-sparkle");
   const tagline = document.getElementById("splash-tagline");
   const intro = window.RobeIntro;
-  if (!splash || letters.length !== 3 || !caret || !tagline || !intro || !window.RobeFigure) {
-    if (splash) splash.style.display = "none";
+  // Played once per browser: returning visitors go straight to the page.
+  let seen = false;
+  try { seen = !!localStorage.getItem("robeIntroSeen"); } catch (e) {}
+  if (!splash || seen || letters.length !== 3 || !caret || !tagline || !intro || !window.RobeFigure) {
+    if (splash) { splash.classList.add("fade-out"); splash.style.display = "none"; }
     return;
   }
+  try { localStorage.setItem("robeIntroSeen", new Date().toISOString()); } catch (e) {}
 
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const font = FONTS[currentFont()] || FONTS[DEFAULT_FONT];

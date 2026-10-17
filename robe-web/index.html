@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Robe — rent the dress, not the price</title>
-<meta name="description" content="Rent clothes from private wardrobes and shops across London. Robe for iOS and Android.">
+<meta name="description" content="Rent clothes from private wardrobes and shops across the UK. Robe for iOS and Android.">
 <script>
   // Light or dark, applied before the page paints: the reader's saved choice,
   // or otherwise whatever their device is set to.
@@ -17,7 +17,12 @@
     document.documentElement.dataset.theme = theme;
   })();
 </script>
-<link rel="stylesheet" href="styles.css?v=25">
+<link rel="stylesheet" href="styles.css?v=26">
+<script>
+  // Seen the opening animation before (in this browser)? Then the page opens straight away:
+  // set before the body draws, so the splash never flashes.
+  try { if (localStorage.getItem("robeIntroSeen")) document.documentElement.classList.add("intro-seen"); } catch (e) {}
+</script>
 </head>
 <body>
 
@@ -48,6 +53,7 @@
       <span class="rail-count-label">pieces on the rail</span>
     </div>
     <nav class="site-nav" id="site-nav" aria-label="Main navigation">
+      <a href="#what-is-robe">What is Robe?</a>
       <a href="#listings">Browse</a>
       <a href="#how-it-works">How it works</a>
       <a href="#promises">Why Robe</a>
@@ -72,7 +78,7 @@
           <span class="doodle d9" data-depth="0.55"><svg viewBox="0 0 120 60"><path d="M6 40 q14 -30 30 -8 t30 -6 t30 -10" fill="none" class="detail"/><path d="M98 10 l16 -6 l-4 6z" fill="currentColor"/><ellipse cx="102" cy="8" rx="2" ry="1" fill="none"/></svg></span>
       </div>
       <div class="hero-copy">
-        <p class="hero-kicker">Clothes rental across London</p>
+        <p class="hero-kicker">Clothes rental across the UK</p>
         <h1 class="hero-title"><span class="line">Rent the dress,</span> <span class="line soft">not the price.</span></h1>
         <p class="hero-sub">Ten-day rentals from wardrobes and boutiques near you. Cleaned, checked and delivered to your door or a locker round the corner.</p>
         <div class="hero-access">
@@ -95,10 +101,107 @@
       </div>
     </section>
 
+    <section class="what-section" id="what-is-robe" aria-labelledby="what-title">
+      <div class="section-heading center">
+        <div class="section-eyebrow">What is Robe?</div>
+        <h2 id="what-title">A shared wardrobe for the whole UK. <span class="soft">Borrow it, wear it, send it on.</span></h2>
+        <p>Robe is clothes rental from real wardrobes and shops, from Edinburgh to Brighton. Here's the whole idea in five pictures.</p>
+      </div>
+      <ol class="what-scenes">
+        <li class="what-scene" data-scene="wardrobe">
+          <svg viewBox="0 0 200 170" aria-hidden="true" class="what-art" filter="url(#crayon)">
+            <ellipse cx="100" cy="158" rx="70" ry="6" class="ground"/>
+            <rect x="58" y="22" width="84" height="132" rx="6" class="wood"/>
+            <rect x="64" y="30" width="72" height="116" rx="3" class="inside"/>
+            <line x1="66" y1="44" x2="134" y2="44" class="rail"/>
+            <g class="hanger h1"><path d="M80 44 v4" class="ink"/><path d="M72 52 l8 -4 l8 4" class="ink"/><path d="M73 52 h14 l6 40 h-26 Z" class="dress pink"/></g>
+            <g class="hanger h2"><path d="M100 44 v4" class="ink"/><path d="M92 52 l8 -4 l8 4" class="ink"/><path d="M93 52 h14 l3 28 l5 36 h-30 l5 -36 Z" class="dress grape"/></g>
+            <g class="hanger h3"><path d="M120 44 v4" class="ink"/><path d="M112 52 l8 -4 l8 4" class="ink"/><path d="M112 52 h16 v34 h-16 Z" class="dress gold"/><path d="M112 52 l-6 18 M128 52 l6 18" class="ink"/></g>
+            <g class="door door-l"><rect x="62" y="26" width="38" height="124" rx="3" class="wood"/><circle cx="94" cy="88" r="2.2" class="knob"/></g>
+            <g class="door door-r"><rect x="100" y="26" width="38" height="124" rx="3" class="wood"/><circle cx="106" cy="88" r="2.2" class="knob"/></g>
+            <path class="spark s1" d="M40 40 q1 5 6 6 q-5 1 -6 6 q-1 -5 -6 -6 q5 -1 6 -6z"/>
+            <path class="spark s2" d="M160 60 q1 4 5 5 q-4 1 -5 5 q-1 -4 -5 -5 q4 -1 5 -5z"/>
+          </svg>
+          <h3><span class="what-step">1</span> Wardrobes open up</h3>
+          <p>People and shops all over the UK list the pieces they love but rarely wear.</p>
+        </li>
+        <li class="what-scene" data-scene="ten">
+          <svg viewBox="0 0 200 170" aria-hidden="true" class="what-art" filter="url(#crayon)">
+            <ellipse cx="100" cy="158" rx="70" ry="6" class="ground"/>
+            <rect x="46" y="34" width="108" height="112" rx="10" class="paper"/>
+            <rect x="46" y="34" width="108" height="26" rx="10" class="cal-top"/>
+            <rect x="46" y="50" width="108" height="10" class="cal-top"/>
+            <path d="M70 26 v16 M130 26 v16" class="ring"/>
+            <text x="100" y="53" class="cal-title">10 DAYS</text>
+            <g class="days">
+              <circle cx="68" cy="80" r="7"/><circle cx="89" cy="80" r="7"/><circle cx="110" cy="80" r="7"/><circle cx="131" cy="80" r="7"/>
+              <circle cx="68" cy="102" r="7"/><circle cx="89" cy="102" r="7"/><circle cx="110" cy="102" r="7"/><circle cx="131" cy="102" r="7"/>
+              <circle cx="68" cy="124" r="7"/><circle cx="89" cy="124" r="7"/>
+            </g>
+            <g class="tag"><path d="M150 96 l26 -10 l10 26 l-26 10 Z" class="tag-card"/><circle cx="155" cy="100" r="2.5" class="ink-fill"/><text x="168" y="108" class="tag-text">£</text></g>
+          </svg>
+          <h3><span class="what-step">2</span> Rent it for ten days</h3>
+          <p>A dress, a jacket, a bag: ten days from the day it arrives, for a fraction of the price.</p>
+        </li>
+        <li class="what-scene" data-scene="map">
+          <svg viewBox="0 0 200 200" aria-hidden="true" class="what-art what-map" filter="url(#crayon)">
+            <g transform="translate(35 2)">
+              <path class="land" d="M37.4 183.0 L54.8 177.0 L62.9 171.6 L80.3 171.6 L90.8 168.4 L107.0 168.8 L119.6 161.0 L120.2 156.4 L112.3 153.0 L123.9 131.6 L118.7 125.0 L107.6 125.0 L105.0 112.0 L98.3 99.0 L96.4 94.0 L88.5 86.0 L85.0 71.6 L76.8 64.0 L73.9 58.0 L75.1 49.6 L79.7 41.0 L82.9 34.0 L68.7 30.0 L57.1 31.6 L68.1 11.6 L45.5 12.0 L42.0 20.0 L37.1 38.0 L39.1 54.4 L40.3 72.0 L46.1 84.0 L61.7 85.6 L63.5 95.6 L68.7 105.6 L68.7 116.0 L64.1 117.4 L49.9 118.0 L48.7 128.0 L55.9 136.0 L43.2 148.4 L57.1 152.0 L66.4 155.0 L72.2 153.6 L67.6 160.0 L54.8 160.4 L45.5 171.6 Z"/>
+              <path class="land" d="M40.3 98.0 L35.0 91.6 L33.9 80.0 L22.3 79.6 L18.8 83.0 L14.7 89.0 L8.9 95.6 L21.7 101.6 L31.0 103.0 Z"/>
+              <path id="what-route" class="route" d="M66.5 65 C 100 88, 58 118, 77.5 114.4 S 66 146, 73.5 155"/>
+              <g class="cities">
+                <circle cx="102" cy="154" r="3.2"/><circle cx="77.5" cy="114.4" r="3.2"/><circle cx="66.5" cy="65" r="3.2"/><circle cx="54.2" cy="66.8" r="3.2"/>
+                <circle cx="66.6" cy="154.4" r="3.2"/><circle cx="34.7" cy="92" r="3.2"/><circle cx="85.6" cy="108" r="3.2"/><circle cx="81.5" cy="134.4" r="3.2"/>
+                <circle cx="85" cy="84.6" r="3.2"/><circle cx="101.9" cy="167.6" r="3.2"/>
+              </g>
+              <g class="locker" transform="translate(73.5 155)"><rect x="-6" y="-14" width="12" height="12" rx="2" class="locker-box"/><path d="M-6 -8 h12 M0 -14 v12" class="ink"/></g>
+              <g class="parcel"><rect x="-5" y="-5" width="10" height="9" rx="1.5" class="parcel-box"/><path d="M-5 -1 h10 M0 -5 v9" class="ink"/>
+                <animateMotion dur="2.6s" begin="indefinite" fill="freeze" calcMode="spline" keyTimes="0;1" keySplines="0.4 0 0.2 1"><mpath href="#what-route"/></animateMotion></g>
+            </g>
+          </svg>
+          <h3><span class="what-step">3</span> Delivered near you</h3>
+          <p>The owner posts it to an InPost locker or a Post Office near you, anywhere in the UK.</p>
+        </li>
+        <li class="what-scene" data-scene="wear">
+          <svg viewBox="0 0 200 170" aria-hidden="true" class="what-art" filter="url(#crayon)">
+            <ellipse cx="100" cy="158" rx="50" ry="6" class="ground"/>
+            <g class="twirl">
+              <circle cx="100" cy="30" r="10" class="skin"/>
+              <path d="M90 26 q10 -16 20 0" class="hair"/>
+              <path d="M100 40 v8" class="ink"/>
+              <path d="M88 50 q12 -6 24 0 l-3 26 h-18 Z" class="dress grape"/>
+              <path class="skirt dress grape" d="M91 76 h18 l26 56 q-35 12 -70 0 Z"/>
+              <path d="M88 52 l-14 22 M112 52 l14 -24" class="ink"/>
+              <path d="M95 134 l-2 20 M105 134 l2 20" class="ink"/>
+            </g>
+            <path class="spark s1" d="M50 50 q1 5 6 6 q-5 1 -6 6 q-1 -5 -6 -6 q5 -1 6 -6z"/>
+            <path class="spark s2" d="M150 40 q1 4 5 5 q-4 1 -5 5 q-1 -4 -5 -5 q4 -1 5 -5z"/>
+            <path class="spark s3" d="M156 108 q1 4 5 5 q-4 1 -5 5 q-1 -4 -5 -5 q4 -1 5 -5z"/>
+            <path class="spark s4" d="M40 112 q1 4 5 5 q-4 1 -5 5 q-1 -4 -5 -5 q4 -1 5 -5z"/>
+          </svg>
+          <h3><span class="what-step">4</span> Wear it out</h3>
+          <p>The wedding, the party, the interview, the weekend away: it's yours for ten days.</p>
+        </li>
+        <li class="what-scene" data-scene="back">
+          <svg viewBox="0 0 200 170" aria-hidden="true" class="what-art" filter="url(#crayon)">
+            <ellipse cx="100" cy="158" rx="70" ry="6" class="ground"/>
+            <g class="washer"><rect x="104" y="58" width="70" height="92" rx="8" class="paper"/><path d="M104 76 h70" class="ink"/><circle cx="116" cy="67" r="3" class="ink-fill"/><circle cx="139" cy="112" r="24" class="drum"/><circle cx="139" cy="112" r="17" class="water"/></g>
+            <g class="bubbles"><circle cx="132" cy="110" r="3"/><circle cx="144" cy="104" r="2.2"/><circle cx="140" cy="118" r="2.6"/></g>
+            <g class="box-back"><rect x="24" y="112" width="40" height="32" rx="3" class="parcel-box"/><path d="M24 124 h40 M44 112 v32" class="ink"/></g>
+            <path d="M70 128 q14 -12 28 -2" class="arrow"/><path d="M92 120 l7 6 l-8 4" class="arrow"/>
+            <g class="heart"><path d="M60 52 c-8 -12 -26 -4 -16 10 l16 16 l16 -16 c10 -14 -8 -22 -16 -10 Z"/></g>
+            <text x="60" y="96" class="keep">Keep it?</text>
+          </svg>
+          <h3><span class="what-step">5</span> Send it back, or keep it</h3>
+          <p>Drop it off and the clean is arranged; your deposit is released once it's checked. Love it? Keep it, and the rent comes off.</p>
+        </li>
+      </ol>
+    </section>
+
     <section class="phones" id="phones" aria-label="The Robe app">
       <div class="section-heading center">
         <div class="section-eyebrow">The app</div>
-        <h2>Every wardrobe in London, <span class="soft">in your pocket.</span></h2>
+        <h2>Every wardrobe in the UK, <span class="soft">in your pocket.</span></h2>
       </div>
       <div class="phone-stage">
         <figure class="phone phone-left" aria-label="A listing in the Robe app: a scarlet maxi gown, £45 for 10 days">
@@ -272,17 +375,11 @@
     </section>
 
     <section class="labels" aria-label="Labels and neighbourhoods on Robe">
-      <h2 class="labels-title reveal">Labels you'll find. <span class="soft">Wardrobes across London.</span></h2>
+      <h2 class="labels-title reveal">Labels you'll find. <span class="soft">Wardrobes across the UK.</span></h2>
       <div class="lane" aria-label="Labels you might find">
         <div class="belt">
           <ul><li>Self-Portrait</li><li>Reformation</li><li>Ghost</li><li>Rixo</li><li>Jenny Packham</li><li>Needle &amp; Thread</li><li>Massimo Dutti</li><li>Reiss</li><li>&amp; Other Stories</li><li>Uniqlo</li></ul>
           <ul aria-hidden="true"><li>Self-Portrait</li><li>Reformation</li><li>Ghost</li><li>Rixo</li><li>Jenny Packham</li><li>Needle &amp; Thread</li><li>Massimo Dutti</li><li>Reiss</li><li>&amp; Other Stories</li><li>Uniqlo</li></ul>
-        </div>
-      </div>
-      <div class="lane lane-back" aria-label="Neighbourhoods">
-        <div class="belt">
-          <ul><li>Hackney</li><li>Brixton</li><li>Camden</li><li>Knightsbridge</li><li>Marylebone</li><li>Islington</li><li>Peckham</li><li>Notting Hill</li><li>Shoreditch</li><li>Clapham</li></ul>
-          <ul aria-hidden="true"><li>Hackney</li><li>Brixton</li><li>Camden</li><li>Knightsbridge</li><li>Marylebone</li><li>Islington</li><li>Peckham</li><li>Notting Hill</li><li>Shoreditch</li><li>Clapham</li></ul>
         </div>
       </div>
     </section>
@@ -510,9 +607,10 @@
   <script src="showcase.js?v=6"></script>
   <script src="storefront.js?v=6"></script>
   <script src="figure-data.js?v=7"></script>
-  <script src="intro-motion.js?v=1"></script>
+  <script src="intro-motion.js?v=2"></script>
+  <script src="whatis.js?v=1"></script>
   <script src="figure.js?v=7"></script>
-  <script src="wordmark.js?v=8"></script>
-  <script src="motion.js?v=2"></script>
+  <script src="wordmark.js?v=9"></script>
+  <script src="motion.js?v=3"></script>
 </body>
 </html>

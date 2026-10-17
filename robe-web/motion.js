@@ -117,7 +117,7 @@
     if (reduceMotion || !canObserve) return;
     const splash = document.getElementById("splash");
     const go = () => root.classList.add("hero-in");
-    if (!splash) { go(); return; }
+    if (!splash || splash.classList.contains("fade-out") || root.classList.contains("intro-seen")) { go(); return; }
     const watch = new MutationObserver(() => {
       if (splash.classList.contains("fade-out")) { watch.disconnect(); setTimeout(go, 120); }
     });

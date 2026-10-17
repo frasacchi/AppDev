@@ -105,6 +105,8 @@ h1, h2, h3 { font-family: var(--font-heading); font-weight: 700; margin: 0 0 0.4
 
 #splash { position: fixed; inset: 0; background: var(--robe-plum); z-index: 1000; display: flex; align-items: center; justify-content: center; transition: opacity 0.4s ease-out; }
 #splash.fade-out { opacity: 0; pointer-events: none; }
+/* Returning visitors (index.html's head script) skip the opening animation. */
+.intro-seen #splash { display: none; }
 /* The opening animation (wordmark.js + intro-motion.js) places these every frame. */
 #splash > * { position: absolute; left: 0; top: 0; }
 .splash-letter { opacity: 0; will-change: transform, opacity; }
@@ -845,3 +847,121 @@ main > section.town-section { padding-bottom: 0; }
 .brand-selfridges .brand-name { font-family: Jost, Arial, sans-serif; font-weight: 700; background: #FFE14D; color: #111; display: inline-block; padding: 0 14px; border-radius: 8px; }
 :root[data-theme="dark"] .brand-harrods .brand-name { color: #E2B85C; }
 @media (prefers-reduced-motion: reduce) { .town-pin, .town-building { animation: none; } }
+
+/* ---------- What is Robe? (whatis.js): five drawn scenes that play as they come into view ---------- */
+.what-scenes { list-style: none; margin: 40px 0 0; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 18px; }
+.what-scene { padding: 18px 16px 20px; border-radius: 26px; background: var(--bg-raised); border: 1px solid var(--line); opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.what-scene.in { opacity: 1; transform: none; }
+.what-scene:nth-child(2) { transition-delay: 0.08s; } .what-scene:nth-child(3) { transition-delay: 0.16s; } .what-scene:nth-child(4) { transition-delay: 0.24s; } .what-scene:nth-child(5) { transition-delay: 0.32s; }
+.what-scene h3 { margin: 12px 0 6px; font-size: 18px; display: flex; align-items: center; gap: 8px; }
+.what-scene p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.5; }
+.what-step { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--robe-grape); color: #fff; font: 600 13px var(--font-body); flex: none; }
+.what-art { display: block; width: 100%; height: auto; overflow: visible; }
+.what-art .ink, .what-art .rail, .what-art .ring, .what-art .arrow { fill: none; stroke: var(--robe-plum); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+:root[data-theme="dark"] .what-art .ink, :root[data-theme="dark"] .what-art .rail, :root[data-theme="dark"] .what-art .ring, :root[data-theme="dark"] .what-art .arrow { stroke: #E9DDF5; }
+.what-art .ink-fill { fill: var(--robe-plum); }
+.what-art .ground { fill: color-mix(in srgb, var(--robe-plum) 10%, transparent); }
+.what-art .wood { fill: #F7D9C4; stroke: var(--robe-plum); stroke-width: 2.2; }
+.what-art .inside { fill: #5B3A55; }
+.what-art .knob { fill: #E8B93F; }
+.what-art .dress { stroke: var(--robe-plum); stroke-width: 1.8; stroke-linejoin: round; }
+.what-art .pink { fill: #FF8FB8; } .what-art .grape { fill: #9D6BD8; } .what-art .gold { fill: #FFD66B; }
+.what-art .paper { fill: #FFFDF8; stroke: var(--robe-plum); stroke-width: 2.2; }
+.what-art .cal-top { fill: var(--robe-grape); }
+.what-art .cal-title { fill: #fff; font: 700 10px var(--font-body); letter-spacing: 0.12em; text-anchor: middle; }
+.what-art .days circle { fill: transparent; stroke: var(--robe-plum); stroke-width: 1.8; }
+.what-art .tag-card { fill: #FFD66B; stroke: var(--robe-plum); stroke-width: 2; }
+.what-art .tag-text { fill: var(--robe-plum); font: 700 13px var(--font-body); }
+.what-art .land { fill: color-mix(in srgb, #9D6BD8 26%, #FFFDF8); stroke: var(--robe-plum); stroke-width: 1.6; stroke-linejoin: round; }
+.what-art .route { fill: none; stroke: var(--robe-blush-deep, #E83E8C); stroke-width: 2; stroke-dasharray: 4 4; }
+.what-art .cities circle { fill: var(--robe-grape); stroke: #fff; stroke-width: 1.2; transform-box: fill-box; transform-origin: center; }
+.what-art .locker-box { fill: #FFC72C; stroke: var(--robe-plum); stroke-width: 1.4; }
+.what-art .parcel-box { fill: #E9B98A; stroke: var(--robe-plum); stroke-width: 1.8; }
+.what-art .skin { fill: #F6C9A8; stroke: var(--robe-plum); stroke-width: 2; }
+.what-art .hair { fill: #5B3A55; stroke: var(--robe-plum); stroke-width: 2; }
+.what-art .drum { fill: #E7E3F2; stroke: var(--robe-plum); stroke-width: 2.2; }
+.what-art .water { fill: #9CD3F2; }
+.what-art .bubbles circle { fill: #fff; stroke: #9CD3F2; stroke-width: 1; }
+.what-art .heart path { fill: #FF5A8A; stroke: var(--robe-plum); stroke-width: 2; }
+.what-art .keep { fill: var(--robe-plum); font: italic 700 12px var(--font-heading); text-anchor: middle; }
+:root[data-theme="dark"] .what-art .keep { fill: #E9DDF5; }
+.what-art .spark { fill: var(--robe-blush-deep, #E83E8C); transform-box: fill-box; transform-origin: center; opacity: 0; }
+
+/* The scenes play once they're in view. */
+.what-art .door { transform-box: fill-box; transition: transform 1.1s cubic-bezier(0.3, 0, 0.2, 1) 0.4s; }
+.what-art .door-l { transform-origin: left center; } .what-art .door-r { transform-origin: right center; }
+.in .what-art .door-l, .in .what-art .door-r { transform: scaleX(0.12); }
+.what-art .hanger { transform-box: fill-box; transform-origin: 50% 0; }
+.in .what-art .hanger { animation: what-sway 3.2s ease-in-out 1.4s infinite; }
+.in .what-art .h2 { animation-delay: 1.7s; } .in .what-art .h3 { animation-delay: 2s; }
+@keyframes what-sway { 0%, 100% { transform: rotate(0); } 30% { transform: rotate(5deg); } 70% { transform: rotate(-4deg); } }
+.in .what-art .spark { animation: what-twinkle 2.4s ease-in-out infinite; }
+.in .what-art .s2 { animation-delay: 0.8s; } .in .what-art .s3 { animation-delay: 1.4s; } .in .what-art .s4 { animation-delay: 2s; }
+@keyframes what-twinkle { 0%, 100% { opacity: 0; transform: scale(0.4); } 50% { opacity: 1; transform: scale(1.1); } }
+.in .what-art .days circle { animation: what-day 0.3s ease forwards; }
+.in .what-art .days circle:nth-child(1) { animation-delay: 0.46s; }
+.in .what-art .days circle:nth-child(2) { animation-delay: 0.62s; }
+.in .what-art .days circle:nth-child(3) { animation-delay: 0.78s; }
+.in .what-art .days circle:nth-child(4) { animation-delay: 0.94s; }
+.in .what-art .days circle:nth-child(5) { animation-delay: 1.10s; }
+.in .what-art .days circle:nth-child(6) { animation-delay: 1.26s; }
+.in .what-art .days circle:nth-child(7) { animation-delay: 1.42s; }
+.in .what-art .days circle:nth-child(8) { animation-delay: 1.58s; }
+.in .what-art .days circle:nth-child(9) { animation-delay: 1.74s; }
+.in .what-art .days circle:nth-child(10) { animation-delay: 1.90s; }
+@keyframes what-day { to { fill: var(--robe-blush-deep, #E83E8C); } }
+.what-art .tag { transform-box: fill-box; transform-origin: 18% 40%; }
+.in .what-art .tag { animation: what-swing 2.6s ease-in-out infinite; }
+@keyframes what-swing { 0%, 100% { transform: rotate(-6deg); } 50% { transform: rotate(8deg); } }
+.what-art .route { stroke-dashoffset: 260; opacity: 0; }
+.in .what-art .route { opacity: 1; animation: what-draw 2.6s ease forwards; }
+@keyframes what-draw { from { stroke-dasharray: 0 400; } to { stroke-dasharray: 400 0; } }
+.what-art .cities circle { transform: scale(0); }
+.in .what-art .cities circle { animation: what-pop 0.4s cubic-bezier(0.3, 1.6, 0.5, 1) forwards; }
+.in .what-art .cities circle:nth-child(1) { animation-delay: 0.19s; }
+.in .what-art .cities circle:nth-child(2) { animation-delay: 0.28s; }
+.in .what-art .cities circle:nth-child(3) { animation-delay: 0.37s; }
+.in .what-art .cities circle:nth-child(4) { animation-delay: 0.46s; }
+.in .what-art .cities circle:nth-child(5) { animation-delay: 0.55s; }
+.in .what-art .cities circle:nth-child(6) { animation-delay: 0.64s; }
+.in .what-art .cities circle:nth-child(7) { animation-delay: 0.73s; }
+.in .what-art .cities circle:nth-child(8) { animation-delay: 0.82s; }
+.in .what-art .cities circle:nth-child(9) { animation-delay: 0.91s; }
+.in .what-art .cities circle:nth-child(10) { animation-delay: 1.00s; }
+@keyframes what-pop { to { transform: scale(1); } }
+.what-art .parcel { transform: translate(66.5px, 65px); }
+.what-art .skirt { transform-box: fill-box; transform-origin: 50% 0; }
+.in .what-art .skirt { animation: what-flare 1.6s ease-in-out infinite; }
+@keyframes what-flare { 0%, 100% { transform: scaleX(0.82); } 50% { transform: scaleX(1.12); } }
+.what-art .twirl { transform-box: fill-box; transform-origin: 50% 100%; }
+.in .what-art .twirl { animation: what-bob 1.6s ease-in-out infinite; }
+@keyframes what-bob { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-4px) rotate(2deg); } }
+.what-art .water { transform-box: fill-box; transform-origin: center; }
+.in .what-art .water { animation: what-spin 1.8s linear infinite; }
+@keyframes what-spin { 0% { transform: rotate(0) scale(1, 0.92); } 50% { transform: rotate(180deg) scale(1, 1); } 100% { transform: rotate(360deg) scale(1, 0.92); } }
+.in .what-art .bubbles circle { animation: what-rise 2s ease-in infinite; }
+.in .what-art .bubbles circle:nth-child(2) { animation-delay: 0.6s; } .in .what-art .bubbles circle:nth-child(3) { animation-delay: 1.2s; }
+@keyframes what-rise { from { transform: translateY(0); opacity: 1; } to { transform: translateY(-46px); opacity: 0; } }
+.what-art .box-back { transform-box: fill-box; }
+.in .what-art .box-back { animation: what-slide 2.4s ease-in-out infinite; }
+@keyframes what-slide { 0%, 20% { transform: translateX(0); } 60%, 100% { transform: translateX(18px); } }
+.what-art .heart { transform-box: fill-box; transform-origin: center; }
+.in .what-art .heart { animation: what-beat 1.4s ease-in-out infinite; }
+@keyframes what-beat { 0%, 100% { transform: scale(1); } 15% { transform: scale(1.18); } 30% { transform: scale(0.96); } 45% { transform: scale(1.08); } }
+@media (max-width: 1080px) { .what-scenes { grid-template-columns: repeat(2, minmax(0, 1fr)); } .what-scene:last-child { grid-column: 1 / -1; max-width: 420px; justify-self: center; } }
+@media (max-width: 560px) { .what-scenes { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) {
+  .what-scene { opacity: 1; transform: none; transition: none; }
+  .what-art *, .in .what-art * { animation: none !important; transition: none !important; }
+  .what-art .door-l, .what-art .door-r { transform: scaleX(0.12); }
+  .what-art .route { opacity: 1; stroke-dasharray: 4 4; } .what-art .cities circle { transform: none; } .what-art .days circle { fill: var(--robe-blush-deep, #E83E8C); }
+}
+
+/* Why Robe: a calm grid of promises instead of a moving belt. */
+.promise-rail { overflow: visible; mask-image: none; -webkit-mask-image: none; }
+.promise-belt { animation: none !important; transform: none !important; width: auto !important; display: block; }
+.promise-list { display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; width: auto !important; animation: none !important; }
+.promise-list[aria-hidden="true"] { display: none !important; }
+.promise-list .promise { width: auto !important; min-width: 0; }
+@media (max-width: 860px) { .promise-list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .promise-list { grid-template-columns: 1fr; } }
